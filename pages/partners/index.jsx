@@ -1,13 +1,13 @@
 import React from "react";
 import { partners_data } from "../../data/partners_data";
-import HeadLine from "../../components/headLine";
+import HeadLine from "../../src/components/headLine";
 import { works_data } from "../../data/partners_data";
-import Feature_collections_carousel from "../../components/carousel/Feature_collection_carousel";
-import Accordion from "../../components/accordion";
+import Feature_collections_carousel from "../../src/components/carousel/Feature_collection_carousel";
+import Accordion from "../../src/components/accordion";
 import { accordion_data } from "../../data/help_center_data";
 import Link from "next/link";
-import PartnersComp from "../../components/partners/Partners";
-import Meta from "../../components/Meta";
+import PartnersComp from "../../src/components/partners/Partners";
+import Meta from "../../src/components/Meta";
 
 const Partners = () => {
   return (

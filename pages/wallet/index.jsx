@@ -1,9 +1,9 @@
 import React from 'react';
-import ImageTitle from '../../components/imageTitle';
+import ImageTitle from '../../src/components/imageTitle';
 import { wallet_data } from '../../data/wallet_data';
 import Link from 'next/link';
 import Head from 'next/head';
-import Meta from '../../components/Meta';
+import Meta from '../../src/components/Meta';
 
 const Wallet = () => {
 	const bgImage = '/images/page-title/wallet_banner.jpg';

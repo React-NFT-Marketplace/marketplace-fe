@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
-import Meta from '../../components/Meta';
+import Meta from '../../src/components/Meta';
 
 const Tarms = () => {
 	return (

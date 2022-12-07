@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { items_data } from '../../data/items_data';
-import Auctions_dropdown from '../../components/dropdown/Auctions_dropdown';
+import Auctions_dropdown from '../../src/components/dropdown/Auctions_dropdown';
 import Link from 'next/link';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import Items_Countdown_timer from '../../components/items_countdown_timer';
-import { ItemsTabs } from '../../components/component';
+import Items_Countdown_timer from '../../src/components/items_countdown_timer';
+import { ItemsTabs } from '../../src/components/component';
 import More_items from './more_items';
-import Likes from '../../components/likes';
-import Meta from '../../components/Meta';
+import Likes from '../../src/components/likes';
+import Meta from '../../src/components/Meta';
 import { useDispatch } from 'react-redux';
 import { bidsModalShow } from '../../redux/counterSlice';
 

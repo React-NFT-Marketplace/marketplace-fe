@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import Post from '../../components/case-studies/post';
-import Approach from '../../components/case-studies/approach';
-import Results from '../../components/case-studies/results';
-import Testimonial from '../../components/testimonial/testimonial';
-import Related_studies from '../../components/case-studies/related_studies';
-import Meta from '../../components/Meta';
+import Post from '../../src/components/case-studies/post';
+import Approach from '../../src/components/case-studies/approach';
+import Results from '../../src/components/case-studies/results';
+import Testimonial from '../../src/components/testimonial/testimonial';
+import Related_studies from '../../src/components/case-studies/related_studies';
+import Meta from '../../src/components/Meta';
 
 const SingleStudy = () => {
 	const router = useRouter();

@@ -1,11 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import News_item from '../../components/blog/news_item';
+import News_item from '../../src/components/blog/news_item';
 import { news_data } from '../../data/news_data';
 import { single_news_data } from '../../data/news_data';
 import Head from 'next/head';
-import Meta from '../../components/Meta';
+import Meta from '../../src/components/Meta';
 
 const Single_post = () => {
 	const router = useRouter();

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Benifits from "../../components/dao/Benifits";
-import Intro from "../../components/dao/Intro";
-import Participate from "../../components/dao/Participate";
-import NewseLatter2 from "../../components/dao/newseLatter2";
-import { Partners } from "../../components/component";
-import Hero_9 from "../../components/hero/hero_9";
-import Meta from "../../components/Meta";
-import TrustedPartner from "../../components/dao/TrustedPartner";
+import Benifits from "../../src/components/dao/Benifits";
+import Intro from "../../src/components/dao/Intro";
+import Participate from "../../src/components/dao/Participate";
+import NewseLatter2 from "../../src/components/dao/newseLatter2";
+import { Partners } from "../../src/components/component";
+import Hero_9 from "../../src/components/hero/hero_9";
+import Meta from "../../src/components/Meta";
+import TrustedPartner from "../../src/components/dao/TrustedPartner";
 
 const Home_9 = () => {
   useEffect(() => {

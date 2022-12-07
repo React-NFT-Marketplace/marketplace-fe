@@ -1,11 +1,11 @@
 import Link from "next/link";
 import React from "react";
-import ImageTitle from "../../components/imageTitle";
+import ImageTitle from "../../src/components/imageTitle";
 import { help_center_data } from "../../data/help_center_data";
 import { accordion_data } from "../../data/help_center_data";
-import Accordion from "../../components/accordion";
+import Accordion from "../../src/components/accordion";
 import Head from "next/head";
-import Meta from "../../components/Meta";
+import Meta from "../../src/components/Meta";
 
 const Help_center = () => {
   const bgImage = "/images/page-title/knowledge_base_banner.jpg";

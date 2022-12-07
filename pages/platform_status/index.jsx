@@ -1,6 +1,6 @@
 import React from "react";
-import ImageTitle from "../../components/imageTitle";
-import Meta from "../../components/Meta";
+import ImageTitle from "../../src/components/imageTitle";
+import Meta from "../../src/components/Meta";
 
 const Platform_status = () => {
   return (

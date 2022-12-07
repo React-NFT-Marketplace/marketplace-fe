@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Team from "../../components/about/team";
-import Partners from "../../components/partners/Partners";
-import About_news from "../../components/blog/about_news";
-import Story from "../../components/about/story";
+import Team from "../../src/components/about/team";
+import Partners from "../../src/components/partners/Partners";
+import About_news from "../../src/components/blog/about_news";
+import Story from "../../src/components/about/story";
 import Head from "next/head";
-import Meta from "../../components/Meta";
+import Meta from "../../src/components/Meta";
 
 const About = () => {
   const [video, setVideo] = useState(false);

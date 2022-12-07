@@ -1,7 +1,7 @@
 import React from "react";
-import Activity_item from "../../components/collectrions/Activity_item";
+import Activity_item from "../../src/components/collectrions/Activity_item";
 import Head from "next/head";
-import Meta from "../../components/Meta";
+import Meta from "../../src/components/Meta";
 
 const index = () => {
   return (

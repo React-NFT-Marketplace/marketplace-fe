@@ -1,8 +1,8 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import News_item from "../../components/blog/news_item";
+import News_item from "../../src/components/blog/news_item";
 import { news_data } from "../../data/news_data";
-import Meta from "../../components/Meta";
+import Meta from "../../src/components/Meta";
 
 const Blog = () => {
   const [loadMoreBtn, setLoadMoreBtn] = useState(true);

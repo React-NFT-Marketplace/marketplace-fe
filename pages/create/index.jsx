@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
-import Collection_dropdown2 from "../../components/dropdown/collection_dropdown2";
+import Collection_dropdown2 from "../../src/components/dropdown/collection_dropdown2";
 import {
   collectionDropdown2_data,
   EthereumDropdown2_data,
 } from "../../data/dropdown";
 import { FileUploader } from "react-drag-drop-files";
-import Proparties_modal from "../../components/modal/proparties_modal";
+import Proparties_modal from "../../src/components/modal/proparties_modal";
 import { useDispatch } from "react-redux";
 import { showPropatiesModal } from "../../redux/counterSlice";
-import Meta from "../../components/Meta";
+import Meta from "../../src/components/Meta";
 
 const Create = () => {
   const fileTypes = [

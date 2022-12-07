@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import UserContext from "../components/UserContext";
+import UserContext from "../src/components/UserContext";
 import Home_1 from "./home/home_1";
 
 export default function Home() {

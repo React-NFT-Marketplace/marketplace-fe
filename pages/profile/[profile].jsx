@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Tippy from '@tippyjs/react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Image from 'next/image';
-import UserId from '../../components/userId';
+import UserId from '../../src/components/userId';
 import Head from 'next/head';
-import Meta from '../../components/Meta';
+import Meta from '../../src/components/Meta';
 
 const Edit_user = () => {
 	const [profilePhoto, setProfilePhoto] = useState();

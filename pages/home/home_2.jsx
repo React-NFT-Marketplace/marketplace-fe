@@ -1,13 +1,13 @@
 import React from 'react';
-import Hero_2 from '../../components/hero/hero_2';
+import Hero_2 from '../../src/components/hero/hero_2';
 import {
 	Top_collection,
 	Auctions_categories,
 	NewseLatter,
 	Feature_collections,
 	Partners,
-} from '../../components/component';
-import Meta from '../../components/Meta';
+} from '../../src/components/component';
+import Meta from '../../src/components/Meta';
 
 const Home_2 = () => {
 	return (

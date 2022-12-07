@@ -5,8 +5,8 @@ import {
 	Top_collection,
 	Tranding_category,
 	NewseLatter,
-} from '../../components/component';
-import Meta from '../../components/Meta';
+} from '../../src/components/component';
+import Meta from '../../src/components/Meta';
 
 const Home_1 = () => {
 	return (

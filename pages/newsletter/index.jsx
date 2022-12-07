@@ -1,6 +1,6 @@
 import React from "react";
-import Story from "../../components/about/story";
-import Meta from "../../components/Meta";
+import Story from "../../src/components/about/story";
+import Meta from "../../src/components/Meta";
 
 const newsletter = () => {
   return (

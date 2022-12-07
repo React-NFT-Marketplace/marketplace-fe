@@ -1,8 +1,8 @@
 import React from 'react';
 import { case_studies_data } from '../../data/case-studies_data';
-import { Partners } from '../../components/component';
+import { Partners } from '../../src/components/component';
 import Link from 'next/link';
-import Meta from '../../components/Meta';
+import Meta from '../../src/components/Meta';
 
 const Case_studies = () => {
 	return (

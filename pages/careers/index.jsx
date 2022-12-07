@@ -1,9 +1,9 @@
 import React from 'react';
-import Careers_title from '../../components/careers/careers_title';
-import Positions from '../../components/careers/positions';
-import Meta from '../../components/Meta';
-import Parks from '../../components/careers/parks';
-import { Partners } from '../../components/component';
+import Careers_title from '../../src/components/careers/careers_title';
+import Positions from '../../src/components/careers/positions';
+import Meta from '../../src/components/Meta';
+import Parks from '../../src/components/careers/parks';
+import { Partners } from '../../src/components/component';
 
 const Careers = () => {
 	return (

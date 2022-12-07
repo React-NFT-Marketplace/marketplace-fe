@@ -1,12 +1,12 @@
-import { Partners } from "../../components/component";
-import DownloadAppBanner from "../../components/crypto/DownloadAppBanner";
-import FancyBlock from "../../components/crypto/FancyBlock";
-import Feature from "../../components/crypto/feature";
-import WalletFeature from "../../components/crypto/wallet-feature";
-import NeedHelpBlock from "../../components/crypto/nee-help-block";
-import Hero_10 from "../../components/hero/hero_10";
-import Meta from "../../components/Meta";
-import Testimonial from "../../components/testimonial/testimonial";
+import { Partners } from "../../src/components/component";
+import DownloadAppBanner from "../../src/components/crypto/DownloadAppBanner";
+import FancyBlock from "../../src/components/crypto/FancyBlock";
+import Feature from "../../src/components/crypto/feature";
+import WalletFeature from "../../src/components/crypto/wallet-feature";
+import NeedHelpBlock from "../../src/components/crypto/nee-help-block";
+import Hero_10 from "../../src/components/hero/hero_10";
+import Meta from "../../src/components/Meta";
+import Testimonial from "../../src/components/testimonial/testimonial";
 
 const Home_1 = () => {
   return (

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Meta from "../components/Meta";
+import Meta from "../src/components/Meta";
 
 const Error_page = () => {
   return (

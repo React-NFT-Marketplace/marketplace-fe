@@ -1,12 +1,12 @@
 import "../styles/globals.css";
 import { ThemeProvider } from "next-themes";
-import Layout from "../components/layout";
+import Layout from "../src/components/layout";
 import { Provider } from "react-redux";
 import { store } from "../redux/store";
 import { useRouter } from "next/router";
 import { MetaMaskProvider } from "metamask-react";
-import Meta from "../components/Meta";
-import UserContext from "../components/UserContext";
+import Meta from "../src/components/Meta";
+import UserContext from "../src/components/UserContext";
 import { useEffect, useRef } from "react";
 
 function MyApp({ Component, pageProps }) {

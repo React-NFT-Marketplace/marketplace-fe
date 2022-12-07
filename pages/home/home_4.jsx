@@ -5,10 +5,10 @@ import {
 	NewseLatter,
 	Partners,
 	Top_collection,
-} from '../../components/component';
-import Meta from '../../components/Meta';
-import Hero_4 from '../../components/hero/hero_4';
-import CoverflowCarousel from '../../components/carousel/coverflowCarousel';
+} from '../../src/components/component';
+import Meta from '../../src/components/Meta';
+import Hero_4 from '../../src/components/hero/hero_4';
+import CoverflowCarousel from '../../src/components/carousel/coverflowCarousel';
 
 const Home_4 = () => {
 	return (

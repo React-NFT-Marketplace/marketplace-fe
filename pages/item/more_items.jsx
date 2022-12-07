@@ -1,6 +1,6 @@
 import React from 'react';
-import { HeadLine } from '../../components/component';
-import BidsCarousel from '../../components/carousel/bidsCarousel';
+import { HeadLine } from '../../src/components/component';
+import BidsCarousel from '../../src/components/carousel/bidsCarousel';
 
 const More_items = () => {
 	return (

@@ -1,8 +1,8 @@
 import React from "react";
-import ImageTitle from "../../components/imageTitle";
-import Meta from "../../components/Meta";
-import ContactForm from "../../components/contact/ContactForm";
-import Address from "../../components/contact/address";
+import ImageTitle from "../../src/components/imageTitle";
+import Meta from "../../src/components/Meta";
+import ContactForm from "../../src/components/contact/ContactForm";
+import Address from "../../src/components/contact/address";
 
 const Contact = () => {
   const bgImage = "/images/page-title/knowledge_base_banner.jpg";

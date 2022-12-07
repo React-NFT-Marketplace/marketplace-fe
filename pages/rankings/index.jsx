@@ -2,9 +2,9 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { rankings_data } from '../../data/rankings_data';
 import Image from 'next/image';
-import Recently_added_dropdown from '../../components/dropdown/recently_added_dropdown';
+import Recently_added_dropdown from '../../src/components/dropdown/recently_added_dropdown';
 import Head from 'next/head';
-import Meta from '../../components/Meta';
+import Meta from '../../src/components/Meta';
 import { collectRenkingData } from '../../redux/counterSlice';
 import { useSelector, useDispatch } from 'react-redux';
 

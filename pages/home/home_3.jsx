@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Collection_category from "../../components/collectrions/collection_category";
+import Collection_category from "../../src/components/collectrions/collection_category";
 import {
   NewseLatter,
   Feature_collections,
@@ -7,8 +7,8 @@ import {
   Browse_category,
   Hero_3,
   Bids,
-} from "../../components/component";
-import Meta from "../../components/Meta";
+} from "../../src/components/component";
+import Meta from "../../src/components/Meta";
 
 const Home_3 = () => {
   useEffect(() => {

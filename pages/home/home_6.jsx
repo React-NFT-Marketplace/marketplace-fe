@@ -1,10 +1,10 @@
 import React from 'react';
-import Meta from '../../components/Meta';
-import Download from '../../components/blog/download';
-import { Auctions_categories, Bids, Browse_category, Partners } from '../../components/component';
-import Collection_category from '../../components/collectrions/collection_category';
-import Hero_6 from '../../components/hero/hero_6';
-import Testimonial from '../../components/blog/testimonial';
+import Meta from '../../src/components/Meta';
+import Download from '../../src/components/blog/download';
+import { Auctions_categories, Bids, Browse_category, Partners } from '../../src/components/component';
+import Collection_category from '../../src/components/collectrions/collection_category';
+import Hero_6 from '../../src/components/hero/hero_6';
+import Testimonial from '../../src/components/blog/testimonial';
 
 const Home_6 = () => {
 	return (

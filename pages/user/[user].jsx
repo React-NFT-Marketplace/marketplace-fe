@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import Social_dropdown from "../../components/dropdown/Social_dropdown";
-import Auctions_dropdown from "../../components/dropdown/Auctions_dropdown";
+import Social_dropdown from "../../src/components/dropdown/Social_dropdown";
+import Auctions_dropdown from "../../src/components/dropdown/Auctions_dropdown";
 import user_data from "../../data/user_data";
-import User_items from "../../components/user/User_items";
+import User_items from "../../src/components/user/User_items";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Head from "next/head";
-import Meta from "../../components/Meta";
+import Meta from "../../src/components/Meta";
 
 const User = () => {
   const router = useRouter();

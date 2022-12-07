@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import Meta from "../../components/Meta";
-import { Metamask_comp_login } from "../../components/metamask/Metamask";
+import Meta from "../../src/components/Meta";
+import { Metamask_comp_login } from "../../src/components/metamask/Metamask";
 
 const Login = () => {
   const [itemActive, setItemActive] = useState(1);
