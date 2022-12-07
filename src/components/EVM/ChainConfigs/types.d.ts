@@ -1,7 +1,7 @@
 export type ChainConfig = {
     name: string;
     shortName: string;
-    chainId: number;
+    id: number;
     evmChain?: string;
     rpc: string;
     nativeCurrency: {

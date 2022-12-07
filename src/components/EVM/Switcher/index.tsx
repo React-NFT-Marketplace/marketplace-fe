@@ -4,10 +4,10 @@ import { ChainConfig } from '../ChainConfigs/types';
 import { ButtonProps } from './types';
 import MetaMaskOnboarding from '@metamask/onboarding';
 
-const requestSwitchChain = async(
+export const requestSwitchChain = async(
     targetChain: ChainConfig,
-    onSuccess: () => void,
-    onError: (e: any) => void,
+    onSuccess?: () => void,
+    onError?: (e: any) => void,
 ) => {
     let {
         id: chainId, 
@@ -65,7 +65,7 @@ const Switcher: React.FC<ButtonProps> = ({
     currentChainId,
 }: ButtonProps) => {
     const [isRequesting, setIsRequesting] = useState(false);
-    const [chain, setChain] = useState('');
+    const [chain, setChain] = useState<number>(-1);
     const [isDisabled, setIsDisabled] = useState(false);
 
     useEffect(() => {
@@ -75,7 +75,7 @@ const Switcher: React.FC<ButtonProps> = ({
     }, [currentChainId]);
 
     useEffect(() => {
-        if(chain !== '') {
+        if(chain && chain !== -1) {
             //only handle chain change when chain is not empty
             //handle disconnect with connector
             handleChainChange(chain);
@@ -96,7 +96,7 @@ const Switcher: React.FC<ButtonProps> = ({
                     return;
                 }
 
-                setChain(window.ethereum.chainId ?? '');
+                setChain(parseInt(window.ethereum.networkVersion!) ?? -1);
             }, 500);
         }
     }, []);

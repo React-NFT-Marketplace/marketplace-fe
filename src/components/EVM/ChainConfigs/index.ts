@@ -4,7 +4,7 @@ import { ChainConfig } from "./types";
 export const BSC_TEST: ChainConfig = {
     "name": "BscTest",
     shortName: "BscTest",
-    "chainId": 97,
+    "id": 97,
     "gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
     "rpc": "https://data-seed-prebsc-1-s3.binance.org:8545",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
@@ -25,7 +25,7 @@ export const BSC_TEST: ChainConfig = {
 export const AVAX_TEST: ChainConfig = {
     "name": "Avalanche",
     shortName: "Avalanche",
-    "chainId": 43113,
+    "id": 43113,
     "rpc": "https://avalanchetestapi.terminet.io/ext/bc/C/rpc",
     "gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
