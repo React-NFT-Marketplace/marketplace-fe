@@ -185,7 +185,7 @@ export default function Header04() {
       {
         id: uuidv4(),
         name: "Terms of Service",
-        path: "/tarms",
+        path: "/terms",
       },
     ],
   };

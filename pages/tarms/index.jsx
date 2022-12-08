@@ -2,10 +2,10 @@ import Head from 'next/head';
 import React from 'react';
 import Meta from '../../src/components/Meta';
 
-const Tarms = () => {
+const Terms = () => {
 	return (
 		<div>
-			<Meta title="Tarms || MotM | NFT Marketplace" />
+			<Meta title="Terms || MotM | NFT Marketplace" />
 			<div className="pt-[5.5rem] lg:pt-24">
 				{/* <!-- TOS --> */}
 				<section className="dark:bg-jacarta-800 relative py-16 md:py-24">
@@ -144,4 +144,4 @@ const Tarms = () => {
 	);
 };
 
-export default Tarms;
+export default Terms;

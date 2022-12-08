@@ -31,9 +31,9 @@ export default class ContractCall {
     IAxelarGateway: Contract;
     IERC20: Contract;
 
-    constructor(id: number) {
+    constructor() {
         // get chain nft contract address
-        const chain: ChainConfig | undefined = _.find(chains, { id });
+        const chain: ChainConfig | undefined = _.find(chains, { id: Number(window.ethereum!.networkVersion) });
 
         this.chainConfig = chain!;
         this.provider = new ethers.providers.Web3Provider(window.ethereum as any);
@@ -516,16 +516,18 @@ export default class ContractCall {
         if (mintData.fromChain == mintData.toChain) {
             console.log(`Same chain tx`);
             // same chain mint
+            console.log(ChainConfigs);
+
             const currChain = _.find(ChainConfigs, {
                 id: Number(mintData.fromChain)
             });
-            const nftContract = new ethers.Contract(
-                currChain!.oneNFT!,
-                this.oneNFT.abi,
-                this.provider.getSigner(),
-            );
 
-            const receipt = await nftContract.createToken(`https://api.onenft.shop/metadata/${mintData.hash}`).then((tx: any) => tx.wait());
+            console.log(currChain!.oneNFT);
+
+            const nftContract = this.oneNFT;
+            console.log('here')
+
+            const receipt = await nftContract.mint(`https://api.onenft.shop/metadata/${mintData.hash}`).then((tx: any) => tx.wait());
 
             const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
             mintData.tx = `${currChain!.blockExplorerUrl}/tx/${txHash}`;

@@ -134,7 +134,7 @@ const BuyModal = () => {
                   className="dark:text-jacarta-200 text-sm"
                 >
                   By checking this box, I agree to {"MotM's"}{" "}
-                  <Link href="/tarms">
+                  <Link href="/terms">
                     <a className="text-accent">Terms of Service</a>
                   </Link>
                 </label>

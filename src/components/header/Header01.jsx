@@ -182,7 +182,7 @@ export default function Header01() {
       {
         id: uuidv4(),
         name: "Terms of Service",
-        path: "/tarms",
+        path: "/terms",
       },
     ],
   };
@@ -698,15 +698,15 @@ export default function Header01() {
                       Balance
                     </span>
                     <div className="flex items-center">
-                      <svg className="icon icon-ETH -ml-1 mr-1 h-[1.125rem] w-[1.125rem]">
-                        <use xlinkHref="/icons.svg#icon-ETH" />
+                      <svg className="icon icon-USDC -ml-1 mr-1 h-[1.125rem] w-[1.125rem]">
+                        <use xlinkHref="/icons.svg#icon-usdc" />
                       </svg>
                       <span className="text-green text-lg font-bold" style={{ textTransform: 'none' }}>
                         {toLocaleDecimal(usdcBalance, 2, 2)} axlUSDC
                       </span>
                     </div>
                   </div>
-                  <Link href="/user/avatar_6">
+                  {/* <Link href="/user/avatar_6">
                     <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -739,7 +739,7 @@ export default function Header01() {
                         Edit Profile
                       </span>
                     </a>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
               <DarkMode />

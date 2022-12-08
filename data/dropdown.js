@@ -35,20 +35,20 @@ export const collectionDropdown2_data = [
 		image: '/images/avatars/collection_ava_7.png',
 	},
 ];
-export const EthereumDropdown2_data = [
+export const chainData = [
 	{
-		id: '0Ethereum',
-		text: 'Ethereum',
-		image: '/images/chains/ETH.png',
+		id: '97',
+		text: 'BSC',
+		image: '/images/chains/bsc.png',
 	},
 	{
-		id: '1Flow',
-		text: 'Flow',
-		image: '/images/chains/FLOW.png',
+		id: '43113',
+		text: 'Polygon',
+		image: '/images/chains/polygon.png',
 	},
 	{
-		id: '2FUSD',
-		text: 'FUSD',
-		image: '/images/chains/FUSD.png',
+		id: '80001',
+		text: 'AVAX',
+		image: '/images/chains/avalanche.png',
 	},
 ];

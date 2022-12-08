@@ -53,7 +53,7 @@ const ContactForm = () => {
         />
         <label className="dark:text-jacarta-200 text-sm">
           I agree to the{" "}
-          <Link href="/tarms">
+          <Link href="/terms">
             <a className="text-accent">Terms of Service</a>
           </Link>
         </label>

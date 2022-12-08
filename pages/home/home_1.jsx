@@ -11,7 +11,7 @@ import Meta from '../../src/components/Meta';
 const Home_1 = () => {
 	return (
 		<main>
-			<Meta title="Home 1 || MotM | NFT Marketplace" />
+			<Meta title="MotM | NFT Marketplace" />
 			<Hero />
 			<Bids />
 			<Top_collection />
