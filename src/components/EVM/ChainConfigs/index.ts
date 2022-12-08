@@ -1,4 +1,5 @@
 import { ChainConfig } from "./types";
+import { EvmChain, GasToken } from "@axelar-network/axelarjs-sdk";
 
 // chains
 export const BSC_TEST: ChainConfig = {
@@ -8,8 +9,10 @@ export const BSC_TEST: ChainConfig = {
     "gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
     "rpc": "https://data-seed-prebsc-1-s3.binance.org:8545",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
+    gasToken: GasToken.BINANCE,
     "tokenName": "BNB",
     "tokenSymbol": "BNB",
+    evmChain: EvmChain.BINANCE,
     nativeCurrency: {
         name: 'BNB',
         decimals: 18,
@@ -31,6 +34,8 @@ export const AVAX_TEST: ChainConfig = {
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "tokenName": "Avax",
     "tokenSymbol": "AVAX",
+    gasToken: GasToken.AVAX,
+    evmChain: EvmChain.AVALANCHE,
     nativeCurrency: {
         name: 'AVAX',
         decimals: 18,
@@ -46,7 +51,8 @@ export const AVAX_TEST: ChainConfig = {
 export const MUMBAI: ChainConfig = {
     name: 'Polygon',
     shortName: 'MUMBAI',
-    evmChain: "polygon",
+    evmChain: EvmChain.POLYGON,
+    gasToken: GasToken.MATIC,
     id: 80001,
     // rpc: 'https://rpc-mumbai.matic.today/',
     // rpc: 'https://polygontestapi.terminet.io/rpc',

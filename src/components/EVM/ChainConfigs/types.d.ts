@@ -1,8 +1,10 @@
+import { EvmChain, GasToken } from "@axelar-network/axelarjs-sdk";
+
 export type ChainConfig = {
     name: string;
     shortName: string;
     id: number;
-    evmChain?: string;
+    evmChain?: EvmChain;
     rpc: string;
     nativeCurrency: {
         name: string;
@@ -12,6 +14,7 @@ export type ChainConfig = {
     blockExplorerUrl?: string;
     gateway?: string;
     gasReceiver?: string;
+    gasToken?: GasToken;
     oneNFT?: string;
     tokenName?: string;
     tokenSymbol?: string;

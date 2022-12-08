@@ -5,7 +5,7 @@ import { ButtonProps } from './types';
 const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChainChange, onFinishLoading, children, style, className, }: ButtonProps) => {
     const [isDisabled, setDisabled] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
-    const [chain, setChain] = useState('');
+    const [chain, setChain] = useState(''); // networkVersion
     const [accounts, setAccounts] = useState<string[]>([]);
     const onboarding = useRef<MetaMaskOnboarding>();
 
@@ -33,7 +33,7 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
                 setDisabled(true);
                 handleNewAccount(accounts[0]);
 
-                setChain(window.ethereum!.chainId ?? '');
+                setChain(window.ethereum!.networkVersion ?? '');
 
                 if(onboarding.current) {
                     onboarding.current.stopOnboarding();
@@ -67,7 +67,7 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
                     return;
                 }
 
-                setChain(window.ethereum.chainId ?? '');
+                setChain(window.ethereum?.networkVersion ?? "");
                 setAccounts([window.ethereum.selectedAddress]);
                 setIsLoading(false);
             }, 500);
@@ -84,8 +84,8 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
                 }
             });
 
-            window.ethereum!.on('chainChanged', (hexId) => {
-                setChain(hexId as string);
+            window.ethereum!.on('chainChanged', () => {
+                setChain(window.ethereum!.networkVersion!);
             });
 
             return () => {

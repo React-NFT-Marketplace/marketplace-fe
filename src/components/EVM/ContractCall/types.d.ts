@@ -54,3 +54,13 @@ export type Log = {
     transactionHash: string;
     transactionIndex: number;
 }
+
+export type ListedToken = {
+    expiryOn: BigNumber;
+    itemId: BigNumber;
+    nft: string;
+    price: BigNumber;
+    seller: string;
+    sold: boolean;
+    tokenId: BigNumber;
+}

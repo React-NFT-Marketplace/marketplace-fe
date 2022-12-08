@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
@@ -8,12 +8,28 @@ import { trendingCategoryData } from "../../../data/categories_data";
 
 import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
+import UserContext from "../UserContext";
 
-const User_items = () => {
+const User_items = ({ items, listedItems }) => {
   const [itemActive, setItemActive] = useState(1);
-  const [itemsOnSale, setItemsOnSale] = useState(0);
-  const [itemsCreated, setItemsCreated] = useState(0);
-  const [itemsOwned, setItemsOwned] = useState(0);
+  const [itemsOnSale, setItemsOnSale] = useState([]);
+  const [itemsOwned, setItemsOwned] = useState(items);
+  const userContext = useContext(UserContext);
+
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
+
+  useEffect(() => {
+    if(!listedItems) {
+      return;
+    }
+
+    if(!userContext || !userContext.account) {
+      return;
+    }
+    setItemsOnSale(listedItems.filter(item => item.seller == userContext.account));
+  }, [listedItems, userContext]);
 
   return (
     <>
@@ -47,7 +63,7 @@ const User_items = () => {
                     <use xlinkHref={`/icons.svg#icon-on-sale`}></use>
                   </svg>
                   <span className="font-display text-base font-medium">
-                    On Sale ({itemsOnSale})
+                    On Sale ({itemsOnSale.length})
                   </span>
                 </button>
               </Tab>
@@ -67,27 +83,7 @@ const User_items = () => {
                     <use xlinkHref={`/icons.svg#icon-owned`}></use>
                   </svg>
                   <span className="font-display text-base font-medium">
-                    Owned ({itemsOwned})
-                  </span>
-                </button>
-              </Tab>
-              <Tab
-                className="nav-item"
-                role="presentation"
-                onClick={() => setItemActive(3)}
-              >
-                <button
-                  className={
-                    itemActive === 3
-                      ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
-                      : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
-                  }
-                >
-                  <svg className="icon mr-1 h-5 w-5 fill-current">
-                    <use xlinkHref={`/icons.svg#icon-created`}></use>
-                  </svg>
-                  <span className="font-display text-base font-medium">
-                    Created ({itemsCreated})
+                    Owned ({items.length})
                   </span>
                 </button>
               </Tab>
@@ -117,7 +113,7 @@ const User_items = () => {
               <div>
                 {/* <!-- Filter --> */}
                 <Trending_categories_items 
-                  items={trendingCategoryData}
+                  items={listedItems}
                 />
               </div>
             </TabPanel>
@@ -125,15 +121,7 @@ const User_items = () => {
               <div>
                 {/* <!-- Filter --> */}
                 <Trending_categories_items 
-                  items={trendingCategoryData}
-                />
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div>
-                {/* <!-- Filter --> */}
-                <Trending_categories_items 
-                  items={trendingCategoryData}
+                  items={items}
                 />
               </div>
             </TabPanel>

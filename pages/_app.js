@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { MetaMaskProvider } from "metamask-react";
 import Meta from "../src/components/Meta";
 import UserContext from "../src/components/UserContext";
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -15,6 +15,9 @@ function MyApp({ Component, pageProps }) {
   const scrollRef = useRef({
     scrollPos: 0,
   });
+
+  const [chain, setChain] = useState(); //network version
+  const [account, setAccount] = useState();
 
   useEffect(() => {
     // if (pid === '/home/home_8') {
@@ -26,16 +29,16 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <Meta title="Home 1 || MotM | NFT Marketplace" />
+      <Meta title="MotM | NFT Marketplace" />
 
       <Provider store={store}>
         <ThemeProvider enableSystem={true} attribute="class">
           <MetaMaskProvider>
-            <UserContext.Provider value={{ scrollRef: scrollRef }}>
+            <UserContext.Provider value={{ scrollRef: scrollRef, chain, account }}>
               {pid === "/login" ? (
                 <Component {...pageProps} />
               ) : (
-                <Layout>
+                <Layout handleChainChange={(chainId) => { setChain(chainId) }} handleAccountChange={(account) => { setAccount(account) }}>
                   <Component {...pageProps} />
                 </Layout>
               )}

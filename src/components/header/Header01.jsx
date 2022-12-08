@@ -12,12 +12,12 @@ import {
 import { useEffect, useState } from "react";
 import OnboardingButton from "../EVM/Connector";
 import { useCallback } from "react";
-import { copyToClipboard, ellipsizeThis, toLocaleDecimal } from "../../common/utils";
+import { copyToClipboard, ellipsizeThis, runIfFunction, toLocaleDecimal } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import axios from 'axios';
 import _ from 'lodash';
 
-export default function Header01() {
+export default function Header01({handleAccountChange, handleChainChange}) {
   const [toggle, setToggle] = useState(false);
   const [isCollapse, setCollapse] = useState(null);
   const [account, setAccount] = useState("");
@@ -393,7 +393,8 @@ export default function Header01() {
 
   const onAccountChanged = useCallback((newAccount) => {
     setAccount(newAccount);
-  }, []);
+    runIfFunction(handleAccountChange, newAccount);
+  }, [handleAccountChange]);
 
   useEffect(() => {
     const getUsdcBalance = async() => {
@@ -409,17 +410,23 @@ export default function Header01() {
       };
 
       let chainConfig = _.find(ChainConfigs, {id: Number(window.ethereum.networkVersion)});
-        
-      let res = await axios.request(options);
-      let tokens = res.data;
-      let usdcToken = tokens.filter(x => x.token_address.toLowerCase() == chainConfig.crossChainToken.toLowerCase())[0];
-
-      let balance = 0;
-      if(usdcToken) {
-          balance = parseInt(usdcToken.balance) / Math.pow(10, usdcToken.decimals);
-      }
       
-      setUsdcBalance(balance);
+      try {
+        let res = await axios.request(options);
+        let tokens = res.data;
+        let usdcToken = tokens.filter(x => x.token_address.toLowerCase() == chainConfig.crossChainToken.toLowerCase())[0];
+  
+        let balance = 0;
+        if(usdcToken) {
+            balance = parseInt(usdcToken.balance) / Math.pow(10, usdcToken.decimals);
+        }
+        
+        setUsdcBalance(balance);
+      }
+
+      catch (e) {
+        console.log(e);
+      }
     }
 
     getUsdcBalance();
@@ -627,7 +634,7 @@ export default function Header01() {
             <div className="ml-8 hidden items-center lg:flex xl:ml-12">
               <OnboardingButton
                 className={`js-wallet border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] ${account? 'hidden': ''}`}
-                handleChainChange={(chainId) => { console.log(chainId) }}
+                handleChainChange={(chainId) => { runIfFunction(handleChainChange, chainId) }}
                 handleNewAccount={onAccountChanged}
                 onFinishLoading={() => {}}
               >

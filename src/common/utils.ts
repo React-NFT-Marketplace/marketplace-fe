@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { ChainConfigs } from '../components/EVM';
 
 export function sleep(ms: number) {
     return new Promise((resolve, reject) => {
@@ -120,10 +121,6 @@ export const getWsUrl = () => {
     return process.env.REACT_APP_WS_URL!;
 }
 
-export const getChainLogo = (assetFile: string) => {
-    return `/assets/chain/${assetFile}.png`;
-}
-
 export const truncateStr = (fullStr: string, strLen: number, separator='..') => {
     if (fullStr.length <= strLen) return fullStr;
 
@@ -159,4 +156,22 @@ export const uppercase = (text: string) => {
         .split(' ')
         .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
         .join(' ');
+}
+
+export const getChainIcon = (chainId: number) => {
+    let image = "";
+
+    switch(chainId) {
+        case ChainConfigs.AVAX_TEST.id:
+            image = "avax";
+            break;
+        case ChainConfigs.BSC_TEST.id:
+            image = "bsc";
+            break;
+        case ChainConfigs.MUMBAI.id:
+            image = "polygon";
+            break;
+    }
+
+    return `/images/chains/${image}.png`;
 }

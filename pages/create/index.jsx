@@ -44,6 +44,11 @@ const Create = () => {
 
     setIsMinting(true);
 
+    if(!window.ethereum) {
+      alert('Metamask not found');
+      return;
+    }
+
     try {
       let caller = new ContractCall();
       await caller.mint(toChainId, name, desc, file);

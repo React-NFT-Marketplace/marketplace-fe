@@ -12,7 +12,7 @@ import { getBase64, getBaseUrl, ucFirst, uppercase } from '../../../common/utils
 import { ChainConfig } from '../ChainConfigs/types';
 // import { BSC_TEST, POLYGON_TEST, BSC, POLYGON } from '../../../src/components/EVM/ChainConfigs';
 import { AxelarQueryAPI, Environment, EvmChain, GasToken } from '@axelar-network/axelarjs-sdk';
-import { Transaction } from './types';
+import { ListedToken, Transaction } from './types';
 import { requestSwitchChain } from '../Switcher';
 const isTestnet = process.env.REACT_APP_CHAIN_ENV === "testnet";
 // assign chain info based on env
@@ -120,32 +120,6 @@ export default class ContractCall {
         return new Contract(chain.nftMarketplace!, NFTMarketplace.abi, this.provider.getSigner());
     }
 
-    saveActionLog = async(toChain: number, tokenId: number, tx: string, action: string) => {
-        let data = JSON.stringify({
-            "toChain": toChain,
-            "fromChain": window.ethereum!.networkVersion,
-            "tokenId": tokenId,
-            "address": window.ethereum!.selectedAddress,
-            "tx": tx
-        });
-
-        // action = listNft | delistNft | buyNft
-        axios({
-            method: "POST",
-            url: `https://api.onenft.shop/${action}`,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data
-        })
-            .then(function (response: any) {
-                console.log(JSON.stringify(response.data));
-            })
-            .catch(function (error: any) {
-                console.log(error);
-            });
-    }
-
     callList = async (tokenId: number, price: number) => {
         if(!window.ethereum) {
             return;
@@ -194,8 +168,6 @@ export default class ContractCall {
         console.log(receipt);
         const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
         const txUrl = `${fromChain.blockExplorerUrl}/tx/${txHash}`;
-
-        await this.saveActionLog(fromChain.id, tokenId, txUrl, 'listNft');
     }
 
     callDelist = async (tokenId: number) => {
@@ -225,8 +197,6 @@ export default class ContractCall {
         console.log(receipt);
         const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
         const txUrl = `${fromChain.blockExplorerUrl}/tx/${txHash}`;
-
-        await this.saveActionLog(fromChain.id, tokenId, txUrl, 'delistNft');
     }
 
     callBuy = async (
@@ -272,8 +242,6 @@ export default class ContractCall {
 
         const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
         const txUrl = `${fromChain.blockExplorerUrl}/tx/${txHash}`;
-
-        await this.saveActionLog(fromChain.id, tokenId, txUrl, 'buyNft');
     }
 
     // cross chain stuff
@@ -301,7 +269,16 @@ export default class ContractCall {
             return;
         }
 
-        let { data: gasFee } = await axios.get(`https://api.onenft.shop/estimateGas/${fromChain.id}/${toChain.id}`);
+        const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
+
+        // Calculate how much gas to pay to Axelar to execute the transaction at the destination chain
+        const gasFee = await api.estimateGasFee(
+            fromChain.evmChain!,
+            toChain.evmChain!,
+            fromChain.gasToken!,
+            1000000,
+            2
+        );
 
         // hard code to one day from now
         const deadline = Math.round(Date.now() / 1000 + (7 * 24 * 60 * 60));
@@ -342,8 +319,6 @@ export default class ContractCall {
         });
         onSent(receipt.transactionHash); */
         const txUrl  = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
-
-        await this.saveActionLog(toChain.id, tokenId, txUrl, 'listNft');
     }
 
     // cross chain delist
@@ -371,7 +346,16 @@ export default class ContractCall {
             return;
         }
 
-        let { data: gasFee } = await axios.get(`https://api.onenft.shop/estimateGas/${fromChain.id}/${toChain.id}`);
+        const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
+
+        // Calculate how much gas to pay to Axelar to execute the transaction at the destination chain
+        const gasFee = await api.estimateGasFee(
+            fromChain.evmChain!,
+            toChain.evmChain!,
+            fromChain.gasToken!,
+            1000000,
+            2
+        );
 
         const sourceContract = this.getMessageSenderContract(fromChain);
         const destContract = this.getMessageReceiverContract(toChain);
@@ -388,8 +372,6 @@ export default class ContractCall {
             .then((tx: any) => tx.wait());
 
         const txUrl  = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
-
-        await this.saveActionLog(toChain.id, tokenId, txUrl, 'delistNft');
     }
 
     crossChainBuy = async (
@@ -420,7 +402,16 @@ export default class ContractCall {
             return;
         }
 
-        let { data: gasFee } = await axios.get(`https://api.onenft.shop/estimateGas/${fromChain.id}/${toChain.id}`);
+        const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
+
+        // Calculate how much gas to pay to Axelar to execute the transaction at the destination chain
+        const gasFee = await api.estimateGasFee(
+            fromChain.evmChain!,
+            toChain.evmChain!,
+            fromChain.gasToken!,
+            1000000,
+            2
+        );
 
         const srcGatewayContract = this.getGatewayContract(fromChain);
         const sourceContract = this.getMessageSenderContract(fromChain);
@@ -460,8 +451,6 @@ export default class ContractCall {
         onSent(receipt.transactionHash); */
 
         const txUrl  = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
-
-        await this.saveActionLog(toChain.id, tokenId, txUrl, 'buyNft');
     }
 
     mint = async (toChainId: number, name: string, description: string, imageBlob: Blob) => {
@@ -522,7 +511,7 @@ export default class ContractCall {
             });
 
             const nftContract = this.oneNFT;
-            const receipt = await nftContract.mint(`https://api.onenft.shop/metadata/${mintData.hash}`).then((tx: any) => tx.wait());
+            const receipt = await nftContract.mint(mintData.tokenURI).then((tx: any) => tx.wait());
 
             const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
             mintData.tx = `${currChain!.blockExplorerUrl}/tx/${txHash}`;
@@ -531,8 +520,6 @@ export default class ContractCall {
         else {
             // cross chain mint
             // might not work yet
-            let gasFee = await fetch(`https://api.onenft.shop/estimateGas/${mintData.fromChain}/${mintData.toChain}`);
-            let gasFeeJson = await gasFee.json();
 
             const fromChain = _.find(ChainConfigs, {
                 id: Number(mintData.fromChain)
@@ -540,6 +527,18 @@ export default class ContractCall {
             const toChain = _.find(ChainConfigs, {
                 id: Number(mintData.toChain)
             });
+            
+            const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
+
+            // Calculate how much gas to pay to Axelar to execute the transaction at the destination chain
+            const gasFee = await api.estimateGasFee(
+                fromChain!.evmChain!,
+                toChain!.evmChain!,
+                fromChain!.gasToken!,
+                1000000,
+                2
+            );
+
             console.log(`Cross chain tx ${fromChain!.name} => ${toChain!.name}`);
 
             const crossMarketplaceContract = new ethers.Contract(
@@ -551,42 +550,22 @@ export default class ContractCall {
             const receipt = await crossMarketplaceContract.crossChainMint(
                     uppercase(toChain!.evmChain!),
                     toChain!.messageReceiver,
-                    `https://api.onenft.shop/metadata/${mintData.hash}`,
+                    mintData.tokenURI,
                     {
-                        value: BigInt(gasFeeJson)
+                        value: BigInt(gasFee)
                     },
                 )
                 .then((tx: any) => tx.wait());;
 
             mintData.tx = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
         }
+    }
 
-        // done at this point
-        // send data to db
-        const data = JSON.stringify({
-            "toChain": Number(mintData.toChain),
-            "fromChain": Number(mintData.fromChain),
-            "hash": mintData.hash,
-            "name": mintData.name,
-            "address": mintData.creator,
-            "image": mintData.tokenURI,
-            "description": mintData.description,
-            "tx": mintData.tx,
+    getAllNFTs = async(): Promise<ListedToken[]> => {
+        let data: ListedToken[] = await this.NFTMarketplace.getAllListedNFTs();
+        data = _.filter(data, (d: ListedToken) => {
+            return (d.tokenId).toString() != "0";
         });
-
-        try {
-            let res = await axios({
-                method: 'post',
-                url: 'https://api.onenft.shop/mint',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: data
-            });
-        }
-
-        catch {
-            console.error(`Save metadata failed`);
-        }
+        return data;
     }
 }
