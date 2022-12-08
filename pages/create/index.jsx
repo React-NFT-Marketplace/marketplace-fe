@@ -9,7 +9,7 @@ import {
 import { FileUploader } from "react-drag-drop-files";
 import Proparties_modal from "../../src/components/modal/proparties_modal";
 import { useDispatch } from "react-redux";
-import { showPropatiesModal } from "../../redux/counterSlice";
+import { showPropertiesModal } from "../../redux/counterSlice";
 import Meta from "../../src/components/Meta";
 import ContractCall from '../../src/components/EVM/ContractCall';
 

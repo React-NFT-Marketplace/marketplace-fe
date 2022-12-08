@@ -147,7 +147,7 @@ export default function Header01() {
       {
         id: uuidv4(),
         name: "User",
-        path: "/user/avatar_6",
+        path: "/user",
       },
       {
         id: uuidv4(),
@@ -484,7 +484,7 @@ export default function Header01() {
                 </li>
 
                 {/* page */}
-                <li className="js-nav-dropdown group relative">
+                {/* <li className="js-nav-dropdown group relative">
                   <button className="dropdown-toggle text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5 w-full">
                     <span
                       className={
@@ -532,7 +532,7 @@ export default function Header01() {
                       </li>
                     ))}
                   </ul>
-                </li>
+                </li> */}
 
                 {/* explore */}
                 <li className="group">
@@ -554,7 +554,7 @@ export default function Header01() {
                 </li>
 
                 {/* resource */}
-                <li className="js-nav-dropdown group relative">
+                {/* <li className="js-nav-dropdown group relative">
                   <button className="dropdown-toggle text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5 w-full">
                     <span
                       className={
@@ -600,7 +600,7 @@ export default function Header01() {
                       </li>
                     ))}
                   </ul>
-                </li>
+                </li> */}
 
                 {/* create */}
                 <li className="group">
@@ -690,7 +690,7 @@ export default function Header01() {
                       </span>
                     </div>
                   </div>
-                  {/* <Link href="/user/avatar_6">
+                  <Link href="/user">
                     <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -707,7 +707,7 @@ export default function Header01() {
                       </span>
                     </a>
                   </Link>
-                  <Link href="/profile/user_avatar">
+                  {/* <Link href="/profile/user_avatar">
                     <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

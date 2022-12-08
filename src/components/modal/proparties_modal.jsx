@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { closePropatiesModal } from "../../../redux/counterSlice";
+import { closePropertiesModal } from "../../../redux/counterSlice";
 
 const Proparties_modal = () => {
   const { propartiesModalValue } = useSelector((state) => state.counter);
@@ -22,7 +22,7 @@ const Proparties_modal = () => {
               <button
                 type="button"
                 className="btn-close"
-                onClick={() => dispatch(closePropatiesModal())}
+                onClick={() => dispatch(closePropertiesModal())}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

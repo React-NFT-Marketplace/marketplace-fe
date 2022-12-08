@@ -83,7 +83,7 @@ const Collection = () => {
 										</h2>
 										<div className="mb-8">
 											<span className="text-jacarta-400 text-sm font-bold">Created by </span>
-											<Link href="/user/avatar_6">
+											<Link href="/user">
 												<a className="text-accent text-sm font-bold">{creator}</a>
 											</Link>
 										</div>

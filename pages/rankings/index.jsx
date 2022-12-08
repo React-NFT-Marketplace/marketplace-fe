@@ -5,11 +5,11 @@ import Image from 'next/image';
 import Recently_added_dropdown from '../../src/components/dropdown/recently_added_dropdown';
 import Head from 'next/head';
 import Meta from '../../src/components/Meta';
-import { collectRenkingData } from '../../redux/counterSlice';
+import { collectRankingData } from '../../redux/counterSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Index = () => {
-	const { filteredRenkingData } = useSelector((state) => state.counter);
+	const { filteredRankingData } = useSelector((state) => state.counter);
 	const dispatch = useDispatch();
 
 	const categoryText = [
@@ -92,7 +92,7 @@ const Index = () => {
 	];
 
 	useEffect(() => {
-		dispatch(collectRenkingData(rankings_data));
+		dispatch(collectRankingData(rankings_data));
 	}, [dispatch]);
 
 	return (
@@ -173,7 +173,7 @@ const Index = () => {
 									</span>
 								</div>
 							</div>
-							{filteredRenkingData.slice(0, 7).map((item) => {
+							{filteredRankingData.slice(0, 7).map((item) => {
 								const {
 									id,
 									image,

@@ -8,8 +8,8 @@ const initialState = {
   sortedtrendingCategoryItemData: [],
   collectiondata: [],
   sortedCollectionData: [],
-  renkingData: [],
-  filteredRenkingData: [],
+  rankingData: [],
+  filteredRankingData: [],
   walletModal: false,
   bidsModal: false,
   buyModal: false,
@@ -55,17 +55,17 @@ export const counterSlice = createSlice({
     buyModalHide: (state) => {
       state.buyModal = false;
     },
-    showPropatiesModal: (state) => {
+    showPropertiesModal: (state) => {
       state.propartiesModalValue = true;
     },
-    closePropatiesModal: (state) => {
+    closePropertiesModal: (state) => {
       state.propartiesModalValue = false;
     },
     updateTrendingCategoryItemData: (state, action) => {
       state.trendingCategoryItemData = action.payload;
       state.sortedtrendingCategoryItemData = action.payload;
     },
-    updatetrendingCategorySorText: (state, action) => {
+    updateTrendingCategorySorText: (state, action) => {
       const sortText = action.payload;
       if (sortText === "Price: Low to High") {
         state.sortedtrendingCategoryItemData =
@@ -130,35 +130,35 @@ export const counterSlice = createSlice({
       }
       // state.sortedCollectionData = state.collectiondata;
     },
-    collectRenkingData: (state, action) => {
-      state.renkingData = action.payload;
-      state.filteredRenkingData = action.payload;
+    collectRankingData: (state, action) => {
+      state.rankingData = action.payload;
+      state.filteredRankingData = action.payload;
     },
-    updateRenkingData: (state, action) => {
+    updateRankingData: (state, action) => {
       const text = action.payload;
-      let tempItem = state.renkingData.filter((item) => item.category === text);
+      let tempItem = state.rankingData.filter((item) => item.category === text);
       if (text === "All") {
-        tempItem = state.renkingData;
+        tempItem = state.rankingData;
       }
-      state.filteredRenkingData = tempItem;
+      state.filteredRankingData = tempItem;
     },
-    updateRenkingDataByBlockchain: (state, action) => {
+    updateRankingDataByBlockchain: (state, action) => {
       const text = action.payload;
-      let tempItem = state.renkingData.filter(
+      let tempItem = state.rankingData.filter(
         (item) => item.blockchain === text
       );
       if (text === "All") {
-        tempItem = state.renkingData;
+        tempItem = state.rankingData;
       }
-      state.filteredRenkingData = tempItem;
+      state.filteredRankingData = tempItem;
     },
-    updateRenkingDataByPostdate: (state, action) => {
+    updateRankingDataByPostdate: (state, action) => {
       const text = action.payload;
-      let tempItem = state.renkingData.filter((item) => item.postDate === text);
+      let tempItem = state.rankingData.filter((item) => item.postDate === text);
       if (text === "All Time" || text === "Last Year") {
-        tempItem = state.renkingData;
+        tempItem = state.rankingData;
       }
-      state.filteredRenkingData = tempItem;
+      state.filteredRankingData = tempItem;
     },
   },
 });
@@ -175,17 +175,17 @@ export const {
   bidsModalHide,
   buyModalShow,
   buyModalHide,
-  showPropatiesModal,
-  closePropatiesModal,
-  updatetrendingCategorySorText,
+  showPropertiesModal,
+  closePropertiesModal,
+  updateTrendingCategorySorText,
   updateTrendingCategoryItemData,
   updateTrendingCategoryItemByInput,
   collectCollectionData,
   updateCollectionData,
-  collectRenkingData,
-  updateRenkingData,
-  updateRenkingDataByBlockchain,
-  updateRenkingDataByPostdate,
+  collectRankingData,
+  updateRankingData,
+  updateRankingDataByBlockchain,
+  updateRankingDataByPostdate,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

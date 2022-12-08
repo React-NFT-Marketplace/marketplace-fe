@@ -15,7 +15,9 @@ const Tranding_category = () => {
 				/>
 
 				{/* trending categories */}
-				<Trending_categories_items />
+				<Trending_categories_items 
+					items={trendingCategoryData.filter((x, index) => index < 8)}
+				/>
 			</div>
 		</section>
 	);

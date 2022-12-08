@@ -12,27 +12,12 @@ const footer = () => {
             <div className="col-span-3 md:col-span-4">
               {/* <!-- Logo --> */}
               <Link href="#">
-                <a className="mb-6 inline-block">
-                  <img
-                    src="/images/logo.png"
-                    className="max-h-7 dark:hidden"
-                    alt="MotM | NFT Marketplace"
-                  />
-                </a>
-              </Link>
-
-              <Link href="#">
                 <a className=" mb-6 inline-block">
-                  <img
-                    src="/images/logo_white.png"
-                    className="hidden max-h-7 dark:block mb-6"
-                    alt="MotM | NFT Marketplace"
-                  />
+                  <h1 className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 dark:text-white w-full text-lg">MotM</h1>
                 </a>
               </Link>
               <p className="dark:text-jacarta-300 mb-12">
-                Create, sell and collect truly rare digital artworks. Powered by
-                blockchain technology.
+                Create, sell and collect truly rare digital artworks. Powered by Axelar.
               </p>
 
               {/* <!-- Socials --> */}
@@ -56,7 +41,7 @@ const footer = () => {
               </div>
             </div>
 
-            {footerMenuList.map((single) => (
+            {/* {footerMenuList.map((single) => (
               <div
                 className={`col-span-full sm:col-span-3 md:col-span-2 ${single.diffClass}`}
                 key={single.id}
@@ -79,7 +64,7 @@ const footer = () => {
                   })}
                 </ul>
               </div>
-            ))}
+            ))} */}
           </div>
 
           <div className="flex flex-col items-center justify-between space-y-2 py-8 sm:flex-row sm:space-y-0">

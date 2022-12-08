@@ -75,13 +75,13 @@ const Explore_collection_item = ({ itemFor }) => {
 
 							<div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
 								<div className="flex flex-wrap items-center">
-									<Link href="/user/avatar_6">
+									<Link href="/user">
 										<a className="mr-2 shrink-0">
 											<img src={userImage} alt="owner" className="h-5 w-5 rounded-full" />
 										</a>
 									</Link>
 									<span className="dark:text-jacarta-400 mr-1">by</span>
-									<Link href="/user/avatar_6">
+									<Link href="/user">
 										<a className="text-accent">
 											<span>{userName}</span>
 										</a>

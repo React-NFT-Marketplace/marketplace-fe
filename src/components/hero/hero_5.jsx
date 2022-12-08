@@ -100,7 +100,7 @@ const Hero_5 = () => {
 													</figure>
 													<div className="p-6">
 														<div className="flex">
-															<Link href="/user/avatar_6">
+															<Link href="/user">
 																<a className="shrink-0">
 																	<img
 																		src={authorImage}
@@ -117,7 +117,7 @@ const Hero_5 = () => {
 																		</span>
 																	</a>
 																</Link>
-																<Link href="/user/avatar_6">
+																<Link href="/user">
 																	<a className="text-2xs text-accent">{authorName}</a>
 																</Link>
 															</div>
@@ -154,7 +154,7 @@ const Hero_5 = () => {
 																	</figure>
 																	<div className="p-6">
 																		<div className="flex">
-																			<Link href="/user/avatar_6">
+																			<Link href="/user">
 																				<a className="shrink-0">
 																					<img
 																						src={authorImage}
@@ -171,7 +171,7 @@ const Hero_5 = () => {
 																						</span>
 																					</a>
 																				</Link>
-																				<Link href="/user/avatar_6">
+																				<Link href="/user">
 																					<a className="text-2xs text-accent">{authorName}</a>
 																				</Link>
 																			</div>

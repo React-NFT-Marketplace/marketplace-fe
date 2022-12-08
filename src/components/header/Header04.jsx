@@ -150,7 +150,7 @@ export default function Header04() {
       {
         id: uuidv4(),
         name: "User",
-        path: "/user/avatar_6",
+        path: "/user",
       },
       {
         id: uuidv4(),

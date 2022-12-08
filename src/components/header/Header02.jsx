@@ -153,7 +153,7 @@ export default function Header02() {
       {
         id: uuidv4(),
         name: "User",
-        path: "/user/avatar_6",
+        path: "/user",
       },
       {
         id: uuidv4(),
@@ -711,7 +711,7 @@ export default function Header02() {
                       </span>
                     </div>
                   </div>
-                  <Link href="/user/avatar_6">
+                  <Link href="/user">
                     <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

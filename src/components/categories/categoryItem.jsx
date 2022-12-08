@@ -5,18 +5,13 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import Likes from "../likes";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
-import { useDispatch, useSelector } from "react-redux";
 import { buyModalShow } from "../../../redux/counterSlice";
 
-const CategoryItem = () => {
-  const { sortedtrendingCategoryItemData } = useSelector(
-    (state) => state.counter
-  );
-  const dispatch = useDispatch();
+const CategoryItem = ({items}) => {
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-      {sortedtrendingCategoryItemData.map((item) => {
+      {items.map((item) => {
         const {
           id,
           image,

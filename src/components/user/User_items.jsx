@@ -4,39 +4,17 @@ import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
 import Feature_collections_data from "../../../data/Feature_collections_data";
 import Trending_categories_items from "../categories/trending_categories_items";
+import { trendingCategoryData } from "../../../data/categories_data";
 
 import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
 
 const User_items = () => {
   const [itemActive, setItemActive] = useState(1);
-  const tabItem = [
-    {
-      id: 1,
-      text: "on sale",
-      icon: "on-sale",
-    },
-    {
-      id: 2,
-      text: "owned",
-      icon: "owned",
-    },
-    {
-      id: 3,
-      text: "created(20)",
-      icon: "created",
-    },
-    {
-      id: 4,
-      text: "collections",
-      icon: "listing",
-    },
-    {
-      id: 5,
-      text: "Activity",
-      icon: "activity",
-    },
-  ];
+  const [itemsOnSale, setItemsOnSale] = useState(0);
+  const [itemsCreated, setItemsCreated] = useState(0);
+  const [itemsOwned, setItemsOwned] = useState(0);
+
   return (
     <>
       <section className="relative py-24">
@@ -53,60 +31,116 @@ const User_items = () => {
           {/* <!-- Tabs Nav --> */}
           <Tabs className="tabs">
             <TabList className="nav nav-tabs scrollbar-custom mb-12 flex items-center justify-start overflow-x-auto overflow-y-hidden border-b border-jacarta-100 pb-px dark:border-jacarta-600 md:justify-center">
-              {tabItem.map(({ id, text, icon }) => {
-                return (
-                  <Tab
-                    className="nav-item"
-                    role="presentation"
-                    key={id}
-                    onClick={() => setItemActive(id)}
-                  >
-                    <button
-                      className={
-                        itemActive === id
-                          ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
-                          : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
-                      }
-                    >
-                      <svg className="icon mr-1 h-5 w-5 fill-current">
-                        <use xlinkHref={`/icons.svg#icon-${icon}`}></use>
-                      </svg>
-                      <span className="font-display text-base font-medium">
-                        {text}
-                      </span>
-                    </button>
-                  </Tab>
-                );
-              })}
+              <Tab
+                className="nav-item"
+                role="presentation"
+                onClick={() => setItemActive(1)}
+              >
+                <button
+                  className={
+                    itemActive === 1
+                      ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
+                      : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
+                  }
+                >
+                  <svg className="icon mr-1 h-5 w-5 fill-current">
+                    <use xlinkHref={`/icons.svg#icon-on-sale`}></use>
+                  </svg>
+                  <span className="font-display text-base font-medium">
+                    On Sale ({itemsOnSale})
+                  </span>
+                </button>
+              </Tab>
+              <Tab
+                className="nav-item"
+                role="presentation"
+                onClick={() => setItemActive(2)}
+              >
+                <button
+                  className={
+                    itemActive === 2
+                      ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
+                      : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
+                  }
+                >
+                  <svg className="icon mr-1 h-5 w-5 fill-current">
+                    <use xlinkHref={`/icons.svg#icon-owned`}></use>
+                  </svg>
+                  <span className="font-display text-base font-medium">
+                    Owned ({itemsOwned})
+                  </span>
+                </button>
+              </Tab>
+              <Tab
+                className="nav-item"
+                role="presentation"
+                onClick={() => setItemActive(3)}
+              >
+                <button
+                  className={
+                    itemActive === 3
+                      ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
+                      : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
+                  }
+                >
+                  <svg className="icon mr-1 h-5 w-5 fill-current">
+                    <use xlinkHref={`/icons.svg#icon-created`}></use>
+                  </svg>
+                  <span className="font-display text-base font-medium">
+                    Created ({itemsCreated})
+                  </span>
+                </button>
+              </Tab>
+              <Tab
+                className="nav-item"
+                role="presentation"
+                onClick={() => setItemActive(4)}
+              >
+                <button
+                  className={
+                    itemActive === 4
+                      ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
+                      : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
+                  }
+                >
+                  <svg className="icon mr-1 h-5 w-5 fill-current">
+                    <use xlinkHref={`/icons.svg#icon-listing`}></use>
+                  </svg>
+                  <span className="font-display text-base font-medium">
+                    Collections
+                  </span>
+                </button>
+              </Tab>
             </TabList>
 
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items />
+                <Trending_categories_items 
+                  items={trendingCategoryData}
+                />
               </div>
             </TabPanel>
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items />
+                <Trending_categories_items 
+                  items={trendingCategoryData}
+                />
               </div>
             </TabPanel>
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items />
+                <Trending_categories_items 
+                  items={trendingCategoryData}
+                />
               </div>
             </TabPanel>
             <TabPanel>
               {/* <!-- Grid --> */}
               <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
                 <Explore_collection_item itemFor="userPage" />
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div>
-                <Activity_item />
               </div>
             </TabPanel>
           </Tabs>

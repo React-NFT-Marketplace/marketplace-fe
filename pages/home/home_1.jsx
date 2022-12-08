@@ -16,7 +16,6 @@ const Home_1 = () => {
 			<Bids />
 			<Top_collection />
 			<Tranding_category />
-			<NewseLatter />
 		</main>
 	);
 };

@@ -145,7 +145,7 @@ const Item = () => {
 										<div className="mb-8 flex flex-wrap">
 											<div className="mr-8 mb-4 flex">
 												<figure className="mr-4 shrink-0">
-													<Link href="/user/avatar_6">
+													<Link href="/user">
 														<a className="relative block">
 															<img
 																src={creatorImage}
@@ -170,7 +170,7 @@ const Item = () => {
 													<span className="text-jacarta-400 block text-sm dark:text-white">
 														Creator <strong>10% royalties</strong>
 													</span>
-													<Link href="/user/avatar_6">
+													<Link href="/user">
 														<a className="text-accent block">
 															<span className="text-sm font-bold">{creatorname}</span>
 														</a>
@@ -180,7 +180,7 @@ const Item = () => {
 
 											<div className="mb-4 flex">
 												<figure className="mr-4 shrink-0">
-													<Link href="/user/avatar_6">
+													<Link href="/user">
 														<a className="relative block">
 															<img
 																src={ownerImage}
@@ -205,7 +205,7 @@ const Item = () => {
 													<span className="text-jacarta-400 block text-sm dark:text-white">
 														Owned by
 													</span>
-													<Link href="/user/avatar_6">
+													<Link href="/user">
 														<a className="text-accent block">
 															<span className="text-sm font-bold">{ownerName}</span>
 														</a>
@@ -223,7 +223,7 @@ const Item = () => {
 														<span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
 															Highest bid by{' '}
 														</span>
-														<Link href="/user/avatar_6">
+														<Link href="/user">
 															<a className="text-accent text-sm font-bold">
 																0x695d2ef170ce69e794707eeef9497af2de25df82
 															</a>
