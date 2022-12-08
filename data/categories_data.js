@@ -1,4 +1,4 @@
-const tranding_category_filter = [
+const trending_category_filter = [
   {
     id: 0,
     text: "all",
@@ -686,4 +686,4 @@ const trendingCategoryData = [
   },
 ];
 
-export { tranding_category_filter, trendingCategoryData };
+export { trending_category_filter, trendingCategoryData };

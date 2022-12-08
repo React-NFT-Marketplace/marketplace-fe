@@ -4,7 +4,7 @@ import { trendingCategoryData } from '../../../data/categories_data';
 import { HeadLine } from '../component';
 import Trending_categories_items from './trending_categories_items';
 
-const Tranding_category = () => {
+const Trending_category = () => {
 	return (
 		<section className="py-24">
 			<div className="container">
@@ -23,4 +23,4 @@ const Tranding_category = () => {
 	);
 };
 
-export default Tranding_category;
+export default Trending_category;

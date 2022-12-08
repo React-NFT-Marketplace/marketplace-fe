@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
 import Feature_collections_data from "../../../data/Feature_collections_data";
-import Trending_categories_items from "../categories/trending_categories_items";
+import Trending_categories_items2 from "../categories/trending_categories_items2";
 import { trendingCategoryData } from "../../../data/categories_data";
 
 import "react-tabs/style/react-tabs.css";
@@ -112,7 +112,7 @@ const User_items = ({ items, listedItems }) => {
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items 
+                <Trending_categories_items2 
                   items={listedItems}
                 />
               </div>
@@ -120,7 +120,7 @@ const User_items = ({ items, listedItems }) => {
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items 
+                <Trending_categories_items2
                   items={items}
                 />
               </div>

@@ -279,7 +279,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
       {
         id: uuidv4(),
         name: "Trading Cards",
-        path: "/tranding-cards",
+        path: "/trending-cards",
         icon: (
           <svg
             xmlns="http://www.w3.org/2000/svg"

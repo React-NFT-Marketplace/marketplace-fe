@@ -282,7 +282,7 @@ export default function Header04() {
       {
         id: uuidv4(),
         name: "Trading Cards",
-        path: "/tranding-cards",
+        path: "/trending-cards",
         icon: (
           <svg
             xmlns="http://www.w3.org/2000/svg"

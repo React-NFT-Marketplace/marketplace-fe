@@ -3,7 +3,7 @@ import {
 	Hero,
 	Bids,
 	Top_collection,
-	Tranding_category,
+	Trending_category,
 	NewseLatter,
 } from '../../src/components/component';
 import Meta from '../../src/components/Meta';
@@ -15,7 +15,7 @@ const Home_1 = () => {
 			<Hero />
 			<Bids />
 			<Top_collection />
-			<Tranding_category />
+			<Trending_category />
 		</main>
 	);
 };

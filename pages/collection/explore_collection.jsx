@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import { tranding_category_filter } from "../../data/categories_data";
+import { trending_category_filter } from "../../data/categories_data";
 import Link from "next/link";
 import { HeadLine } from "../../src/components/component";
 import Feature_collections_data from "../../data/Feature_collections_data";
@@ -53,7 +53,7 @@ const Explore_collection = () => {
           {/* <!-- Filter --> */}
           <div className="mb-8 flex flex-wrap items-start justify-between">
             <ul className="flex flex-wrap items-center">
-              {tranding_category_filter.map(({ id, svg, text }) => {
+              {trending_category_filter.map(({ id, svg, text }) => {
                 if (text === "all") {
                   return (
                     <li

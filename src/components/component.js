@@ -1,7 +1,7 @@
 import Hero from "./hero/hero.jsx";
 import Bids from "./bids/bids.jsx";
 import Top_collection from "./collectrions/top_collection.jsx";
-import Tranding_category from "./categories/tranding_categories.jsx";
+import Trending_category from "./categories/trending_categories.jsx";
 import HeadLine from "./headLine.jsx";
 import NewseLatter from "./blog/newseLatter.jsx";
 import Auctions_categories from "./categories/Auctions_categories.jsx";
@@ -15,7 +15,7 @@ export {
   Hero,
   Bids,
   Top_collection,
-  Tranding_category,
+  Trending_category,
   HeadLine,
   NewseLatter,
   Auctions_categories,
