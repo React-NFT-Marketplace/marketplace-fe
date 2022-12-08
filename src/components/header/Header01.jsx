@@ -14,6 +14,7 @@ import OnboardingButton from "../EVM/Connector";
 import { useCallback } from "react";
 import { copyToClipboard, ellipsizeThis, runIfFunction, toLocaleDecimal } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
+import ContractCall from "../EVM/ContractCall";
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -401,29 +402,12 @@ export default function Header01({handleAccountChange, handleChainChange}) {
       if(!account) {
         return;
       }
-
-      const options = {
-        method: 'GET',
-        url: `https://deep-index.moralis.io/api/v2/${account}/erc20`,
-        params: {chain: window.ethereum.chainId},
-        headers: {accept: 'application/json', 'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY}
-      };
-
-      let chainConfig = _.find(ChainConfigs, {id: Number(window.ethereum.networkVersion)});
-      
       try {
-        let res = await axios.request(options);
-        let tokens = res.data;
-        let usdcToken = tokens.filter(x => x.token_address.toLowerCase() == chainConfig.crossChainToken.toLowerCase())[0];
-  
-        let balance = 0;
-        if(usdcToken) {
-            balance = parseInt(usdcToken.balance) / Math.pow(10, usdcToken.decimals);
-        }
-        
-        setUsdcBalance(balance);
+          let caller = new ContractCall();
+          const balance = await caller.getWalletUSDCBal()
+          console.log(balance);
+          setUsdcBalance(balance);
       }
-
       catch (e) {
         console.log(e);
       }
@@ -666,7 +650,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
                 </button>
                 <div className="dropdown-menu dark:bg-jacarta-800 group-dropdown-hover:opacity-100 group-dropdown-hover:visible !-right-4 !top-[85%] !left-auto z-10 min-w-[14rem] whitespace-nowrap rounded-xl bg-white transition-all will-change-transform before:absolute before:-top-3 before:h-3 before:w-full lg:absolute lg:grid lg:!translate-y-4 lg:py-4 lg:px-2 lg:shadow-2xl hidden lg:invisible lg:opacity-0">
                   <div>
-                    <button 
+                    <button
                       className="js-copy-clipboard font-display text-jacarta-700 my-4 flex select-none items-center whitespace-nowrap px-5 leading-none dark:text-white"
                       onClick={() => { copyToClipboard(account); }}
                     >
@@ -680,7 +664,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
                         <path fill="none" d="M0 0h24v24H0z" />
                         <path d="M7 7V3a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-4v3.993c0 .556-.449 1.007-1.007 1.007H3.007A1.006 1.006 0 0 1 2 20.993l.003-12.986C2.003 7.451 2.452 7 3.01 7H7zm2 0h6.993C16.549 7 17 7.449 17 8.007V15h3V4H9v3zM4.003 9L4 20h11V9H4.003z" />
                       </svg>
-                      
+
                       <span>{ellipsizeThis(account, 10, 0)}</span>
                     </button>
                   </div>

@@ -6,6 +6,7 @@ import OneNFT from '../../../ABI/OneNFT.json';
 import NFTMarketplace from '../../../ABI/NFTMarketplaceV2.json';
 import IAxelarGateway from '../../../ABI/IAxelarGateway.json';
 import IERC20 from '../../../ABI/IERC20.json';
+import aUSDC from '../../../ABI/aUSDC.json';
 import _ from 'lodash';
 import axios from 'axios';
 import { getBase64, getBaseUrl, ucFirst, uppercase } from '../../../common/utils';
@@ -30,6 +31,7 @@ export default class ContractCall {
     NFTMarketplace: Contract;
     IAxelarGateway: Contract;
     IERC20: Contract;
+    aUSDC: Contract;
 
     constructor() {
         // get chain nft contract address
@@ -44,6 +46,7 @@ export default class ContractCall {
         this.NFTMarketplace = new ethers.Contract(chain!.nftMarketplace!, NFTMarketplace.abi, this.signer);
         this.IAxelarGateway = new ethers.Contract(chain!.gateway!, IAxelarGateway.abi, this.signer);
         this.IERC20 = new ethers.Contract(chain!.crossChainToken!, IERC20.abi, this.signer);
+        this.aUSDC = new ethers.Contract(chain!.crossChainToken!, aUSDC.abi, this.signer);
     }
 
     getSignature = async (
@@ -103,7 +106,6 @@ export default class ContractCall {
         });
     } */
 
-
     getGatewayContract = (chain: ChainConfig) => {
         return new Contract(chain.gateway!, IAxelarGateway.abi, this.provider.getSigner());
     }
@@ -118,6 +120,17 @@ export default class ContractCall {
 
     getMarketplaceContract = (chain: ChainConfig) => {
         return new Contract(chain.nftMarketplace!, NFTMarketplace.abi, this.provider.getSigner());
+    }
+
+    getWalletUSDCBal = async () => {
+        const balance = await this.aUSDC.balanceOf(window.ethereum!.selectedAddress);
+        const tokenDecimal = 6;
+        // to align some token that are not 18 decimals (ecc, eifi)
+        let decimalPad = (18 - tokenDecimal);
+        decimalPad = (decimalPad == 0) ? 1 : Number(10) ** decimalPad;
+
+
+        return ethers.utils.formatEther(balance.mul(decimalPad));
     }
 
     callList = async (tokenId: number, price: number) => {
@@ -515,8 +528,8 @@ export default class ContractCall {
 
             const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
             mintData.tx = `${currChain!.blockExplorerUrl}/tx/${txHash}`;
-        } 
-        
+        }
+
         else {
             // cross chain mint
             // might not work yet
@@ -527,7 +540,7 @@ export default class ContractCall {
             const toChain = _.find(ChainConfigs, {
                 id: Number(mintData.toChain)
             });
-            
+
             const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
 
             // Calculate how much gas to pay to Axelar to execute the transaction at the destination chain
