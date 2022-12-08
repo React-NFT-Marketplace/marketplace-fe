@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { updateCollectionData } from '../../../redux/counterSlice';
 import { useDispatch } from 'react-redux';
+import { runIfFunction } from '../../common/utils';
 
-const Collection_dropdown = () => {
+const Collection_dropdown = ({ onSortChange }) => {
 	const dispatch = useDispatch();
-	const [dropdownItemActive, setDropdownItemActive] = useState(null);
+	const [dropdownItemActive, setDropdownItemActive] = useState(1);
 	const [dropdownShow, setDropdownShow] = useState(false);
+
+	useEffect(() => {
+		runIfFunction(onSortChange, dropdownItemActive);
+	}, [dropdownItemActive, onSortChange]);
 
 	const handleDropdown = () => {
 		window.addEventListener('click', (w) => {
@@ -24,15 +29,15 @@ const Collection_dropdown = () => {
 	const dropdownItemText = [
 		{
 			id: 1,
-			text: 'trending',
+			text: 'Trending',
 		},
 		{
 			id: 2,
-			text: 'top',
+			text: 'Top',
 		},
 		{
 			id: 3,
-			text: 'recent',
+			text: 'Recent',
 		},
 	];
 	return (
@@ -42,7 +47,7 @@ const Collection_dropdown = () => {
 					className="dark:bg-jacarta-700 dropdown-toggle border-jacarta-100 dark:border-jacarta-600 inline-flex w-48 items-center justify-between rounded-lg border bg-white py-2 px-3 text-sm dark:text-white"
 					onClick={handleDropdown}
 				>
-					<span className="font-display">Trending</span>
+					<span className="font-display">{dropdownItemText.filter(item => item.id == dropdownItemActive)[0].text}</span>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"

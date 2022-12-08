@@ -50,9 +50,11 @@ export const counterSlice = createSlice({
       state.bidsModal = false;
     },
     buyModalShow: (state) => {
+      document.querySelectorAll("body")[0].classList.add('modal-open');
       state.buyModal = true;
     },
     buyModalHide: (state) => {
+      document.querySelectorAll("body")[0].classList.remove('modal-open');
       state.buyModal = false;
     },
     showPropertiesModal: (state) => {

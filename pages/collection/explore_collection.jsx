@@ -52,62 +52,6 @@ const Explore_collection = () => {
 
           {/* <!-- Filter --> */}
           <div className="mb-8 flex flex-wrap items-start justify-between">
-            <ul className="flex flex-wrap items-center">
-              {trending_category_filter.map(({ id, svg, text }) => {
-                if (text === "all") {
-                  return (
-                    <li
-                      className="my-1 mr-2.5"
-                      key={id}
-                      onClick={() => {
-                        handleItemFilter(text);
-                        setFilterVal(id);
-                      }}
-                    >
-                      <button
-                        className={
-                          filterVal === id
-                            ? " group bg-accent font-display flex h-9 items-center justify-center rounded-lg px-4 text-sm font-semibold transition-colors border-transparent text-white capitalize"
-                            : "dark:border-jacarta-600 dark:bg-jacarta-900 dark:hover:bg-accent group hover:bg-accent border-jacarta-100 font-display text-jacarta-500 flex h-9 items-center rounded-lg border bg-white px-4 text-sm font-semibold transition-colors hover:border-transparent hover:text-white dark:text-white dark:hover:border-transparent dark:hover:text-white capitalize"
-                        }
-                      >
-                        {text}
-                      </button>
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li
-                      className="my-1 mr-2.5"
-                      key={id}
-                      onClick={() => {
-                        handleItemFilter(text);
-                        setFilterVal(id);
-                      }}
-                    >
-                      <button
-                        className={
-                          filterVal === id
-                            ? "dark:border-jacarta-600 bg-accent group border-jacarta-100 font-display flex h-9 items-center rounded-lg border px-4 text-sm font-semibold transition-colors border-transparent dark:border-transparent text-white"
-                            : "dark:border-jacarta-600 dark:bg-jacarta-900 dark:hover:bg-accent group hover:bg-accent border-jacarta-100 font-display text-jacarta-500 flex h-9 items-center rounded-lg border bg-white px-4 text-sm font-semibold transition-colors hover:border-transparent hover:text-white dark:text-white dark:hover:border-transparent dark:hover:text-white"
-                        }
-                      >
-                        <svg
-                          className={
-                            filterVal === id
-                              ? "icon mr-1 h-4 w-4 transition-colors fill-white"
-                              : "icon fill-jacarta-700 dark:fill-jacarta-100 mr-1 h-4 w-4 transition-colors group-hover:fill-white"
-                          }
-                        >
-                          <use xlinkHref={`/icons.svg#icon-${svg}`}></use>
-                        </svg>
-                        <span>{text}</span>
-                      </button>
-                    </li>
-                  );
-                }
-              })}
-            </ul>
             {/* dropdown */}
             <Collection_dropdown />
           </div>

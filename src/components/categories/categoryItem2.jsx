@@ -59,7 +59,7 @@ const CategoryItem2 = ({items}) => {
                   </a>
                 </Link>
 
-                <div className="absolute left-3 -bottom-3">
+                <div className="absolute bottom-3">
                   <div className="flex -space-x-2">
                     <Link href={`/item}`}>
                       <a>

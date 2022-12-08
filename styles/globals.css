@@ -6,7 +6,9 @@ html {
 @tailwind utilities;
 
 @layer base {
-	
+	#__next {
+		max-height: 100vh;
+	}
 	.light body {
 		background: #fff !important;
 		color: #000;
@@ -14,6 +16,11 @@ html {
 
 	.text-black {
 		color: rgba(0, 0, 0, 0.6);
+	}
+
+	body.modal-open {
+		max-height: 100vh;
+		overflow: hidden;
 	}
 }
 
