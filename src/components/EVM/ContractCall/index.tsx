@@ -516,17 +516,12 @@ export default class ContractCall {
         if (mintData.fromChain == mintData.toChain) {
             console.log(`Same chain tx`);
             // same chain mint
-            console.log(ChainConfigs);
 
             const currChain = _.find(ChainConfigs, {
                 id: Number(mintData.fromChain)
             });
 
-            console.log(currChain!.oneNFT);
-
             const nftContract = this.oneNFT;
-            console.log('here')
-
             const receipt = await nftContract.mint(`https://api.onenft.shop/metadata/${mintData.hash}`).then((tx: any) => tx.wait());
 
             const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;

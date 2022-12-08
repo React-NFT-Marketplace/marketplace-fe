@@ -432,23 +432,7 @@ export default function Header01() {
         <div className="flex items-center px-6 py-6 xl:px-24 ">
           <Link className="shrink-0" href="/">
             <a>
-              <div className="dark:hidden">
-                <Image
-                  src={Logo}
-                  height={28}
-                  width={130}
-                  alt="MotM | NFT Marketplace"
-                  className="max-h-7 h-auto "
-                />
-              </div>
-              <div className="hidden dark:block">
-                <Image
-                  src={WhiteLogo}
-                  height={28}
-                  width={130}
-                  alt="MotM | NFT Marketplace"
-                />
-              </div>
+              <h1 className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 dark:text-white lg:px-5 w-full text-lg">MotM</h1>
             </a>
           </Link>
           {/* End  logo */}
@@ -797,24 +781,7 @@ export default function Header01() {
         }`}
       >
         <div className="t-0 dark:bg-jacarta-800 fixed left-0 z-10 flex w-full items-center justify-between bg-white p-6 lg:hidden">
-          <div className="dark:hidden">
-            <Image
-              src={Logo}
-              height={28}
-              width={130}
-              alt="MotM | NFT Marketplace"
-              className="max-h-7 h-auto "
-            />
-          </div>
-
-          <div className="hidden dark:block">
-            <Image
-              src={WhiteLogo}
-              height={28}
-              width={130}
-              alt="MotM | NFT Marketplace"
-            />
-          </div>
+          <span>MotM</span>
 
           <button
             className="js-mobile-close border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent ml-2 flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15]"

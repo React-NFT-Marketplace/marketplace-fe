@@ -47,6 +47,10 @@ const Create = () => {
     try {
       let caller = new ContractCall();
       await caller.mint(toChainId, name, desc, file);
+      setDesc("");
+      setFile(null);
+      setName("");
+      setToChainId(null);
       alert('minted');
     }
 
@@ -157,6 +161,7 @@ const Create = () => {
                 className="dark:bg-jacarta-700 border-jacarta-100 hover:ring-accent/10 focus:ring-accent dark:border-jacarta-600 dark:placeholder:text-jacarta-300 w-full rounded-lg py-3 px-3 hover:ring-2 dark:text-white"
                 placeholder="Item name"
                 required
+                value={name}
                 onChange={(ev) => { setName(ev.target.value) }}
               />
             </div>
@@ -200,6 +205,7 @@ const Create = () => {
                 rows="4"
                 required
                 placeholder="Provide a detailed description of your item."
+                value={desc}
                 onChange={(ev) => { setDesc(ev.target.value) }}
               ></textarea>
             </div>
