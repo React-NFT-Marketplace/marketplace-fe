@@ -144,3 +144,19 @@ export const copyToClipboard = async (text: string) => {
 export const ucFirst = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export const getBase64 = async (file: Blob) => {
+    return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+export const uppercase = (text: string) => {
+    return text.toLowerCase()
+        .split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ');
+}

@@ -10,11 +10,18 @@ import {
   isParentPageActive,
 } from "../../../utils/daynamicNavigation";
 import { useEffect, useState } from "react";
-import WalletButton from "../wallet-btn/WalletButton";
+import OnboardingButton from "../EVM/Connector";
+import { useCallback } from "react";
+import { copyToClipboard, ellipsizeThis, toLocaleDecimal } from "../../common/utils";
+import { ChainConfigs } from "../EVM";
+import axios from 'axios';
+import _ from 'lodash';
 
 export default function Header01() {
   const [toggle, setToggle] = useState(false);
   const [isCollapse, setCollapse] = useState(null);
+  const [account, setAccount] = useState("");
+  const [usdcBalance, setUsdcBalance] = useState(0);
 
   // window resize
   useEffect(() => {
@@ -27,7 +34,7 @@ export default function Header01() {
 
   const route = useRouter();
   /* -------------------------------------------------------------------------- */
-  /*                            daynamic navigations                            */
+  /*                            dynamic navigations                             */
   /* -------------------------------------------------------------------------- */
   const home = {
     id: 1,
@@ -384,6 +391,40 @@ export default function Header01() {
     setCollapse(id);
   };
 
+  const onAccountChanged = useCallback((newAccount) => {
+    setAccount(newAccount);
+  }, []);
+
+  useEffect(() => {
+    const getUsdcBalance = async() => {
+      if(!account) {
+        return;
+      }
+
+      const options = {
+        method: 'GET',
+        url: `https://deep-index.moralis.io/api/v2/${account}/erc20`,
+        params: {chain: window.ethereum.chainId},
+        headers: {accept: 'application/json', 'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY}
+      };
+
+      let chainConfig = _.find(ChainConfigs, {id: Number(window.ethereum.networkVersion)});
+        
+      let res = await axios.request(options);
+      let tokens = res.data;
+      let usdcToken = tokens.filter(x => x.token_address.toLowerCase() == chainConfig.crossChainToken.toLowerCase())[0];
+
+      let balance = 0;
+      if(usdcToken) {
+          balance = parseInt(usdcToken.balance) / Math.pow(10, usdcToken.decimals);
+      }
+      
+      setUsdcBalance(balance);
+    }
+
+    getUsdcBalance();
+  }, [account]);
+
   return (
     <>
       {/* main desktop menu sart*/}
@@ -412,7 +453,7 @@ export default function Header01() {
           </Link>
           {/* End  logo */}
 
-          <form
+          {/* <form
             action="search"
             className="relative ml-12 mr-8 hidden basis-3/12 lg:block xl:ml-[8%]"
           >
@@ -433,61 +474,29 @@ export default function Header01() {
                 <path d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z" />
               </svg>
             </span>
-          </form>
+          </form> */}
           {/* End Desktop search form */}
 
           <div className="js-mobile-menu dark:bg-jacarta-800 invisible fixed inset-0 z-10 ml-auto items-center bg-white opacity-0 lg:visible lg:relative lg:inset-auto lg:flex lg:bg-transparent lg:opacity-100 dark:lg:bg-transparent">
             <nav className="navbar w-full">
               <ul className="flex flex-col lg:flex-row">
                 {/* home */}
-                <li className="js-nav-dropdown group relative">
-                  <button className="dropdown-toggle text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5 w-full">
-                    <span
-                      className={
-                        isParentPageActive(home.pages, route.asPath)
-                          ? "text-accent  dark:text-accent"
-                          : ""
-                      }
-                    >
-                      Home
-                    </span>
-                    <i className="lg:hidden">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width={24}
-                        height={24}
-                        className="h-4 w-4 dark:fill-white"
-                      >
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z" />
-                      </svg>
-                    </i>
-                  </button>
-                  <ul className="dropdown-menu dark:bg-jacarta-800 left-0 top-[85%] z-10 hidden min-w-[200px] gap-x-4 whitespace-nowrap rounded-xl bg-white transition-all will-change-transform group-hover:visible group-hover:opacity-100 lg:invisible lg:absolute lg:grid lg:translate-y-4 lg:py-4 lg:px-2 lg:opacity-0 lg:shadow-2xl lg:group-hover:translate-y-2 relative">
-                    {home?.pages?.map((page) => (
-                      <li key={page.id}>
-                        <Link href={page.path}>
-                          <a className="dark:hover:bg-jacarta-600  hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors justify-between ">
-                            <span
-                              className={`font-display ${
-                                isChildrenPageActive(page.path, route.asPath)
-                                  ? "text-accent dark:text-accent"
-                                  : "text-jacarta-700"
-                              } text-sm dark:text-white`}
-                            >
-                              {page.name}
-                            </span>
-                            {page.condition ? (
-                              <span className="rounded bg-green py-1 px-2 text-tiny font-bold uppercase leading-none text-white ml-4">
-                                new
-                              </span>
-                            ) : undefined}
-                          </a>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                <li className="group">
+                  <Link href="/">
+                    <a>
+                      <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                        <span
+                          className={
+                            isChildrenPageActive(route.asPath, "/")
+                              ? "text-accent dark:text-accent"
+                              : ""
+                          }
+                        >
+                          Home
+                        </span>
+                      </button>
+                    </a>
+                  </Link>
                 </li>
 
                 {/* page */}
@@ -542,49 +551,22 @@ export default function Header01() {
                 </li>
 
                 {/* explore */}
-                <li className="js-nav-dropdown nav-item dropdown group relative">
-                  <button className="dropdown-toggle text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5 w-full">
-                    <span
-                      className={
-                        isParentPageActive(explore.pages, route.asPath)
-                          ? "text-accent dark:text-accent"
-                          : ""
-                      }
-                    >
-                      Explore
-                    </span>
-                    <i className="lg:hidden">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width={24}
-                        height={24}
-                        className="h-4 w-4 dark:fill-white"
-                      >
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z" />
-                      </svg>
-                    </i>
-                  </button>
-                  <ul
-                    className="dropdown-menu dark:bg-jacarta-800 -left-6 top-[85%] z-10 hidden grid-flow-col grid-rows-5 gap-x-4 whitespace-nowrap rounded-xl bg-white transition-all will-change-transform group-hover:visible group-hover:opacity-100 lg:invisible lg:absolute lg:!grid lg:translate-y-4 lg:py-8 lg:px-5 lg:opacity-0 lg:shadow-2xl lg:group-hover:translate-y-2 relative"
-                    aria-labelledby="navDropdown-1"
-                  >
-                    {explore?.pages?.map((page) => (
-                      <li key={page.id}>
-                        <Link href="/">
-                          <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors">
-                            <span className="bg-light-base mr-3 rounded-xl p-[0.375rem]">
-                              {page?.icon}
-                            </span>
-                            <span className="font-display text-jacarta-700 text-sm dark:text-white">
-                              {page?.name}
-                            </span>
-                          </a>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                <li className="group">
+                  <Link href="/collection/explore_collection">
+                    <a>
+                      <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                        <span
+                          className={
+                            isChildrenPageActive(route.asPath, "/collection/explore_collection")
+                              ? "text-accent dark:text-accent"
+                              : ""
+                          }
+                        >
+                          Explore
+                        </span>
+                      </button>
+                    </a>
+                  </Link>
                 </li>
 
                 {/* resource */}
@@ -659,10 +641,26 @@ export default function Header01() {
             {/* End menu for desktop */}
 
             <div className="ml-8 hidden items-center lg:flex xl:ml-12">
-              <WalletButton />
+              <OnboardingButton
+                className={`js-wallet border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] ${account? 'hidden': ''}`}
+                handleChainChange={(chainId) => { console.log(chainId) }}
+                handleNewAccount={onAccountChanged}
+                onFinishLoading={() => {}}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width={24}
+                  height={24}
+                  className="h-4 w-4 fill-jacarta-700 transition-colors group-hover:fill-white group-focus:fill-white dark:fill-white"
+                >
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path d="M22 6h-7a6 6 0 1 0 0 12h7v2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2zm-7 2h8v8h-8a4 4 0 1 1 0-8zm0 3v2h3v-2h-3z" />
+                </svg>
+              </OnboardingButton>
               {/* End metamask Wallet */}
 
-              <div className="js-nav-dropdown group-dropdown relative">
+              <div className={`js-nav-dropdown group-dropdown relative ${account? '' : 'hidden'}`}>
                 <button className="dropdown-toggle border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent ml-2 flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -677,18 +675,22 @@ export default function Header01() {
                 </button>
                 <div className="dropdown-menu dark:bg-jacarta-800 group-dropdown-hover:opacity-100 group-dropdown-hover:visible !-right-4 !top-[85%] !left-auto z-10 min-w-[14rem] whitespace-nowrap rounded-xl bg-white transition-all will-change-transform before:absolute before:-top-3 before:h-3 before:w-full lg:absolute lg:grid lg:!translate-y-4 lg:py-4 lg:px-2 lg:shadow-2xl hidden lg:invisible lg:opacity-0">
                   <div>
-                    <button className="js-copy-clipboard font-display text-jacarta-700 my-4 flex select-none items-center whitespace-nowrap px-5 leading-none dark:text-white">
-                      <span>0x7a86c0b06417100...</span>
+                    <button 
+                      className="js-copy-clipboard font-display text-jacarta-700 my-4 flex select-none items-center whitespace-nowrap px-5 leading-none dark:text-white"
+                      onClick={() => { copyToClipboard(account); }}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         width={24}
                         height={24}
-                        className="dark:fill-jacarta-300 fill-jacarta-500 ml-auto mb-px h-4 w-4"
+                        className="dark:fill-jacarta-300 fill-jacarta-500 ml-auto mb-px h-4 w-4 mr-3"
                       >
                         <path fill="none" d="M0 0h24v24H0z" />
                         <path d="M7 7V3a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-4v3.993c0 .556-.449 1.007-1.007 1.007H3.007A1.006 1.006 0 0 1 2 20.993l.003-12.986C2.003 7.451 2.452 7 3.01 7H7zm2 0h6.993C16.549 7 17 7.449 17 8.007V15h3V4H9v3zM4.003 9L4 20h11V9H4.003z" />
                       </svg>
+                      
+                      <span>{ellipsizeThis(account, 10, 0)}</span>
                     </button>
                   </div>
                   <div className="dark:border-jacarta-600 border-jacarta-100 mx-5 mb-6 rounded-lg border p-4">
@@ -699,8 +701,8 @@ export default function Header01() {
                       <svg className="icon icon-ETH -ml-1 mr-1 h-[1.125rem] w-[1.125rem]">
                         <use xlinkHref="/icons.svg#icon-ETH" />
                       </svg>
-                      <span className="text-green text-lg font-bold">
-                        10 ETH
+                      <span className="text-green text-lg font-bold" style={{ textTransform: 'none' }}>
+                        {toLocaleDecimal(usdcBalance, 2, 2)} axlUSDC
                       </span>
                     </div>
                   </div>
@@ -735,23 +737,6 @@ export default function Header01() {
                       </svg>
                       <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
                         Edit Profile
-                      </span>
-                    </a>
-                  </Link>
-                  <Link href="/login">
-                    <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width={24}
-                        height={24}
-                        className="fill-jacarta-700 h-4 w-4 transition-colors dark:fill-white"
-                      >
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM7 11V8l-5 4 5 4v-3h8v-2H7z" />
-                      </svg>
-                      <span className="font-display text-jacarta-700 mt-1 text-sm dark:text-white">
-                        Sign out
                       </span>
                     </a>
                   </Link>
@@ -849,7 +834,7 @@ export default function Header01() {
         </div>
         {/* mobile menu top header content */}
 
-        <form action="search" className="relative mt-24 mb-8 w-full lg:hidden">
+        {/* <form action="search" className="relative mt-24 mb-8 w-full lg:hidden">
           <input
             type="search"
             className="text-jacarta-700 placeholder-jacarta-500 focus:ring-accent border-jacarta-100 w-full rounded-2xl border py-3 px-4 pl-10 dark:border-transparent dark:bg-white/[.15] dark:text-white dark:placeholder-white"
@@ -867,7 +852,7 @@ export default function Header01() {
               <path d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z" />
             </svg>
           </span>
-        </form>
+        </form> */}
         {/* End search form mobile menu  */}
 
         <nav className="navbar w-full">

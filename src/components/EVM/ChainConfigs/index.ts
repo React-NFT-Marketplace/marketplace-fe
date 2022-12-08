@@ -42,3 +42,20 @@ export const AVAX_TEST: ChainConfig = {
     "nftMarketplace": "0xccD1a7454D044601Fb0C193576A10C5e25651b23",
     "oneNFT": "0x4454140E52Aa1F3E47b188cA0d96440020717BDb"
 };
+
+export const MUMBAI: ChainConfig = {
+    name: 'Polygon',
+    shortName: 'MUMBAI',
+    evmChain: "polygon",
+    id: 80001,
+    // rpc: 'https://rpc-mumbai.matic.today/',
+    // rpc: 'https://polygontestapi.terminet.io/rpc',
+    rpc: 'https://rpc-mumbai.maticvigil.com/',
+    nativeCurrency: {
+        name: 'MATIC',
+        decimals: 18,
+        symbol: 'MATIC',
+    },
+    blockExplorerUrl: 'https://mumbai.polygonscan.com',
+    crossChainToken: '0x2c852e740B62308c46DD29B982FBb650D063Bd07',
+};

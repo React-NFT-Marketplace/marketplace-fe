@@ -8,7 +8,7 @@ import IAxelarGateway from '../../../ABI/IAxelarGateway.json';
 import IERC20 from '../../../ABI/IERC20.json';
 import _ from 'lodash';
 import axios from 'axios';
-import { getBaseUrl, ucFirst } from '../../../common/utils';
+import { getBase64, getBaseUrl, ucFirst, uppercase } from '../../../common/utils';
 import { ChainConfig } from '../ChainConfigs/types';
 // import { BSC_TEST, POLYGON_TEST, BSC, POLYGON } from '../../../src/components/EVM/ChainConfigs';
 import { AxelarQueryAPI, Environment, EvmChain, GasToken } from '@axelar-network/axelarjs-sdk';
@@ -462,5 +462,134 @@ export default class ContractCall {
         const txUrl  = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
 
         await this.saveActionLog(toChain.id, tokenId, txUrl, 'buyNft');
+    }
+
+    mint = async (toChainId: number, name: string, description: string, imageBlob: Blob) => {
+
+        if(!window.ethereum) {
+            return;
+        }
+
+        const fromChainId = window.ethereum.networkVersion;
+        let hash = await fetch(`https://api.onenft.shop/premint/${fromChainId}`);
+        hash = await hash.json();
+        let content = await getBase64(imageBlob);
+
+        let mintData = {
+            name: name,
+            description: description,
+            path: imageBlob.name,
+            content: content,
+            hash: hash,
+            fromChain: fromChainId,
+            toChain: toChainId.toString(),
+            creator: window.ethereum.selectedAddress,
+            tx: '',
+            tokenURI: '',
+        };
+
+        try {
+            let res = await axios
+                                .request({
+                                    method: 'POST',
+                                    url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+                                    headers: {
+                                        accept: 'application/json',
+                                        'Content-Type': 'application/json',
+                                        'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY
+                                    },
+                                    data: JSON.stringify([{
+                                        path: mintData.path,
+                                        content: mintData.content
+                                    }])
+                                });
+            mintData.tokenURI = res.data[0].path;
+        }
+
+        catch (error){
+            console.error(error);
+            alert('Error Uploading..');
+            return;
+        }
+
+        //mint
+        if (mintData.fromChain == mintData.toChain) {
+            console.log(`Same chain tx`);
+            // same chain mint
+            const currChain = _.find(ChainConfigs, {
+                id: Number(mintData.fromChain)
+            });
+            const nftContract = new ethers.Contract(
+                currChain!.oneNFT!,
+                this.oneNFT.abi,
+                this.provider.getSigner(),
+            );
+
+            const receipt = await nftContract.createToken(`https://api.onenft.shop/metadata/${mintData.hash}`).then((tx: any) => tx.wait());
+
+            const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
+            mintData.tx = `${currChain!.blockExplorerUrl}/tx/${txHash}`;
+        } 
+        
+        else {
+            // cross chain mint
+            // might not work yet
+            let gasFee = await fetch(`https://api.onenft.shop/estimateGas/${mintData.fromChain}/${mintData.toChain}`);
+            let gasFeeJson = await gasFee.json();
+
+            const fromChain = _.find(ChainConfigs, {
+                id: Number(mintData.fromChain)
+            });
+            const toChain = _.find(ChainConfigs, {
+                id: Number(mintData.toChain)
+            });
+            console.log(`Cross chain tx ${fromChain!.name} => ${toChain!.name}`);
+
+            const crossMarketplaceContract = new ethers.Contract(
+                fromChain!.messageSender!,
+                this.messageSender.abi,
+                this.provider.getSigner(),
+            );
+
+            const receipt = await crossMarketplaceContract.crossChainMint(
+                    uppercase(toChain!.evmChain!),
+                    toChain!.messageReceiver,
+                    `https://api.onenft.shop/metadata/${mintData.hash}`,
+                    {
+                        value: BigInt(gasFeeJson)
+                    },
+                )
+                .then((tx: any) => tx.wait());;
+
+            mintData.tx = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
+        }
+
+        // done at this point
+        // send data to db
+        const data = JSON.stringify({
+            "toChain": Number(mintData.toChain),
+            "fromChain": Number(mintData.fromChain),
+            "hash": mintData.hash,
+            "name": mintData.name,
+            "address": mintData.creator,
+            "image": mintData.tokenURI,
+            "description": mintData.description,
+            "tx": mintData.tx,
+        });
+
+        try {
+            let res = await axios({
+                method: 'post',
+                url: 'https://api.onenft.shop/mint',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            });
+        }
+
+        catch {
+            console.error(`Save metadata failed`);
+        }
     }
 }
