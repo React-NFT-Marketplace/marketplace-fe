@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { ChainConfigs } from '../components/EVM';
+import * as ChainConfigs from '../components/EVM/ChainConfigs/index';
 import axios from 'axios';
 import _ from 'lodash';
 import { ChainConfig } from '../components/EVM/ChainConfigs/types';
@@ -274,7 +274,9 @@ export const getAxelarTxsHistory = async() => {
 
 export const getBlockExporerHistory = async(chainId: number | null = null, contractAddress: string) => {
     // get chain nft contract address
-    const chain: ChainConfig | undefined = _.find(chains, { id: (chainId? Number(chainId) : Number(window.ethereum!.networkVersion)) });
+    const cid = (chainId ? Number(chainId) : Number(window.ethereum!.networkVersion));
+    const chain: ChainConfig | undefined = _.find(chains, { "id": cid });
+    console.log(chains);
 
     const apiKey = JSON.parse(process.env.NEXT_PUBLIC_EXPLORER_API!);
 

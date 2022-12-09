@@ -45,7 +45,7 @@ const Activity_item = () => {
 
         _.map(results.data, (res, resIndex) => {
             const eventTypeCall = eventType[res.call?.eventSignature] || 'ContractCall';
-            console.log(eventTypeCall);
+            // console.log(eventTypeCall);
             const price = eventTypeCall == 'Buy' ? formatUsdcAmount(res.call.returnValues.amount.hex) : '';
             const eventTime = moment.unix(res.call.created_at.ms / 1000);
 
@@ -75,7 +75,7 @@ const Activity_item = () => {
     const getBscExplorer = useCallback(async() => {
         const chain = _.find(chains, {"id": Number(window.ethereum.networkVersion)});
 
-        const results = await getBlockExporerHistory(null, chain.oneNFT);
+        const results = await getBlockExporerHistory(false, chain.oneNFT);
         const formatted = [];
 
         _.map(results.result, (res, resIndex) => {

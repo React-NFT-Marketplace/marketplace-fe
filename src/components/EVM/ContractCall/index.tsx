@@ -93,7 +93,7 @@ export default class ContractCall {
 
     getProvider = (isRpc: boolean = false, chain?: ChainConfig) => {
         chain = chain ?? this.chainConfig!;
-        return isRpc? new ethers.providers.JsonRpcProvider(chain.rpc) : new ethers.providers.Web3Provider(window.ethereum as any);
+        return isRpc? new ethers.providers.JsonRpcBatchProvider(chain.rpc) : new ethers.providers.Web3Provider(window.ethereum as any);
     }
 
     getGatewayContract = (chain?: ChainConfig) => {
