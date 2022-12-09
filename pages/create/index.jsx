@@ -7,7 +7,7 @@ import {
   chainData,
 } from "../../data/dropdown";
 import { FileUploader } from "react-drag-drop-files";
-import Proparties_modal from "../../src/components/modal/proparties_modal";
+import Properties_modal from "../../src/components/modal/properties_modal";
 import { useDispatch } from "react-redux";
 import { showPropertiesModal } from "../../redux/counterSlice";
 import Meta from "../../src/components/Meta";
@@ -70,9 +70,9 @@ const Create = () => {
   const popupItemData = [
     {
       id: 1,
-      name: "proparties",
+      name: "properties",
       text: "Textual traits that show up as rectangles.",
-      icon: "proparties-icon",
+      icon: "properties-icon",
     },
     {
       id: 2,

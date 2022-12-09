@@ -11,7 +11,7 @@ import More_items from './more_items';
 import Likes from '../../src/components/likes';
 import Meta from '../../src/components/Meta';
 import { useDispatch } from 'react-redux';
-import { bidsModalShow } from '../../redux/counterSlice';
+import { listModalShow } from '../../redux/counterSlice';
 
 const Item = () => {
 	const dispatch = useDispatch();
@@ -274,7 +274,7 @@ const Item = () => {
 											<Link href="#">
 												<button
 													className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-													onClick={() => dispatch(bidsModalShow())}
+													onClick={() => dispatch(listModalShow())}
 												>
 													Place Bid
 												</button>

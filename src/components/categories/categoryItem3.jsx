@@ -4,13 +4,14 @@ import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import { buyModalShow, updateBuyModalProps } from "../../../redux/counterSlice";
-import { getChainIcon } from "../../common/utils";
+import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
 import axios from "axios";
+import ContractCall from "../EVM/ContractCall";
 
-const CategoryItem3 = ({items}) => {
+const CategoryItem3 = ({items, listedItems}) => {
   const dispatch = useDispatch();
   const [itemsWithMetadata, setItemsWithMetadata] = useState([]);
 
@@ -68,7 +69,10 @@ const CategoryItem3 = ({items}) => {
           metadata
         } = item;
 
-        const price = 10; //update this
+        let listDetails = listedItems.filter(x => BigNumber.from(x.tokenId).toNumber() == tokenId && !x.sold);
+        const isListed = listDetails.length > 0;
+        const price = isListed? BigNumber.from(listDetails[0].sellingPrice).toNumber() / Math.pow(10, 6) : 0; //update this
+        const seller = isListed? listDetails[0].seller : "";
 
         const id = BigNumber.from(tokenId).toNumber();
         const chainConfig = _.find(ChainConfigs, {id: Number(chain)});
@@ -123,17 +127,27 @@ const CategoryItem3 = ({items}) => {
                   </a>
                 </Link>
               </div>
-              {/* <div className="mt-2 text-sm">
-                <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                  {0}
-                </span>
-                <span className="dark:text-jacarta-300 text-jacarta-500">
-                  {0}/{0}
-                </span>
-              </div> */}
+              {
+                seller &&
+                <div className="mt-2 text-sm">
+                  <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
+                    Seller: {ellipsizeThis(seller, 5, 5)}
+                  </span>
+                  <span className="mb-1 flex items-center whitespace-nowrap">
+                    <span data-tippy-content="USDC">
+                      <svg className="h-4 w-4">
+                        <use xlinkHref="/icons.svg#icon-usdc"></use>
+                      </svg>
+                    </span>
+                    <span className="dark:text-jacarta-100 text-sm font-medium tracking-tight ml-2">
+                      {toLocaleDecimal(price, 3, 3)}
+                    </span>
+                  </span>
+                </div>
+              }
 
               {
-                item.isListed &&
+                isListed &&
                 <div className="mt-8 flex items-center justify-between">
                   <button
                     className="text-accent font-display text-sm font-semibold"

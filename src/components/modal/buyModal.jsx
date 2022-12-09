@@ -49,16 +49,16 @@ const BuyModal = () => {
               </div>
 
               <div className="dark:border-jacarta-600 border-jacarta-100 relative flex items-center border-t border-b py-4">
-                <figure className="mr-5 self-start">
+                <figure className="mr-10 self-start">
                   <img
                     src={buyModalProps.image}
                     alt="item_image"
-                    className="rounded-2lg"
+                    className="rounded-2lg h-[200px]"
                     loading="lazy"
                   />
                 </figure>
 
-                <div>
+                <div className="mr-10">
                   <div className="text-accent text-sm">
                     {buyModalProps.name}
                   </div>
@@ -92,7 +92,7 @@ const BuyModal = () => {
                       </svg>
                     </span>
                     <span className="dark:text-jacarta-100 text-sm font-medium tracking-tight ml-2">
-                      {toLocaleDecimal(buyModalProps.price, 2, 2)}
+                      {toLocaleDecimal(buyModalProps.price, 3, 3)}
                     </span>
                   </span>
                   <span className="mb-1 flex items-center justify-between whitespace-nowrap">
@@ -102,7 +102,7 @@ const BuyModal = () => {
                       </svg>
                     </span>
                     <span className="dark:text-jacarta-100 text-sm font-medium tracking-tight ml-2">
-                      {toLocaleDecimal(buyModalProps.price * 0.05, 2, 2)}
+                      {toLocaleDecimal(buyModalProps.price * 0.05, 3, 3)}
                     </span>
                   </span>
                 </div>
@@ -121,7 +121,7 @@ const BuyModal = () => {
                       </svg>
                     </span>
                     <span className="text-green font-medium tracking-tight ml-2">
-                      {toLocaleDecimal(buyModalProps.price * 1.05, 2, 2)}
+                      {toLocaleDecimal(buyModalProps.price * 1.05, 3, 3)}
                     </span>
                   </span>
                 </div>

@@ -8,7 +8,7 @@ import { bidsData } from "../../../data/bids_data";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
-import { bidsModalShow } from "../../../redux/counterSlice";
+import { listModalShow } from "../../../redux/counterSlice";
 import { useDispatch } from "react-redux";
 import Likes from "../likes";
 
@@ -110,7 +110,7 @@ const BidsCarousel = () => {
                     <button
                       type="button"
                       className="text-accent font-display text-sm font-semibold"
-                      onClick={() => dispatch(bidsModalShow())}
+                      onClick={() => dispatch(listModalShow())}
                     >
                       Place bid
                     </button>

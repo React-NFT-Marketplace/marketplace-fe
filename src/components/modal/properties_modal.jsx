@@ -2,15 +2,15 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { closePropertiesModal } from "../../../redux/counterSlice";
 
-const Proparties_modal = () => {
-  const { propartiesModalValue } = useSelector((state) => state.counter);
+const Properties_modal = () => {
+  const { propertiesModalValue } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
 
   return (
     <div>
       <div
         className={
-          propartiesModalValue ? "modal fade show block" : "modal fade"
+          propertiesModalValue ? "modal fade show block" : "modal fade"
         }
       >
         <div className="modal-dialog max-w-2xl">
@@ -105,4 +105,4 @@ const Proparties_modal = () => {
   );
 };
 
-export default Proparties_modal;
+export default Properties_modal;

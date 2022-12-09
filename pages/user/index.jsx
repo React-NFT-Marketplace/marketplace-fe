@@ -14,8 +14,6 @@ import UserContext from "../../src/components/UserContext";
 import { useContext } from "react";
 
 const User = () => {
-
-  const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
   const [nfts, setNfts] = useState([]);
   const [listedNfts, setListedNfts] = useState([]);
@@ -253,6 +251,7 @@ const User = () => {
         <User_items
           items={nfts}
           listedItems={listedNfts}
+          canList={true}
         />
       </div>
     </>

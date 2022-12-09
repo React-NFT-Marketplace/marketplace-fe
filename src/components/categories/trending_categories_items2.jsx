@@ -4,7 +4,7 @@ import Recently_added_dropdown from "../dropdown/recently_added_dropdown";
 import { cloneObj } from "../../common/utils";
 import CategoryItem2 from "./categoryItem2";
 
-const Trending_categories_items = ({items}) => {
+const Trending_categories_items = ({items, canList = false}) => {
   const [currentItems, setCurrentItems] = useState([]);
   const [currentSort, setCurrentSort] = useState(1);
 
@@ -83,7 +83,7 @@ const Trending_categories_items = ({items}) => {
       </div>
 
       {/* <!-- Grid --> */}
-      <CategoryItem2 items={currentItems}/>
+      <CategoryItem2 items={currentItems} canList={canList}/>
     </>
   );
 };

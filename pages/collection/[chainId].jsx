@@ -19,11 +19,54 @@ const Collection = () => {
 	const chainId = router.query.chainId;
 	const [nfts, setNfts] = useState([]);
 	const userContext = useContext(UserContext);
+	const [hasQueriedNfts, setHasQueriedNfts] = useState(false);
 	const chain = useMemo(() => {
 		return _.find(ChainConfigs, {id: Number(chainId)});
 	}, [chainId]);
 
 	const [collectionName, setCollectionName] = useState("");
+	const [listedNfts, setListedNfts] = useState([]);
+	const [isLoadingPrices, setIsLoadingPrices] = useState(true);
+
+	useEffect(() => {
+	  if(!userContext.chain) {
+		return;
+	  }
+  
+	  if(hasQueriedNfts) {
+		return;
+	  }
+  
+	  setHasQueriedNfts(true);
+  
+	  const getNfts = async() => {
+  
+		let newNFTs = [];
+  
+		await Promise.all(
+		  _.map(ChainConfigs, async(chain) => {
+			  if(!chain.oneNFT) {
+				return;
+			  }
+  
+			  let contract = new ContractCall(chain.id);
+			  let nfts = await contract.getAllNFTs();
+	
+			  nfts.forEach(r => {
+				newNFTs.push({
+				  ...r,
+				  chain: chain.id
+				})
+			  })
+		  })
+		);
+  
+		setListedNfts(newNFTs);
+		setIsLoadingPrices(false);
+	  }
+  
+	  getNfts();
+	}, [userContext.chain, hasQueriedNfts]);
 
 	useEffect(() => {
 		if(!chainId) {
@@ -56,7 +99,7 @@ const Collection = () => {
 		}
 
 		getNFTs();
-	}, [chainId, userContext.account]);
+	}, [chainId]);
 
 	return (
 		<>
@@ -167,12 +210,20 @@ const Collection = () => {
 				{/* <!-- end profile --> */}
 			</div>
 			{
-				nfts.length > 0?
+				nfts.length == 0 &&
+				<div className='flex items-center justify-center py-10'>Loading..</div>
+			}
+			{
+				nfts.length > 0 &&
+				isLoadingPrices &&
+				<div className='flex items-center justify-center my-3'>Loading Prices..</div>
+			}
+			{
+				nfts.length > 0 &&
 				<Collection_items2
 					items={nfts}
-				/> :
-				<div className='flex items-center justify-center py-10'>Loading..</div>
-
+					listedItems={listedNfts}
+				/>
 			}
 		</>
 	);

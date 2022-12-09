@@ -404,7 +404,6 @@ export default function Header01({handleAccountChange, handleChainChange}) {
   }, [handleAccountChange]);
 
   const onChainChanged = useCallback((chainId) => {
-    console.log('chain changed');
     setChainId(chainId);
     runIfFunction(handleChainChange, chainId)
   }, [handleChainChange])
@@ -422,7 +421,6 @@ export default function Header01({handleAccountChange, handleChainChange}) {
       try {
           let caller = new ContractCall();
           const balance = await caller.getWalletUSDCBal();
-          console.log(balance);
           setUsdcBalance(balance);
       }
       catch (e) {

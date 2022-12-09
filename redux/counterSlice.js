@@ -11,9 +11,9 @@ const initialState = {
   rankingData: [],
   filteredRankingData: [],
   walletModal: false,
-  bidsModal: false,
+  listModal: false,
   buyModal: false,
-  propartiesModalValue: false,
+  propertiesModalValue: false,
   trendingCategorySorText: "",
 
   //props
@@ -22,7 +22,11 @@ const initialState = {
     name: "",
     price: 0,
     collectionName: ""
-  }
+  },
+
+  listModalProps: {
+    chainId: undefined,
+  },
 };
 
 export const counterSlice = createSlice({
@@ -51,11 +55,11 @@ export const counterSlice = createSlice({
     walletModalhide: (state) => {
       state.walletModal = false;
     },
-    bidsModalShow: (state) => {
-      state.bidsModal = true;
+    listModalShow: (state) => {
+      state.listModal = true;
     },
-    bidsModalHide: (state) => {
-      state.bidsModal = false;
+    listModalHide: (state) => {
+      state.listModal = false;
     },
     buyModalShow: (state) => {
       document.querySelectorAll("body")[0].classList.add('modal-open');
@@ -66,10 +70,10 @@ export const counterSlice = createSlice({
       state.buyModal = false;
     },
     showPropertiesModal: (state) => {
-      state.propartiesModalValue = true;
+      state.propertiesModalValue = true;
     },
     closePropertiesModal: (state) => {
-      state.propartiesModalValue = false;
+      state.propertiesModalValue = false;
     },
     updateTrendingCategoryItemData: (state, action) => {
       state.trendingCategoryItemData = action.payload;
@@ -174,6 +178,10 @@ export const counterSlice = createSlice({
       const props = action.payload;
       state.buyModalProps = props;
     },
+    updateListModalProps: (state, action) => {
+      const props = action.payload;
+      state.listModalProps = props;
+    },
   },
 });
 
@@ -185,8 +193,8 @@ export const {
   closeDropdown,
   walletModalShow,
   walletModalhide,
-  bidsModalShow,
-  bidsModalHide,
+  listModalShow,
+  listModalHide,
   buyModalShow,
   buyModalHide,
   showPropertiesModal,
@@ -201,6 +209,7 @@ export const {
   updateRankingDataByBlockchain,
   updateRankingDataByPostdate,
   updateBuyModalProps,
+  updateListModalProps,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

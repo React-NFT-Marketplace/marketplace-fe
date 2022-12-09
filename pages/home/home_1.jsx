@@ -1,10 +1,6 @@
 import React from 'react';
 import {
 	Hero,
-	Bids,
-	Top_collection,
-	Trending_category,
-	NewseLatter,
 } from '../../src/components/component';
 import Meta from '../../src/components/Meta';
 
@@ -13,9 +9,6 @@ const Home_1 = () => {
 		<main>
 			<Meta title="MotM | NFT Marketplace" />
 			<Hero />
-			<Bids />
-			<Top_collection />
-			<Trending_category />
 		</main>
 	);
 };

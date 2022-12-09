@@ -1,29 +1,43 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { bidsModalHide } from "../../../redux/counterSlice";
+import { listModalHide } from "../../../redux/counterSlice";
+import ContractCall from "../EVM/ContractCall";
 
-const BidsModal = () => {
-  const { bidsModal } = useSelector((state) => state.counter);
+const ListModal = () => {
+  const { listModal, listModalProps } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
-  const [ETHAmount, setETHAmount] = useState(0.05);
+  const [amount, setAmount] = useState(0);
 
-  const handleEThAmount = (e) => {
+  const handleAmount = useCallback((e) => {
     e.preventDefault();
-    setETHAmount(e.target.value);
-  };
+    setAmount(e.target.value);
+  }, []);
+
+  const onListClick = useCallback(async() => {
+    let { chainId } = listModalProps;
+
+    if(!chainId) {
+      alert('Unable to get chain');
+      return;
+    }
+
+    let contract = new ContractCall(chainId);
+    await contract.callList()
+  }, [amount, listModalProps]);
+
   return (
     <div>
-      <div className={bidsModal ? "modal fade show block" : "modal fade"}>
+      <div className={listModal ? "modal fade show block" : "modal fade"}>
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="placeBidLabel">
-                Place a bid
+                List
               </h5>
               <button
                 type="button"
                 className="btn-close"
-                onClick={() => dispatch(bidsModalHide())}
+                onClick={() => dispatch(listModalHide())}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -49,12 +63,12 @@ const BidsModal = () => {
               <div className="dark:border-jacarta-600 border-jacarta-100 relative mb-2 flex items-center overflow-hidden rounded-lg border">
                 <div className="border-jacarta-100 bg-jacarta-50 flex flex-1 items-center self-stretch border-r px-2">
                   <span>
-                    <svg className="icon icon-ETH mr-1 h-5 w-5">
-                      <use xlinkHref="/icons.svg#icon-ETH"></use>
+                    <svg className="icon icon-USDC mr-1 h-5 w-5">
+                      <use xlinkHref="/icons.svg#icon-usdc"></use>
                     </svg>
                   </span>
                   <span className="font-display text-jacarta-700 text-sm">
-                    ETH
+                    USDC
                   </span>
                 </div>
 
@@ -62,19 +76,9 @@ const BidsModal = () => {
                   type="number"
                   className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
                   placeholder="Amount"
-                  value={ETHAmount}
-                  onChange={(e) => handleEThAmount(e)}
+                  value={amount}
+                  onChange={(e) => handleAmount(e)}
                 />
-
-                <div className="bg-jacarta-50 border-jacarta-100 flex flex-1 justify-end self-stretch border-l dark:text-jacarta-700">
-                  <span className="self-center px-2 text-sm">$130.82</span>
-                </div>
-              </div>
-
-              <div className="text-right">
-                <span className="dark:text-jacarta-400 text-sm">
-                  Balance: 0.0000 WETH
-                </span>
               </div>
 
               {/* <!-- Terms --> */}
@@ -102,8 +106,9 @@ const BidsModal = () => {
                 <button
                   type="button"
                   className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                  onClick={onListClick}
                 >
-                  Place Bid
+                  List
                 </button>
               </div>
             </div>
@@ -114,4 +119,4 @@ const BidsModal = () => {
   );
 };
 
-export default BidsModal;
+export default ListModal;

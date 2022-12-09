@@ -9,7 +9,7 @@ import 'react-tabs/style/react-tabs.css';
 import { collection_activity_item_data } from '../../../data/collection_data';
 import CategoryItem3 from '../categories/categoryItem3';
 
-const Collection_items2 = ({ items }) => {
+const Collection_items2 = ({ items, listedItems }) => {
 	/* const [itemsTabs, setItemsTabs] = useState(1);
 	const [categoryItemData, setCategoryItemData] = useState(trendingCategoryData);
 
@@ -39,7 +39,7 @@ const Collection_items2 = ({ items }) => {
 					/>
 				</picture>
 				<div className="container">
-					<CategoryItem3 items={items}/>
+					<CategoryItem3 items={items} listedItems={listedItems}/>
 					{/* <!-- Tabs Nav --> */}
 					{/* <Tabs className="tabs">
 						<TabList className="nav nav-tabs dark:border-jacarta-600 border-jacarta-100 mb-12 flex items-center justify-center border-b">

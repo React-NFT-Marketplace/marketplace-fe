@@ -63,6 +63,7 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
                     return;
                 }
 
+                handleChainChange(window.ethereum!.networkVersion!);
                 setChain(window.ethereum?.networkVersion ?? "");
                 setAccounts([window.ethereum.selectedAddress]);
                 setIsLoading(false);

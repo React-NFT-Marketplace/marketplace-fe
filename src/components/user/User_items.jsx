@@ -10,10 +10,9 @@ import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
 import UserContext from "../UserContext";
 
-const User_items = ({ items, listedItems }) => {
+const User_items = ({ items, listedItems, canList }) => {
   const [itemActive, setItemActive] = useState(1);
   const [itemsOnSale, setItemsOnSale] = useState([]);
-  const [itemsOwned, setItemsOwned] = useState(items);
   const userContext = useContext(UserContext);
 
   useEffect(() => {
@@ -102,6 +101,7 @@ const User_items = ({ items, listedItems }) => {
                 {/* <!-- Filter --> */}
                 <Trending_categories_items2
                   items={items}
+                  canList={true}
                 />
               </div>
             </TabPanel>

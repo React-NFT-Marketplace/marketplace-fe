@@ -9,7 +9,7 @@ import { bidsData } from '../../../data/bids_data';
 import Link from 'next/link';
 import Tippy from '@tippyjs/react';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
-import { bidsModalShow } from '../../../redux/counterSlice';
+import { listModalShow } from '../../../redux/counterSlice';
 import { useDispatch } from 'react-redux';
 import Likes from '../likes';
 import { statistic_promo_2_data } from '../../../data/statistic_promo_2_data';

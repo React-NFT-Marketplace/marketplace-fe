@@ -3,13 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { buyModalShow, updateBuyModalProps } from "../../../redux/counterSlice";
+import { listModalShow, buyModalShow, updateBuyModalProps, updateListModalProps } from "../../../redux/counterSlice";
 import { getChainIcon } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
 
-const CategoryItem2 = ({items}) => {
+const CategoryItem2 = ({items, canList = false}) => {
   const dispatch = useDispatch();
 
   return (
@@ -139,6 +139,22 @@ const CategoryItem2 = ({items}) => {
                       </span>
                     </a>
                   </Link>
+                </div>
+              }
+              {
+                !item.isListed && canList &&
+                <div className="mt-8 flex items-center justify-between">
+                  <button
+                    className="text-accent font-display text-sm font-semibold"
+                    onClick={() => {
+                      dispatch(listModalShow());
+                      dispatch(updateListModalProps({
+                        chainId: Number(chain)
+                      }));
+                    }}
+                  >
+                    List now
+                  </button>
                 </div>
               }
             </div>
