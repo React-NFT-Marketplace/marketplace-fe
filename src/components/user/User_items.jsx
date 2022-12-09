@@ -87,26 +87,6 @@ const User_items = ({ items, listedItems }) => {
                   </span>
                 </button>
               </Tab>
-              <Tab
-                className="nav-item"
-                role="presentation"
-                onClick={() => setItemActive(4)}
-              >
-                <button
-                  className={
-                    itemActive === 4
-                      ? "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white active"
-                      : "nav-link hover:text-jacarta-700 text-jacarta-400 relative flex items-center whitespace-nowrap py-3 px-6 dark:hover:text-white"
-                  }
-                >
-                  <svg className="icon mr-1 h-5 w-5 fill-current">
-                    <use xlinkHref={`/icons.svg#icon-listing`}></use>
-                  </svg>
-                  <span className="font-display text-base font-medium">
-                    Collections
-                  </span>
-                </button>
-              </Tab>
             </TabList>
 
             <TabPanel>
@@ -123,12 +103,6 @@ const User_items = ({ items, listedItems }) => {
                 <Trending_categories_items2
                   items={items}
                 />
-              </div>
-            </TabPanel>
-            <TabPanel>
-              {/* <!-- Grid --> */}
-              <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-                <Explore_collection_item itemFor="userPage" />
               </div>
             </TabPanel>
           </Tabs>
