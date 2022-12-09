@@ -88,20 +88,27 @@ const User = () => {
                       config.params['cursor'] = nextCursor;
                   }
 
-                  const { data } = await axios(config);
-
-                  // merge all result
-                  if (!_.isNil(data)) {
-
-                      data.result.forEach(r => {
-                        nfts.push({
-                          ...r,
-                          chain: chain.id
+                  try {
+                    const { data } = await axios(config);
+  
+                    // merge all result
+                    if (!_.isNil(data)) {
+  
+                        data.result.forEach(r => {
+                          nfts.push({
+                            ...r,
+                            chain: chain.id
+                          })
                         })
-                      })
+  
+                        // while next page still available
+                        nextCursor = data.cursor;
+                    }
+                  }
 
-                      // while next page still available
-                      nextCursor = data.cursor;
+                  catch (e){
+                    console.error(e);
+                    break;
                   }
 
               } while(!_.isNil(nextCursor));

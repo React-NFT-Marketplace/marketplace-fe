@@ -51,10 +51,9 @@ const Explore_collection = () => {
           />
 
           {/* <!-- Filter --> */}
-          <div className="mb-8 flex flex-wrap items-start justify-between">
-            {/* dropdown */}
+          {/* <div className="mb-8 flex flex-wrap items-start justify-between">
             <Collection_dropdown />
-          </div>
+          </div> */}
 
           {/* <!-- Grid --> */}
           <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">

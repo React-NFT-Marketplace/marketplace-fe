@@ -93,24 +93,27 @@ const CategoryItem2 = ({items}) => {
                 </span>
               </div>
 
-              <div className="mt-8 flex items-center justify-between">
-                <button
-                  className="text-accent font-display text-sm font-semibold"
-                  onClick={() => dispatch(buyModalShow())}
-                >
-                  Buy now
-                </button>
-                <Link href={`/item`}>
-                  <a className="group flex items-center">
-                    <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
-                      <use xlinkHref="/icons.svg#icon-history"></use>
-                    </svg>
-                    <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
-                      View History
-                    </span>
-                  </a>
-                </Link>
-              </div>
+              {
+                item.isListed &&
+                <div className="mt-8 flex items-center justify-between">
+                  <button
+                    className="text-accent font-display text-sm font-semibold"
+                    onClick={() => dispatch(buyModalShow())}
+                  >
+                    Buy now
+                  </button>
+                  <Link href={`/item`}>
+                    <a className="group flex items-center">
+                      <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
+                        <use xlinkHref="/icons.svg#icon-history"></use>
+                      </svg>
+                      <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
+                        View History
+                      </span>
+                    </a>
+                  </Link>
+                </div>
+              }
             </div>
           </article>
         );
