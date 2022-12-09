@@ -580,7 +580,28 @@ export default class ContractCall {
         }
     }
 
-    getContractNFTs = async
+    // getContractNFTs = async() => {
+    getContractNFTs = async(): Promise<HolderToken[]> => {
+        const nftCount: number = Number(await this.oneNFT.getCurrentId());
+        const tokenIds = Array(nftCount).fill(1).map((element, index) => index + 1);
+        const tokenURLs = await this._batchGetTokenURI(tokenIds);
+        const contractName = await this.oneNFT.name();
+
+        const tokenHolders = await this.oneNFT.GetAllNftOwnerAddress();
+
+        const result: HolderToken[] = [];
+        _.map(tokenURLs, (uri, id) => {
+            result.push({
+                collection: contractName,
+                nft: this.oneNFT.address,
+                tokenId: tokenIds[id],
+                tokenURI: uri,
+                holder: tokenHolders[id]
+            })
+        });
+
+        return result;
+    }
 
     getHolderNFTs = async(): Promise<HolderToken[]> => {
         let nftIds: any = await this.oneNFT.GetHolderNfts(window.ethereum?.selectedAddress);
@@ -588,23 +609,20 @@ export default class ContractCall {
             return (d).toString() != "0";
         });
 
-        let promises: any = [];
-        _.map(nftIds, (d) => {
-            // Queue some new things...
-            promises.push(this.batchOneNFT.tokenURI(d.toString()));
-            // This line won't complete until the 10 above calls are complete, all of which will be sent as a single batch
-        })
-        const tokenURLs = await Promise.all(promises);
+        const tokenIds = _.map(nftIds, (d) => Number(d.toString()));
+        const tokenURLs = await this._batchGetTokenURI(tokenIds);
+        const contractName = await this.oneNFT.name();
 
         const result: HolderToken[] = [];
-        await Promise.all(_.map(tokenURLs, async(uri, tIndex) => {
+        _.map(tokenURLs, async(uri, tIndex) => {
             result.push({
-                collection: await this.oneNFT.name(),
+                collection: contractName,
                 nft: this.oneNFT.address,
-                tokenId: Number(nftIds[tIndex].toString()),
-                tokenURI: uri
+                tokenId: tokenIds[tIndex],
+                tokenURI: uri,
+                holder: window.ethereum?.selectedAddress!
             })
-        }));
+        });
 
         return result;
     }
@@ -615,13 +633,8 @@ export default class ContractCall {
             return (d.tokenId).toString() != "0";
         });
 
-        let promises: any = [];
-        _.map(data, (d) => {
-            // Queue some new things...
-            promises.push(this.batchOneNFT.tokenURI(d.tokenId.toString()));
-            // This line won't complete until the 10 above calls are complete, all of which will be sent as a single batch
-        })
-        const tokenURLs = await Promise.all(promises);
+        const tokenIds = _.map(data, (d) => Number(d.tokenId.toString()));
+        const tokenURLs = await this._batchGetTokenURI(tokenIds);
 
         const result: ListedToken[] = [];
         _.map(tokenURLs, (uri, tIndex) => {
@@ -631,5 +644,17 @@ export default class ContractCall {
             })
         })
         return result;
+    }
+
+    // use as helper function
+    _batchGetTokenURI = async(tokenIds: number[]): Promise<string[]> => {
+        let promises: any = [];
+        _.map(tokenIds, (d) => {
+            // Queue some new things...
+            promises.push(this.batchOneNFT.tokenURI(d));
+            // This line won't complete until the 10 above calls are complete, all of which will be sent as a single batch
+        })
+        const tokenURLs = await Promise.all(promises);
+        return tokenURLs;
     }
 }

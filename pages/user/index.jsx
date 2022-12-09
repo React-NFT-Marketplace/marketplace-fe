@@ -128,6 +128,8 @@ const User = () => {
     const getNfts = async() => {
       let contract = new ContractCall();
       let newNfts = await contract.getAllNFTs();
+      console.log(await contract.getHolderNFTs());
+    //   console.log(await contract.getContractNFTs());
     //   console.log(newNfts);
       setListedNfts(newNfts);
     }

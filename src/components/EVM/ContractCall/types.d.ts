@@ -71,4 +71,5 @@ export type HolderToken = {
     nft: string;
     tokenId: number;
     tokenURI?: string;
+    holder: string;
 }
