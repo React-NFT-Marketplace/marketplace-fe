@@ -227,3 +227,43 @@ export const uploadToIPFS = async (ipfsPath: string, content: any): Promise<stri
             });
     })
 }
+
+export const getAxelarTxsHistory = async() => {
+    const data = `{"senderAddress":${window.ethereum?.selectedAddress},"size":25,"from":0,"method":"searchGMP"}`;
+
+    const config = {
+        method: 'post',
+        url: 'https://testnet.api.gmp.axelarscan.io/',
+        headers: {
+            'authority': 'testnet.api.gmp.axelarscan.io',
+            'accept': '*/*',
+            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7,zh-TW;q=0.6,zh;q=0.5',
+            'cache-control': 'no-cache',
+            'content-type': 'text/plain;charset=UTF-8',
+            'origin': 'https://testnet.axelarscan.io',
+            'pragma': 'no-cache',
+            'referer': 'https://testnet.axelarscan.io/',
+            'sec-ch-ua': '"Not?A_Brand";v="8", "Chromium";v="108", "Google Chrome";v="108"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"macOS"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
+        },
+        data : data
+    };
+
+    return new Promise((resolve, reject) => {
+        axios(config)
+        .then(function (response) {
+            resolve(response.data)
+            // console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            // console.log(error);
+            reject(error)
+        });
+    })
+
+}

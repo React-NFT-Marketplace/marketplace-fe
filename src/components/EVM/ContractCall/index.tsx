@@ -38,12 +38,12 @@ export default class ContractCall {
     constructor(chainId: number | null = null) {
         // get chain nft contract address
         const chain: ChainConfig | undefined = _.find(chains, { id: (chainId? Number(chainId) : Number(window.ethereum!.networkVersion)) });
-        
+
         if(chain) {
             this.chainConfig = chain;
             this.provider = chainId? new ethers.providers.JsonRpcProvider(chain.rpc) : new ethers.providers.Web3Provider(window.ethereum as any);
             this.signer = chainId? this.provider : this.provider.getSigner();
-            
+
             this.messageSender = new ethers.Contract(chain!.messageSender!, MessageSender.abi, this.signer);
             this.messageReceiver = new ethers.Contract(chain!.messageReceiver!, MessageReceiver.abi, this.signer);
             this.oneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
@@ -54,7 +54,7 @@ export default class ContractCall {
             this.IERC20 = new ethers.Contract(chain!.crossChainToken!, IERC20.abi, this.signer);
             this.aUSDC = new ethers.Contract(chain!.crossChainToken!, aUSDC.abi, this.signer);
 
-            
+
         }
     }
 
@@ -186,20 +186,25 @@ export default class ContractCall {
         }
 
         // hard code to one day from now
-        const deadline = Math.round(Date.now() / 1000 + (7 * 24 * 60 * 60));
+        const deadline = Math.round(Date.now() / 1000 + (1 * 24 * 60 * 60));
 
         //switch to target chain
-        const contractName = await this.NFTMarketplace.name();
-        const nftNonce = await this.NFTMarketplace.nonces(tokenId);
+        const contractName = await this.oneNFT!.name();
+        const nftNonce = await this.oneNFT!.nonces(tokenId);
 
         // await marketplaceContract.approve(marketplaceContract.address, tokenId);
 
         // gasless call
-        const signature = await this.getSignature(contractName, fromChain.nftMarketplace!, window.ethereum.selectedAddress, tokenId, fromChain.id, nftNonce, deadline);
+        const signature = await this.getSignature(contractName, fromChain.oneNFT!, fromChain.nftMarketplace!, tokenId, fromChain.id, nftNonce, deadline);
         // console.log(`here ${signature}`);
 
+        // list for how long? (default 14 days)
+        let currentTime = new Date();
+        currentTime.setDate(currentTime.getDate()+14);
+        const listExpiry = Math.round(currentTime.getTime() / 1000);
+
         // gasless call
-        const receipt = await this.NFTMarketplace.setListTokenGasless(tokenId, ethers.utils.parseUnits(price.toString(), 6), deadline, signature);
+        const receipt = await(await this.NFTMarketplace.makeItem(fromChain.oneNFT, tokenId, ethers.utils.parseUnits(price.toString(), 6), listExpiry, deadline, signature)).wait(1);
 
         // const receipt = await marketplaceContract.setListToken(tokenId, window.ethers.utils.parseUnits(price.toString(), 6));
 
@@ -213,7 +218,7 @@ export default class ContractCall {
         const txUrl = `${fromChain.blockExplorerUrl}/tx/${txHash}`;
     }
 
-    callDelist = async (tokenId: number) => {
+    callDelist = async (itemId: number) => {
         if(!this.NFTMarketplace) {
             return;
         }
@@ -235,11 +240,11 @@ export default class ContractCall {
             return;
         }
 
+        // its item id (aka listed id), not token id ya
         const receipt = await this.NFTMarketplace
-            .delistToken(
-                tokenId
-            )
-            .then((tx: any) => tx.wait());
+            .delistItem(
+                itemId
+            ).then((tx: any) => tx.wait());
 
         console.log(receipt);
         const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
@@ -248,7 +253,7 @@ export default class ContractCall {
 
     callBuy = async (
         amount: string,
-        tokenId: number
+        itemId: number
     ) => {
         if(!this.NFTMarketplace || !this.IERC20 || !this.provider) {
             return;
@@ -286,8 +291,8 @@ export default class ContractCall {
             .then((tx: any) => tx.wait());
 
         const receipt = await this.NFTMarketplace
-            .executeSale(
-                tokenId
+            .purchaseItem(
+                itemId
             )
             .then((tx: any) => tx.wait());
 
@@ -349,18 +354,25 @@ export default class ContractCall {
         const contractName = await destMarketplace!.name();
         const nftNonce = await destMarketplace!.nonces(tokenId);
 
-        const signature = await this.getSignature(contractName, toChain.nftMarketplace!, toChain.messageReceiver!, tokenId, toChain.id, nftNonce, deadline);
+        const signature = await this.getSignature(contractName, toChain.oneNFT!, toChain.nftMarketplace!, tokenId, toChain.id, nftNonce, deadline);
 
         //switch back to current chain
         await requestSwitchChain(fromChain);
         const sourceContract = this.getMessageSenderContract(fromChain);
 
+        // list for how long? (default 14 days)
+        let currentTime = new Date();
+        currentTime.setDate(currentTime.getDate()+14);
+        const listExpiry = Math.round(currentTime.getTime() / 1000);
+
         const receipt = await sourceContract!
             .crossChainList(
                 toChain.name,
                 destContract!.address,
+                toChain.oneNFT,
                 tokenId,
                 ethers.utils.parseUnits(price.toString(), 6),
+                listExpiry,
                 deadline,
                 signature,
                 {
@@ -377,7 +389,7 @@ export default class ContractCall {
     }
 
     // cross chain delist
-    crossChainDelist = async (toChainId: number, tokenId: number) => {
+    crossChainDelist = async (toChainId: number, itemId: number) => {
         if(!this.provider || !this.IERC20) {
             return;
         }
@@ -423,7 +435,7 @@ export default class ContractCall {
             .crossChainDelist(
                 toChain.name,
                 destContract!.address,
-                tokenId,
+                itemId,
                 {
                     value: BigInt(gasFee)
                 },
@@ -436,7 +448,7 @@ export default class ContractCall {
     crossChainBuy = async (
         toChainId: number,
         amount: string,
-        tokenId: number
+        itemId: number
     ) => {
         if(!this.provider || !this.IERC20) {
             return;
@@ -501,7 +513,7 @@ export default class ContractCall {
                 destContract!.address,
                 "aUSDC",
                 ethers.utils.parseUnits(amount, 6),
-                tokenId,
+                itemId,
                 {
                     value: BigInt(gasFee)
                 },
@@ -530,12 +542,12 @@ export default class ContractCall {
         const toChain = _.find(ChainConfigs, {
             id: Number(toChainId)
         });
-        
+
         const fromChainId = Number(window.ethereum.networkVersion);
         const fromChain = _.find(ChainConfigs, {
             id: fromChainId
         });
-        
+
         const content: any = await getBase64(imageBlob);
 
         let ipfsJSON: string;
@@ -620,7 +632,7 @@ export default class ContractCall {
         if(!this.oneNFT) {
             return [];
         }
-        
+
         const nftCount: number = Number(await this.oneNFT.getCurrentId());
         const tokenIds = Array(nftCount).fill(1).map((element, index) => index + 1);
         const tokenURLs = await this._batchGetTokenURI(tokenIds);
