@@ -7,9 +7,10 @@ import FilterCategoryItem from '../categories/filterCategoryItem';
 
 import 'react-tabs/style/react-tabs.css';
 import { collection_activity_item_data } from '../../../data/collection_data';
+import CategoryItem2 from '../categories/categoryItem2';
 
-const Collection_items = () => {
-	const [itemsTabs, setItemsTabs] = useState(1);
+const Collection_items = ({ items }) => {
+	/* const [itemsTabs, setItemsTabs] = useState(1);
 	const [categoryItemData, setCategoryItemData] = useState(trendingCategoryData);
 
 	const collectionItemsTabs = [
@@ -23,7 +24,8 @@ const Collection_items = () => {
 			text: 'Activity',
 			icon: 'activities',
 		},
-	];
+	]; */
+
 	return (
 		<>
 			<section className="relative py-24">
@@ -37,8 +39,9 @@ const Collection_items = () => {
 					/>
 				</picture>
 				<div className="container">
+					<CategoryItem2 items={items}/>
 					{/* <!-- Tabs Nav --> */}
-					<Tabs className="tabs">
+					{/* <Tabs className="tabs">
 						<TabList className="nav nav-tabs dark:border-jacarta-600 border-jacarta-100 mb-12 flex items-center justify-center border-b">
 							{collectionItemsTabs.map(({ id, text, icon }) => {
 								return (
@@ -68,7 +71,7 @@ const Collection_items = () => {
 						<TabPanel>
 							<Activity_item />
 						</TabPanel>
-					</Tabs>
+					</Tabs> */}
 				</div>
 			</section>
 		</>

@@ -10,13 +10,13 @@ const FilterCategoryItem = () => {
 
 	useEffect(() => {
 		dispatch(updateTrendingCategoryItemData(trendingCategoryData.slice(0, 8)));
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<div>
 			{/* <!-- Filter --> */}
-			<Collection_category_filter />
-			<CategoryItem />
+			{/* <Collection_category_filter /> */}
+			<CategoryItem items={trendingCategoryData}/>
 		</div>
 	);
 };

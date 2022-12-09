@@ -15,6 +15,14 @@ const initialState = {
   buyModal: false,
   propartiesModalValue: false,
   trendingCategorySorText: "",
+
+  //props
+  buyModalProps: {
+    image: "",
+    name: "",
+    price: 0,
+    collectionName: ""
+  }
 };
 
 export const counterSlice = createSlice({
@@ -162,6 +170,10 @@ export const counterSlice = createSlice({
       }
       state.filteredRankingData = tempItem;
     },
+    updateBuyModalProps: (state, action) => {
+      const props = action.payload;
+      state.buyModalProps = props;
+    },
   },
 });
 
@@ -188,6 +200,7 @@ export const {
   updateRankingData,
   updateRankingDataByBlockchain,
   updateRankingDataByPostdate,
+  updateBuyModalProps,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

@@ -22,31 +22,33 @@ const isTestnet = process.env.REACT_APP_CHAIN_ENV === "testnet";
 
 const chains = ChainConfigs;
 export default class ContractCall {
-    provider: ethers.providers.JsonRpcProvider;
-    chainConfig: ChainConfig;
-    signer: ethers.providers.JsonRpcSigner;
-    messageSender: Contract;
-    messageReceiver: Contract;
-    oneNFT: Contract;
-    NFTMarketplace: Contract;
-    IAxelarGateway: Contract;
-    IERC20: Contract;
-    aUSDC: Contract;
+    provider?: ethers.providers.JsonRpcProvider;
+    chainConfig?: ChainConfig;
+    signer?: ethers.providers.JsonRpcProvider | ethers.providers.JsonRpcSigner;
+    messageSender?: Contract;
+    messageReceiver?: Contract;
+    oneNFT?: Contract;
+    NFTMarketplace?: Contract;
+    IAxelarGateway?: Contract;
+    IERC20?: Contract;
+    aUSDC?: Contract;
 
-    constructor() {
+    constructor(chainId: number | null = null) {
         // get chain nft contract address
-        const chain: ChainConfig | undefined = _.find(chains, { id: Number(window.ethereum!.networkVersion) });
-
-        this.chainConfig = chain!;
-        this.provider = new ethers.providers.Web3Provider(window.ethereum as any);
-        this.signer = this.provider.getSigner();
-        this.messageSender = new ethers.Contract(chain!.messageSender!, MessageSender.abi, this.signer);
-        this.messageReceiver = new ethers.Contract(chain!.messageReceiver!, MessageReceiver.abi, this.signer);
-        this.oneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
-        this.NFTMarketplace = new ethers.Contract(chain!.nftMarketplace!, NFTMarketplace.abi, this.signer);
-        this.IAxelarGateway = new ethers.Contract(chain!.gateway!, IAxelarGateway.abi, this.signer);
-        this.IERC20 = new ethers.Contract(chain!.crossChainToken!, IERC20.abi, this.signer);
-        this.aUSDC = new ethers.Contract(chain!.crossChainToken!, aUSDC.abi, this.signer);
+        const chain: ChainConfig | undefined = _.find(chains, { id: (chainId? Number(chainId) : Number(window.ethereum!.networkVersion)) });
+        
+        if(chain) {
+            this.chainConfig = chain;
+            this.provider = chainId? new ethers.providers.JsonRpcProvider(chain.rpc) : new ethers.providers.Web3Provider(window.ethereum as any);
+            this.signer = chainId? this.provider : this.provider.getSigner();
+            this.messageSender = new ethers.Contract(chain.messageSender!, MessageSender.abi, this.signer);
+            this.messageReceiver = new ethers.Contract(chain.messageReceiver!, MessageReceiver.abi, this.signer);
+            this.oneNFT = new ethers.Contract(chain.oneNFT!, OneNFT.abi, this.signer);
+            this.NFTMarketplace = new ethers.Contract(chain.nftMarketplace!, NFTMarketplace.abi, this.signer);
+            this.IAxelarGateway = new ethers.Contract(chain.gateway!, IAxelarGateway.abi, this.signer);
+            this.IERC20 = new ethers.Contract(chain.crossChainToken!, IERC20.abi, this.signer);
+            this.aUSDC = new ethers.Contract(chain.crossChainToken!, aUSDC.abi, this.signer);
+        }
     }
 
     getSignature = async (
@@ -87,8 +89,10 @@ export default class ContractCall {
             },
         };
 
+        const signer = this.signer as ethers.providers.JsonRpcSigner;
+
         // sign Permit
-        const signature = await this.signer._signTypedData(
+        const signature = await signer._signTypedData(
             typedData.domain,
             { Permit: typedData.types.Permit },
             typedData.message
@@ -107,22 +111,37 @@ export default class ContractCall {
     } */
 
     getGatewayContract = (chain: ChainConfig) => {
+        if(!this.provider) {
+            return;
+        }
         return new Contract(chain.gateway!, IAxelarGateway.abi, this.provider.getSigner());
     }
 
     getMessageSenderContract = (chain: ChainConfig) => {
+        if(!this.provider) {
+            return;
+        }
         return new Contract(chain.messageSender!, MessageSender.abi, this.provider.getSigner());
     }
 
     getMessageReceiverContract = (chain: ChainConfig) => {
+        if(!this.provider) {
+            return;
+        }
         return new Contract(chain.messageReceiver!, MessageReceiver.abi, this.provider.getSigner());
     }
 
     getMarketplaceContract = (chain: ChainConfig) => {
+        if(!this.provider) {
+            return;
+        }
         return new Contract(chain.nftMarketplace!, NFTMarketplace.abi, this.provider.getSigner());
     }
 
     getWalletUSDCBal = async () => {
+        if(!this.aUSDC) {
+            return 0;
+        }
         const balance = await this.aUSDC.balanceOf(window.ethereum!.selectedAddress);
         const tokenDecimal = 6;
         // to align some token that are not 18 decimals (ecc, eifi)
@@ -134,6 +153,10 @@ export default class ContractCall {
     }
 
     callList = async (tokenId: number, price: number) => {
+        if(!this.NFTMarketplace) {
+            return;
+        }
+
         if(!window.ethereum) {
             return;
         }
@@ -184,6 +207,10 @@ export default class ContractCall {
     }
 
     callDelist = async (tokenId: number) => {
+        if(!this.NFTMarketplace) {
+            return;
+        }
+
         if (!window.ethereum?.selectedAddress) {
             alert('Not connected');
             return;
@@ -216,6 +243,10 @@ export default class ContractCall {
         amount: string,
         tokenId: number
     ) => {
+        if(!this.NFTMarketplace || !this.IERC20 || !this.provider) {
+            return;
+        }
+
         if (!window.ethereum?.selectedAddress) {
             alert('Not connected');
             return;
@@ -259,6 +290,10 @@ export default class ContractCall {
 
     // cross chain stuff
     crossChainList = async (toChainId: number, tokenId: number, price: string) => {
+        if(!this.provider) {
+            return;
+        }
+
         if (!window.ethereum?.selectedAddress) {
             alert('Not connected');
             return;
@@ -304,8 +339,8 @@ export default class ContractCall {
         await requestSwitchChain(toChain);
         const destMarketplace = this.getMarketplaceContract(toChain);
         const destContract = this.getMessageReceiverContract(toChain);
-        const contractName = await destMarketplace.name();
-        const nftNonce = await destMarketplace.nonces(tokenId);
+        const contractName = await destMarketplace!.name();
+        const nftNonce = await destMarketplace!.nonces(tokenId);
 
         const signature = await this.getSignature(contractName, toChain.nftMarketplace!, toChain.messageReceiver!, tokenId, toChain.id, nftNonce, deadline);
 
@@ -313,10 +348,10 @@ export default class ContractCall {
         await requestSwitchChain(fromChain);
         const sourceContract = this.getMessageSenderContract(fromChain);
 
-        const receipt = await sourceContract
+        const receipt = await sourceContract!
             .crossChainList(
                 toChain.name,
-                destContract.address,
+                destContract!.address,
                 tokenId,
                 ethers.utils.parseUnits(price.toString(), 6),
                 deadline,
@@ -336,6 +371,10 @@ export default class ContractCall {
 
     // cross chain delist
     crossChainDelist = async (toChainId: number, tokenId: number) => {
+        if(!this.provider || !this.IERC20) {
+            return;
+        }
+
         if (!window.ethereum?.selectedAddress) {
             alert('Not connected');
             return;
@@ -373,10 +412,10 @@ export default class ContractCall {
         const sourceContract = this.getMessageSenderContract(fromChain);
         const destContract = this.getMessageReceiverContract(toChain);
 
-        const receipt = await sourceContract
+        const receipt = await sourceContract!
             .crossChainDelist(
                 toChain.name,
-                destContract.address,
+                destContract!.address,
                 tokenId,
                 {
                     value: BigInt(gasFee)
@@ -392,6 +431,10 @@ export default class ContractCall {
         amount: string,
         tokenId: number
     ) => {
+        if(!this.provider || !this.IERC20) {
+            return;
+        }
+
         if (!window.ethereum?.selectedAddress) {
             alert('Not connected');
             return;
@@ -431,7 +474,7 @@ export default class ContractCall {
         const destContract = this.getMessageReceiverContract(toChain);
 
         // Get token address from the gateway contract
-        const tokenAddress = await srcGatewayContract.tokenAddresses("aUSDC");
+        const tokenAddress = await srcGatewayContract!.tokenAddresses("aUSDC");
 
 
         const erc20 = new Contract(
@@ -442,13 +485,13 @@ export default class ContractCall {
 
         // Approve the token for the amount to be sent
         await erc20
-            .approve(sourceContract.address, ethers.utils.parseUnits(amount, 6))
+            .approve(sourceContract!.address, ethers.utils.parseUnits(amount, 6))
             .then((tx: any) => tx.wait());
 
-        const receipt = await sourceContract
+        const receipt = await sourceContract!
             .crossChainBuy(
                 toChain.name,
-                destContract.address,
+                destContract!.address,
                 "aUSDC",
                 ethers.utils.parseUnits(amount, 6),
                 tokenId,
@@ -467,6 +510,9 @@ export default class ContractCall {
     }
 
     mint = async (toChainId: number, name: string, description: string, imageBlob: Blob) => {
+        if(!this.provider || !this.oneNFT || !this.messageSender) {
+            return;
+        }
 
         if(!window.ethereum) {
             return;
@@ -575,6 +621,9 @@ export default class ContractCall {
     }
 
     getAllNFTs = async(): Promise<ListedToken[]> => {
+        if(!this.provider || !this.NFTMarketplace) {
+            return [];
+        }
         let data: ListedToken[] = await this.NFTMarketplace.getAllListedNFTs();
         data = _.filter(data, (d: ListedToken) => {
             return (d.tokenId).toString() != "0";

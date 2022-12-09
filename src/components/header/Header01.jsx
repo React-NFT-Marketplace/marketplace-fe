@@ -407,6 +407,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
       if(!account) {
         return;
       }
+      console.log(account, window.ethereum.networkVersion);
       try {
           let caller = new ContractCall();
           const balance = await caller.getWalletUSDCBal()

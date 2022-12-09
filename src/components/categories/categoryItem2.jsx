@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { buyModalShow } from "../../../redux/counterSlice";
+import { buyModalShow, updateBuyModalProps } from "../../../redux/counterSlice";
 import { getChainIcon } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
+import { BigNumber } from "ethers";
 
 const CategoryItem2 = ({items}) => {
   const dispatch = useDispatch();
@@ -37,13 +38,15 @@ const CategoryItem2 = ({items}) => {
           ]
          */
         const {
-          token_id: id,
-          token_uri: image,
+          tokenId,
+          tokenURI: image,
           chain
         } = item;
 
+        const price = 10; //update this
+
+        const id = BigNumber.from(tokenId).toNumber();
         const fromChain = _.find(ChainConfigs, {id: Number(chain)});
-        console.log(ChainConfigs)
 
         return (
           <article key={id}>
@@ -53,7 +56,7 @@ const CategoryItem2 = ({items}) => {
                   <a>
                     <img
                       src={image}
-                      alt="item 5"
+                      alt={`Item #${id}`}
                       className="w-full h-[230px] rounded-[0.625rem] object-cover"
                     />
                   </a>
@@ -65,7 +68,7 @@ const CategoryItem2 = ({items}) => {
                       <a>
                         <Tippy content={<span>{fromChain.name}</span>}>
                           <img
-                            src={getChainIcon(chain)}
+                            src={getChainIcon(Number(chain))}
                             alt="Chain"
                             className="dark:border-jacarta-600 hover:border-accent dark:hover:border-accent h-6 w-6 rounded-full border-2 border-white"
                           />
@@ -79,7 +82,7 @@ const CategoryItem2 = ({items}) => {
                 <Link href={`/item`}>
                   <a>
                     <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
-                      Item #123
+                      Item #{id}
                     </span>
                   </a>
                 </Link>
@@ -98,7 +101,15 @@ const CategoryItem2 = ({items}) => {
                 <div className="mt-8 flex items-center justify-between">
                   <button
                     className="text-accent font-display text-sm font-semibold"
-                    onClick={() => dispatch(buyModalShow())}
+                    onClick={() => {
+                      dispatch(buyModalShow());
+                      dispatch(updateBuyModalProps({
+                        image,
+                        name: `Item ${id}`,
+                        collectionName: `Collection (${fromChain.name})`,
+                        price
+                      }));
+                    }}
                   >
                     Buy now
                   </button>
