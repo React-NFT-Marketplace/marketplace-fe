@@ -22,7 +22,8 @@ const Collection_dropdown2 = ({ data, collection, onItemChange }) => {
 		if(!activeItem) {
 			return;
 		}
-		runIfFunction(onItemChange, activeItem);
+		
+		runIfFunction(onItemChange, Number(activeItem));
 	}, [activeItem, onItemChange]);
 
 	return (

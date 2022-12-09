@@ -133,13 +133,28 @@ const User = () => {
     setHasQueriedNfts(true);
 
     const getNfts = async() => {
-      let contract = new ContractCall();
-      let newNfts = await contract.getAllNFTs();
 
-    //   console.log(await contract.getHolderNFTs());
-    //   console.log(await contract.getContractNFTs());
-      console.log(newNfts);
-      setListedNfts(newNfts);
+      let newNFTs = [];
+
+      await Promise.all(
+        _.map(ChainConfigs, async(chain) => {
+            if(!chain.oneNFT) {
+              return;
+            }
+
+            let contract = new ContractCall(chain.id);
+            let nfts = await contract.getAllNFTs();
+  
+            nfts.forEach(r => {
+              newNFTs.push({
+                ...r,
+                chain: chain.id
+              })
+            })
+        })
+      );
+
+      setListedNfts(newNFTs);
     }
 
     getNfts();

@@ -44,7 +44,6 @@ export default class ContractCall {
             this.provider = chainId? new ethers.providers.JsonRpcProvider(chain.rpc) : new ethers.providers.Web3Provider(window.ethereum as any);
             this.signer = chainId? this.provider : this.provider.getSigner();
             
-            
             this.messageSender = new ethers.Contract(chain!.messageSender!, MessageSender.abi, this.signer);
             this.messageReceiver = new ethers.Contract(chain!.messageReceiver!, MessageReceiver.abi, this.signer);
             this.oneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
@@ -522,15 +521,21 @@ export default class ContractCall {
         if(!this.provider || !this.oneNFT || !this.messageSender) {
             return;
         }
-        const toChain = _.find(ChainConfigs, {
-            id: toChainId
-        });
 
         if(!window.ethereum) {
             return;
         }
 
+        //get chains
+        const toChain = _.find(ChainConfigs, {
+            id: Number(toChainId)
+        });
+        
         const fromChainId = Number(window.ethereum.networkVersion);
+        const fromChain = _.find(ChainConfigs, {
+            id: fromChainId
+        });
+        
         const content: any = await getBase64(imageBlob);
 
         let ipfsJSON: string;
@@ -559,7 +564,7 @@ export default class ContractCall {
         }
 
         //mint
-        if (toChainId == fromChainId) {
+        if (Number(toChainId) == fromChainId) {
             console.log(`Same chain tx`);
             // same chain mint
 
@@ -576,13 +581,6 @@ export default class ContractCall {
         else {
             // cross chain mint
             // might not work yet
-
-            const fromChain = _.find(ChainConfigs, {
-                id: fromChainId
-            });
-            const toChain = _.find(ChainConfigs, {
-                id: toChainId
-            });
 
             const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
 
@@ -718,7 +716,7 @@ export default class ContractCall {
         if(!this.batchNFTMarketplace) {
             return [];
         }
-        
+
         let promises: any = [];
         _.map(itemIds, (d) => {
             // Queue some new things...

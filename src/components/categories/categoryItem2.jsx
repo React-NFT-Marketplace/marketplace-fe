@@ -38,18 +38,27 @@ const CategoryItem2 = ({items}) => {
           ]
          */
         const {
-          tokenId,
-          tokenURI: image,
-          chain
+          token_id,
+          chain,
+          name: collectionName,
         } = item;
+
+        const metadata = JSON.parse(item.metadata);
+
+        const {
+          creator,
+          description,
+          image,
+          name: itemName
+        } = metadata;
 
         const price = 10; //update this
 
-        const id = BigNumber.from(tokenId).toNumber();
-        const fromChain = _.find(ChainConfigs, {id: Number(chain)});
+        const id = BigNumber.from(token_id).toNumber();
+        const chainConfig = _.find(ChainConfigs, {id: Number(chain)});
 
         return (
-          <article key={id}>
+          <article key={id + '-nftitem'}>
             <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
               <figure className="relative">
                 <Link href={`/item`}>
@@ -66,7 +75,7 @@ const CategoryItem2 = ({items}) => {
                   <div className="flex -space-x-2">
                     <Link href={`/item}`}>
                       <a>
-                        <Tippy content={<span>{fromChain.name}</span>}>
+                        <Tippy content={<span>{chainConfig.name}</span>}>
                           <img
                             src={getChainIcon(Number(chain))}
                             alt="Chain"
@@ -79,22 +88,29 @@ const CategoryItem2 = ({items}) => {
                 </div>
               </figure>
               <div className="mt-7 flex items-center justify-between">
+                <Link href={`/collection/${chain}`}>
+                  <a>
+                    <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
+                      {collectionName}
+                    </span>
+                  </a>
+                </Link>
                 <Link href={`/item`}>
                   <a>
                     <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
-                      Item #{id}
+                      {itemName}
                     </span>
                   </a>
                 </Link>
               </div>
-              <div className="mt-2 text-sm">
+              {/* <div className="mt-2 text-sm">
                 <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
                   {0}
                 </span>
                 <span className="dark:text-jacarta-300 text-jacarta-500">
                   {0}/{0}
                 </span>
-              </div>
+              </div> */}
 
               {
                 item.isListed &&
@@ -105,8 +121,8 @@ const CategoryItem2 = ({items}) => {
                       dispatch(buyModalShow());
                       dispatch(updateBuyModalProps({
                         image,
-                        name: `Item ${id}`,
-                        collectionName: `Collection (${fromChain.name})`,
+                        name: itemName,
+                        collectionName: collectionName,
                         price
                       }));
                     }}

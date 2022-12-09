@@ -42,13 +42,23 @@ export const chainData = [
 		image: '/images/chains/bsc.png',
 	},
 	{
-		id: '43113',
+		id: '80001',
 		text: 'Polygon',
 		image: '/images/chains/polygon.png',
 	},
 	{
-		id: '80001',
-		text: 'AVAX',
+		id: '43113',
+		text: 'Avalanche',
 		image: '/images/chains/avalanche.png',
+	},
+	{
+		id: '4002',
+		text: 'Fantom',
+		image: '/images/chains/fantom.png',
+	},
+	{
+		id: '1287',
+		text: 'Moonbeam',
+		image: '/images/chains/moonbeam.png',
 	},
 ];
