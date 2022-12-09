@@ -11,6 +11,7 @@ export const BSCTEST: ChainConfig = {
     "tokenName": "BNB",
     "tokenSymbol": "BNB",
     "evmChain": EvmChain.BINANCE,
+    "gasToken": GasToken.BINANCE,
     "nativeCurrency": {
         name: 'BNB',
         decimals: 18,
@@ -33,6 +34,7 @@ export const AVAXTEST: ChainConfig = {
     "tokenName": "Avax",
     "tokenSymbol": "AVAX",
     "evmChain": EvmChain.AVALANCHE,
+    "gasToken": GasToken.AVAX,
     "nativeCurrency": {
         name: 'AVAX',
         decimals: 18,
@@ -55,6 +57,7 @@ export const MUMBAI: ChainConfig = {
     "tokenName": "MATIC",
     "tokenSymbol": "MATIC",
     "evmChain": EvmChain.POLYGON,
+    "gasToken": GasToken.MATIC,
     "nativeCurrency": {
         name: 'MATIC',
         decimals: 18,
@@ -77,6 +80,7 @@ export const FANTOMTEST: ChainConfig = {
     "tokenName": "FTM",
     "tokenSymbol": "FTM",
     "evmChain": EvmChain.FANTOM,
+    "gasToken": GasToken.FTM,
     "nativeCurrency": {
         name: 'FTM',
         decimals: 18,
@@ -99,6 +103,7 @@ export const MOONBASE: ChainConfig = {
     "tokenName": "DEV",
     "tokenSymbol": "DEV",
     "evmChain": EvmChain.MOONBEAM,
+    "gasToken": GasToken.GLMR,
     "nativeCurrency": {
         name: 'DEV',
         decimals: 18,
