@@ -17,7 +17,7 @@ const index = () => {
         </picture>
         <div className="container">
           <h1 className="font-display text-jacarta-700 py-16 text-center text-4xl font-medium dark:text-white">
-            Activity
+            History
           </h1>
 
           <Activity_item />

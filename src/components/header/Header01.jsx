@@ -143,8 +143,8 @@ export default function Header01({handleAccountChange, handleChainChange}) {
       },
       {
         id: uuidv4(),
-        name: "Activity",
-        path: "/activity",
+        name: "History",
+        path: "/history",
       },
       {
         id: uuidv4(),
@@ -607,6 +607,26 @@ export default function Header01({handleAccountChange, handleChainChange}) {
                     ))}
                   </ul>
                 </li> */}
+
+
+                {/* create */}
+                <li className="group">
+                  <Link href="/history">
+                    <a>
+                      <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                        <span
+                          className={
+                            isChildrenPageActive(route.asPath, "/history")
+                              ? "text-accent dark:text-accent"
+                              : ""
+                          }
+                        >
+                          History
+                        </span>
+                      </button>
+                    </a>
+                  </Link>
+                </li>
 
                 {/* create */}
                 <li className="group">
@@ -1108,6 +1128,23 @@ export default function Header01({handleAccountChange, handleChainChange}) {
                   </li>
                 ))}
               </ul>
+            </li>
+            <li className="group" onClick={() => setToggle(false)}>
+              <Link href="/history">
+                <a>
+                  <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                    <span
+                      className={
+                        isChildrenPageActive("/history", route.asPath)
+                          ? "text-accent dark:text-accent"
+                          : ""
+                      }
+                    >
+                      History
+                    </span>
+                  </button>
+                </a>
+              </Link>
             </li>
             <li className="group" onClick={() => setToggle(false)}>
               <Link href="/create">
