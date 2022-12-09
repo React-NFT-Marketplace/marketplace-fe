@@ -49,10 +49,6 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
     }, [accounts, isLoading, handleNewAccount]);
 
     useEffect(() => {
-        handleChainChange(chain);
-    }, [handleChainChange, chain]);
-
-    useEffect(() => {
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {
             setTimeout(() => {
                 if(!window.ethereum || !window.ethereum.isConnected()) {
@@ -72,7 +68,7 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
                 setIsLoading(false);
             }, 500);
 
-            window.ethereum!.on('accountsChanged', (newAccounts) => {
+            const onAccountChanged = (newAccounts: any) => {
                 if(Array.isArray(newAccounts)) {
                     if(typeof(newAccounts[0] === 'string')) {
                         setAccounts(newAccounts);
@@ -82,21 +78,25 @@ const OnboardingButton: React.FC<ButtonProps> = ({ handleNewAccount, handleChain
                 else {
                     setAccounts([]);
                 }
-            });
+            }
+            window.ethereum!.on('accountsChanged', onAccountChanged);
 
-            window.ethereum!.on('chainChanged', () => {
+            const onChainChanged = () => {
+                handleChainChange(window.ethereum!.networkVersion!);
                 setChain(window.ethereum!.networkVersion!);
-            });
+            }
+            window.ethereum!.on('chainChanged', onChainChanged);
 
             return () => {
-                window.ethereum!.removeListener('accountsChanged', (newAccounts) => setAccounts(newAccounts));
+                window.ethereum!.removeListener('accountsChanged', onAccountChanged);
+                window.ethereum!.removeListener('chainChanged', onChainChanged);
             };
         }
 
         else {
             setDisabled(false);
         }
-    }, []);
+    }, [handleChainChange]);
 
     const onClick = () => {
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {

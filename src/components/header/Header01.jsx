@@ -22,6 +22,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
   const [toggle, setToggle] = useState(false);
   const [isCollapse, setCollapse] = useState(null);
   const [account, setAccount] = useState("");
+  const [chainId, setChainId] = useState("");
   const [usdcBalance, setUsdcBalance] = useState(0);
   const [showBalanceWindow, setShowBalanceWindow] = useState(false);
 
@@ -402,15 +403,25 @@ export default function Header01({handleAccountChange, handleChainChange}) {
     runIfFunction(handleAccountChange, newAccount);
   }, [handleAccountChange]);
 
+  const onChainChanged = useCallback((chainId) => {
+    console.log('chain changed');
+    setChainId(chainId);
+    runIfFunction(handleChainChange, chainId)
+  }, [handleChainChange])
+
   useEffect(() => {
     const getUsdcBalance = async() => {
       if(!account) {
         return;
       }
-      console.log(account, window.ethereum.networkVersion);
+
+      if(!chainId) {
+        return;
+      }
+      
       try {
           let caller = new ContractCall();
-          const balance = await caller.getWalletUSDCBal()
+          const balance = await caller.getWalletUSDCBal();
           console.log(balance);
           setUsdcBalance(balance);
       }
@@ -420,7 +431,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
     }
 
     getUsdcBalance();
-  }, [account]);
+  }, [account, chainId]);
 
   return (
     <>
@@ -624,7 +635,7 @@ export default function Header01({handleAccountChange, handleChainChange}) {
             <div className="ml-8 hidden items-center lg:flex xl:ml-12">
               <OnboardingButton
                 className={`js-wallet border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15] ${account? 'hidden': ''}`}
-                handleChainChange={(chainId) => { runIfFunction(handleChainChange, chainId) }}
+                handleChainChange={onChainChanged}
                 handleNewAccount={onAccountChanged}
                 onFinishLoading={() => {}}
               >
