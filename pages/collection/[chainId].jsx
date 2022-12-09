@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { collection_item_data } from '../../data/collection_data';
 import Auctions_dropdown from '../../src/components/dropdown/Auctions_dropdown';
 import Social_dropdown from '../../src/components/dropdown/Social_dropdown';
-import Collection_items from '../../src/components/collectrions/Collection_items';
+import Collection_items2 from '../../src/components/collectrions/Collection_items2';
 import Image from 'next/image';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -23,6 +23,8 @@ const Collection = () => {
 		return _.find(ChainConfigs, {id: Number(chainId)});
 	}, [chainId]);
 
+	const [collectionName, setCollectionName] = useState("");
+
 	useEffect(() => {
 		if(!chainId) {
 			return;
@@ -32,13 +34,16 @@ const Collection = () => {
 		const getNFTs = async() => {
 			try {
 				let contract = new ContractCall(chainId);
-				let nfts = await contract.getAllNFTs();
+
+				let name = await contract.oneNFT.name();
+				setCollectionName(name);
+
+				let nfts = await contract.getContractNFTs();
 				let ret = [];
 				nfts.forEach(nft => {
 					ret.push({
 						...nft,
-						chain: chainId,
-						isListed: true,
+						chain: chainId
 					});
 				});
 
@@ -102,7 +107,7 @@ const Collection = () => {
 					<div className="container">
 						<div className="text-center">
 							<h2 className="font-display text-jacarta-700 mb-2 text-4xl font-medium dark:text-white">
-								Collection ({chain?.name})
+								{collectionName}
 							</h2>
 							{/* <div className="mb-8">
 								<span className="text-jacarta-400 text-sm font-bold">Created by </span>
@@ -163,7 +168,7 @@ const Collection = () => {
 			</div>
 			{
 				nfts.length > 0?
-				<Collection_items 
+				<Collection_items2
 					items={nfts}
 				/> :
 				<div className='flex items-center justify-center py-10'>Loading..</div>
