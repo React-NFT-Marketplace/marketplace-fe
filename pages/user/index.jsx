@@ -132,7 +132,7 @@ const User = () => {
       setListedNfts(newNfts);
     }
 
-    //getNfts();
+    getNfts();
   }, [userContext.chain, hasQueriedNfts]);
 
   useEffect(() => {
@@ -145,7 +145,7 @@ const User = () => {
     <>
       <Meta title="User || MotM | NFT Marketplace" />
       {/* <!-- Profile --> */}
-      
+
       <div className="pt-[5.5rem] lg:pt-24">
         {/* <!-- Banner --> */}
         <div className="relative h-[18.75rem]">
@@ -225,7 +225,7 @@ const User = () => {
           </div>
         </section>
         {/* <!-- end profile --> */}
-        <User_items 
+        <User_items
           items={nfts}
           listedItems={listedNfts}
         />

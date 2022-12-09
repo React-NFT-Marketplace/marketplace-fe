@@ -23,11 +23,14 @@ const isTestnet = process.env.REACT_APP_CHAIN_ENV === "testnet";
 const chains = ChainConfigs;
 export default class ContractCall {
     provider: ethers.providers.JsonRpcProvider;
+    batchProvider: ethers.providers.JsonRpcBatchProvider;
     chainConfig: ChainConfig;
     signer: ethers.providers.JsonRpcSigner;
+    batchSigner: ethers.providers.JsonRpcSigner;
     messageSender: Contract;
     messageReceiver: Contract;
     oneNFT: Contract;
+    batchOneNFT: Contract;
     NFTMarketplace: Contract;
     IAxelarGateway: Contract;
     IERC20: Contract;
@@ -37,12 +40,15 @@ export default class ContractCall {
         // get chain nft contract address
         const chain: ChainConfig | undefined = _.find(chains, { id: Number(window.ethereum!.networkVersion) });
 
+        console.log(window.ethereum);
         this.chainConfig = chain!;
         this.provider = new ethers.providers.Web3Provider(window.ethereum as any);
+        this.batchProvider = new ethers.providers.JsonRpcBatchProvider(chain!.rpc);
         this.signer = this.provider.getSigner();
         this.messageSender = new ethers.Contract(chain!.messageSender!, MessageSender.abi, this.signer);
         this.messageReceiver = new ethers.Contract(chain!.messageReceiver!, MessageReceiver.abi, this.signer);
         this.oneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
+        this.batchOneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
         this.NFTMarketplace = new ethers.Contract(chain!.nftMarketplace!, NFTMarketplace.abi, this.signer);
         this.IAxelarGateway = new ethers.Contract(chain!.gateway!, IAxelarGateway.abi, this.signer);
         this.IERC20 = new ethers.Contract(chain!.crossChainToken!, IERC20.abi, this.signer);
@@ -579,6 +585,23 @@ export default class ContractCall {
         data = _.filter(data, (d: ListedToken) => {
             return (d.tokenId).toString() != "0";
         });
-        return data;
+
+        let promises: any = [];
+        _.map(data, (d) => {
+            // Queue some new things...
+            promises.push(this.batchOneNFT.tokenURI(d.tokenId.toString()));
+            // This line won't complete until the 10 above calls are complete, all of which will be sent as a single batch
+        })
+        const tokenURLs = await Promise.all(promises);
+
+        const result: ListedToken[] = [];
+        _.map(tokenURLs, (uri, tIndex) => {
+            console.log(`tIndex: ${tIndex}`);
+            result.push({
+                ...data[tIndex],
+                tokenURI: uri
+            })
+        })
+        return result;
     }
 }
