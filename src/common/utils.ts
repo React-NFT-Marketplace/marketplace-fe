@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { ChainConfigs } from '../components/EVM';
+import axios from 'axios';
 
 export function sleep(ms: number) {
     return new Promise((resolve, reject) => {
@@ -180,4 +181,49 @@ export const getChainIcon = (chainId: number) => {
     }
 
     return `/images/chains/${image}.png`;
+}
+
+// str byteToHex(uint8 byte)
+//   converts a single byte to a hex string
+function byteToHex(byte: any) {
+    return ('0' + byte.toString(16)).slice(-2);
+}
+
+
+// str generateId(int len);
+//   len - must be an even number (default: 40)
+export function generateId(len = 40) {
+    var arr = new Uint8Array(len / 2);
+    window.crypto.getRandomValues(arr);
+    return Array.from(arr, byteToHex).join("");
+}
+
+export const uploadToIPFS = async (ipfsPath: string, content: any): Promise<string> => {
+    const options = {
+        method: 'POST',
+        url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY
+        },
+        data: JSON.stringify([{
+            path: ipfsPath,
+            content: content
+        }])
+    };
+    // image[0].name,
+    // await getBase64(image[0]),
+
+    return new Promise((resolve, reject) => {
+        axios
+            .request(options)
+            .then((response) => {
+                resolve(response.data[0].path);
+            })
+            .catch(function (error) {
+                console.error(error);
+                reject(`IPFS failed`);
+            });
+    })
 }

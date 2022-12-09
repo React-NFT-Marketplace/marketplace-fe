@@ -63,4 +63,14 @@ export type ListedToken = {
     seller: string;
     sold: boolean;
     tokenId: BigNumber;
+    tokenURI: string;
+    sellingPrice: BigNumber;
+}
+
+export type HolderToken = {
+    collection: string;
+    nft: string;
+    tokenId: number;
+    tokenURI?: string;
+    holder: string;
 }
