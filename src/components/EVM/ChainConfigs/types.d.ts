@@ -11,6 +11,7 @@ export type ChainConfig = {
         symbol: string;
     };
     blockExplorerUrl?: string;
+    blockExplorerApi?: string;
     gateway?: string;
     gasReceiver?: string;
     gasToken?: GasToken;

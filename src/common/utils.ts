@@ -1,6 +1,10 @@
 import moment from 'moment';
 import { ChainConfigs } from '../components/EVM';
 import axios from 'axios';
+import _ from 'lodash';
+import { ChainConfig } from '../components/EVM/ChainConfigs/types';
+const chains = ChainConfigs;
+import { ethers, Contract, BigNumber } from 'ethers';
 
 export function sleep(ms: number) {
     return new Promise((resolve, reject) => {
@@ -229,7 +233,7 @@ export const uploadToIPFS = async (ipfsPath: string, content: any): Promise<stri
 }
 
 export const getAxelarTxsHistory = async() => {
-    const data = `{"senderAddress":${window.ethereum?.selectedAddress},"size":25,"from":0,"method":"searchGMP"}`;
+    const data = `{"senderAddress":"${window.ethereum?.selectedAddress}","size":25,"from":0,"method":"searchGMP"}`;
 
     const config = {
         method: 'post',
@@ -265,5 +269,40 @@ export const getAxelarTxsHistory = async() => {
             reject(error)
         });
     })
+}
 
+export const getBlockExporerHistory = async(chainId: number | null = null, contractAddress: string) => {
+    // get chain nft contract address
+    const chain: ChainConfig | undefined = _.find(chains, { id: (chainId? Number(chainId) : Number(window.ethereum!.networkVersion)) });
+    const apiKey = JSON.parse(process.env.NEXT_PUBLIC_EXPLORER_API!);
+    console.log(apiKey);
+    console.log(apiKey[chain!.name]);
+
+    const config = {
+        method: 'get',
+        url: `${chain?.blockExplorerApi}/api?module=account&action=tokennfttx&contractaddress=${contractAddress}&address=${window.ethereum?.selectedAddress}&page=1&offset=100&startblock=0&endblock=999999999&sort=asc&apikey=${apiKey[chain!.name]}`,
+        headers: { }
+    };
+
+    return new Promise((resolve, reject) => {
+        axios(config)
+        .then(function (response) {
+            resolve(response.data)
+            // console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            // console.log(error);
+            reject(error)
+        });
+    })
+}
+
+export const formatUsdcAmount = (amount: string) => {
+    const tokenDecimal = 6;
+    // to align some token that are not 18 decimals (ecc, eifi)
+    let decimalPad = (18 - tokenDecimal);
+    decimalPad = (decimalPad == 0) ? 1 : Number(10) ** decimalPad;
+    const amountDecimal = ethers.BigNumber.from(amount);
+
+    return ethers.utils.formatEther(amountDecimal.mul(decimalPad));
 }
