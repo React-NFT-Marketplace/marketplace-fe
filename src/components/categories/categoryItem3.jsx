@@ -9,7 +9,6 @@ import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
 import axios from "axios";
-import ContractCall from "../EVM/ContractCall";
 
 const CategoryItem3 = ({items, listedItems}) => {
   const dispatch = useDispatch();
@@ -76,6 +75,7 @@ const CategoryItem3 = ({items, listedItems}) => {
 
         const id = BigNumber.from(tokenId).toNumber();
         const chainConfig = _.find(ChainConfigs, {id: Number(chain)});
+        const itemId = isListed? BigNumber.from(listDetails[0].itemId).toNumber() : undefined;
 
         return (
           <article key={id + '-nftitem'}>
@@ -157,7 +157,9 @@ const CategoryItem3 = ({items, listedItems}) => {
                         image: metadata.image,
                         name: metadata.name,
                         collectionName,
-                        price
+                        price,
+                        itemId,
+                        chainId: chain,
                       }));
                     }}
                   >

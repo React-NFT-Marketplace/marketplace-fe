@@ -103,7 +103,7 @@ export const MOONBASE: ChainConfig = {
     "tokenName": "DEV",
     "tokenSymbol": "DEV",
     "evmChain": EvmChain.MOONBEAM,
-    "gasToken": GasToken.GLMR,
+    "gasToken": "DEV",
     "nativeCurrency": {
         name: 'DEV',
         decimals: 18,

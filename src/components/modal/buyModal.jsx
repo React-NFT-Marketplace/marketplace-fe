@@ -1,13 +1,42 @@
 import Link from "next/link";
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { buyModalHide } from "../../../redux/counterSlice";
 import { toLocaleDecimal } from "../../common/utils";
-import { Confirm_checkout } from "../metamask/Metamask";
+import ContractCall from "../EVM/ContractCall";
+import { toast } from 'react-toastify';
+import { BigNumber } from "ethers";
+
+const SuccessMintToast = (url) => (
+    <div>
+        <a target="_blank" rel="noopener noreferrer" href={url}>Tx Success!</a> 
+    </div>
+);
 
 const BuyModal = () => {
   const { buyModal, buyModalProps } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
+
+  const onBuyClick = useCallback(async() => {
+    let { chainId, itemId, price } = buyModalProps;
+
+    if(!chainId) {
+      alert('Unable to get chain');
+      return;
+    }
+
+    try {
+      dispatch(buyModalHide());
+      let contract = new ContractCall(chainId);
+      let url = await contract.buy(chainId, price, BigNumber.from(itemId));
+      toast.success(SuccessMintToast(url));
+    }
+
+    catch (e){
+      console.log(e);
+      toast.error('Failed to buy!');
+    }
+  }, [buyModalProps, dispatch]);
 
   return (
     <div>
@@ -149,7 +178,13 @@ const BuyModal = () => {
 
             <div className="modal-footer">
               <div className="flex items-center justify-center space-x-4">
-                <Confirm_checkout />
+                <button
+                  type="button"
+                  className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                  onClick={onBuyClick}
+                >
+                  Confirm Checkout
+                </button>
               </div>
             </div>
           </div>

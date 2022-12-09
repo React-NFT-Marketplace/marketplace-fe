@@ -13,7 +13,7 @@ export type ChainConfig = {
     blockExplorerUrl?: string;
     gateway?: string;
     gasReceiver?: string;
-    gasToken?: GasToken;
+    gasToken?: string;
     oneNFT?: string;
     tokenName?: string;
     tokenSymbol?: string;

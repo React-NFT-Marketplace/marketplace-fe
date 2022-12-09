@@ -282,13 +282,7 @@ export default class ContractCall {
 
         // Get token address from the gateway contract
         const NFTMarketplace = this.getMarketplaceContract();
-        const tokenAddress = await NFTMarketplace.getReceivingToken();
-
-        const erc20 = new Contract(
-            tokenAddress,
-            this.getIERC20Contract().abi,
-            this.getProvider(),
-        );
+        const erc20 = this.getAUSDCContract();
 
         // Approve the token for the amount to be sent
         await erc20
@@ -481,19 +475,11 @@ export default class ContractCall {
             2
         );
 
-        const srcGatewayContract = this.getGatewayContract(fromChain);
         const sourceContract = this.getMessageSenderContract(fromChain);
         const destContract = this.getMessageReceiverContract(toChain);
 
         // Get token address from the gateway contract
-        const tokenAddress = await srcGatewayContract!.tokenAddresses("aUSDC");
-
-
-        const erc20 = new Contract(
-            tokenAddress,
-            this.getIERC20Contract().abi,
-            this.getProvider(),
-        );
+        const erc20 = this.getAUSDCContract();
 
         // Approve the token for the amount to be sent
         await erc20

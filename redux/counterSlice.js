@@ -22,7 +22,9 @@ const initialState = {
     image: "",
     name: "",
     price: 0,
-    collectionName: ""
+    collectionName: "",
+    itemId: undefined,
+    chainId: undefined,
   },
 
   listModalProps: {
@@ -198,7 +200,7 @@ export const counterSlice = createSlice({
       const props = action.payload;
       state.listModalProps = props;
     },
-    updateDeistModalProps: (state, action) => {
+    updateDelistModalProps: (state, action) => {
       const props = action.payload;
       state.delistModalProps = props;
     },
@@ -232,7 +234,7 @@ export const {
   updateRankingDataByPostdate,
   updateBuyModalProps,
   updateListModalProps,
-  updateDeistModalProps,
+  updateDelistModalProps,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

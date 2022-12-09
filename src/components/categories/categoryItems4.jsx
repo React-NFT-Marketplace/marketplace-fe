@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { buyModalShow, delistModalShow, updateBuyModalProps, updateDeistModalProps } from "../../../redux/counterSlice";
+import { delistModalShow, updateDelistModalProps } from "../../../redux/counterSlice";
 import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
@@ -151,7 +151,7 @@ const CategoryItem4 = ({listedItems}) => {
                     className="text-accent font-display text-sm font-semibold"
                     onClick={() => {
                       dispatch(delistModalShow());
-                      dispatch(updateDeistModalProps({
+                      dispatch(updateDelistModalProps({
                         chainId: chain,
                         itemId: BigNumber.from(itemId).toNumber(),
                       }));

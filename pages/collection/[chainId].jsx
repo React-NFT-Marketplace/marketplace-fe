@@ -20,6 +20,7 @@ const Collection = () => {
 	const [nfts, setNfts] = useState([]);
 	const userContext = useContext(UserContext);
 	const [hasQueriedNfts, setHasQueriedNfts] = useState(false);
+	const [hasQueriedCollections, setHasQueriedCollections] = useState(false);
 	const chain = useMemo(() => {
 		return _.find(ChainConfigs, {id: Number(chainId)});
 	}, [chainId]);
@@ -72,6 +73,12 @@ const Collection = () => {
 		if(!chainId) {
 			return;
 		}
+  
+		if(hasQueriedCollections) {
+		  return;
+		}
+		
+		setHasQueriedCollections(true);
 
 		//get collection NFTs
 		const getNFTs = async() => {
@@ -99,7 +106,7 @@ const Collection = () => {
 		}
 
 		getNFTs();
-	}, [chainId]);
+	}, [chainId, hasQueriedCollections]);
 
 	return (
 		<>
