@@ -162,14 +162,20 @@ export const getChainIcon = (chainId: number) => {
     let image = "";
 
     switch(chainId) {
-        case ChainConfigs.AVAX_TEST.id:
-            image = "avax";
+        case ChainConfigs.AVAXTEST.id:
+            image = "avalanche";
             break;
-        case ChainConfigs.BSC_TEST.id:
+        case ChainConfigs.BSCTEST.id:
             image = "bsc";
             break;
         case ChainConfigs.MUMBAI.id:
             image = "polygon";
+            break;
+        case ChainConfigs.FANTOMTEST.id:
+            image = "fantom";
+            break;
+        case ChainConfigs.MOONBASE.id:
+            image = "moonbeam";
             break;
     }
 

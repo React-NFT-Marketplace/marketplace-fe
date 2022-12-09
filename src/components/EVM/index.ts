@@ -4,9 +4,11 @@ import * as ChainConfigs from './ChainConfigs';
 import * as ContractCall from './ContractCall';
 
 const SupportedChains = [
-    ChainConfigs.BSC_TEST,
-    ChainConfigs.AVAX_TEST,
-    ChainConfigs.MUMBAI
+    ChainConfigs.BSCTEST,
+    ChainConfigs.AVAXTEST,
+    ChainConfigs.MUMBAI,
+    ChainConfigs.FANTOMTEST,
+    ChainConfigs.MOONBASE,
 ]
 
 export { EVMConnector, EVMSwitcher, ChainConfigs, ContractCall, SupportedChains };

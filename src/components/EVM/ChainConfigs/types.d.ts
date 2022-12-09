@@ -2,7 +2,6 @@ import { EvmChain, GasToken } from "@axelar-network/axelarjs-sdk";
 
 export type ChainConfig = {
     name: string;
-    shortName: string;
     id: number;
     evmChain?: EvmChain;
     rpc: string;
