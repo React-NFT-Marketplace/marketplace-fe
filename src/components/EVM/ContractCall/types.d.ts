@@ -64,6 +64,7 @@ export type ListedToken = {
     sold: boolean;
     tokenId: BigNumber;
     tokenURI: string;
+    sellingPrice: BigNumber;
 }
 
 export type HolderToken = {

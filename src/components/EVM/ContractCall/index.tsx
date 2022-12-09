@@ -9,7 +9,7 @@ import IERC20 from '../../../ABI/IERC20.json';
 import aUSDC from '../../../ABI/aUSDC.json';
 import _ from 'lodash';
 import axios from 'axios';
-import { getBase64, getBaseUrl, ucFirst, uppercase } from '../../../common/utils';
+import { getBase64, getBaseUrl, ucFirst, uppercase, generateId, uploadToIPFS } from '../../../common/utils';
 import { ChainConfig } from '../ChainConfigs/types';
 // import { BSC_TEST, POLYGON_TEST, BSC, POLYGON } from '../../../src/components/EVM/ChainConfigs';
 import { AxelarQueryAPI, Environment, EvmChain, GasToken } from '@axelar-network/axelarjs-sdk';
@@ -26,12 +26,13 @@ export default class ContractCall {
     batchProvider: ethers.providers.JsonRpcBatchProvider;
     chainConfig: ChainConfig;
     signer: ethers.providers.JsonRpcSigner;
-    batchSigner: ethers.providers.JsonRpcSigner;
+    batchSigner: ethers.Wallet
     messageSender: Contract;
     messageReceiver: Contract;
     oneNFT: Contract;
     batchOneNFT: Contract;
     NFTMarketplace: Contract;
+    batchNFTMarketplace: Contract;
     IAxelarGateway: Contract;
     IERC20: Contract;
     aUSDC: Contract;
@@ -40,16 +41,17 @@ export default class ContractCall {
         // get chain nft contract address
         const chain: ChainConfig | undefined = _.find(chains, { id: Number(window.ethereum!.networkVersion) });
 
-        console.log(window.ethereum);
         this.chainConfig = chain!;
         this.provider = new ethers.providers.Web3Provider(window.ethereum as any);
         this.batchProvider = new ethers.providers.JsonRpcBatchProvider(chain!.rpc);
         this.signer = this.provider.getSigner();
+        this.batchSigner = new ethers.Wallet(`${process.env.NEXT_PUBLIC_DOXXED_PRIVATE_KEY}`, this.batchProvider);
         this.messageSender = new ethers.Contract(chain!.messageSender!, MessageSender.abi, this.signer);
         this.messageReceiver = new ethers.Contract(chain!.messageReceiver!, MessageReceiver.abi, this.signer);
         this.oneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
-        this.batchOneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.signer);
+        this.batchOneNFT = new ethers.Contract(chain!.oneNFT!, OneNFT.abi, this.batchSigner);
         this.NFTMarketplace = new ethers.Contract(chain!.nftMarketplace!, NFTMarketplace.abi, this.signer);
+        this.batchNFTMarketplace = new ethers.Contract(chain!.nftMarketplace!, NFTMarketplace.abi, this.batchSigner);
         this.IAxelarGateway = new ethers.Contract(chain!.gateway!, IAxelarGateway.abi, this.signer);
         this.IERC20 = new ethers.Contract(chain!.crossChainToken!, IERC20.abi, this.signer);
         this.aUSDC = new ethers.Contract(chain!.crossChainToken!, aUSDC.abi, this.signer);
@@ -470,50 +472,40 @@ export default class ContractCall {
         onSent(receipt.transactionHash); */
 
         const txUrl  = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
+        console.log(txUrl);
     }
 
     mint = async (toChainId: number, name: string, description: string, imageBlob: Blob) => {
+        const toChain = _.find(ChainConfigs, {
+            id: toChainId
+        });
 
         if(!window.ethereum) {
             return;
         }
 
-        const fromChainId = window.ethereum.networkVersion;
-        let hash = await fetch(`https://api.onenft.shop/premint/${fromChainId}`);
-        hash = await hash.json();
-        let content = await getBase64(imageBlob);
+        const fromChainId = Number(window.ethereum.networkVersion);
+        const content: any = await getBase64(imageBlob);
 
-        let mintData = {
-            name: name,
-            description: description,
-            path: imageBlob.name,
-            content: content,
-            hash: hash,
-            fromChain: fromChainId,
-            toChain: toChainId.toString(),
-            creator: window.ethereum.selectedAddress,
-            tx: '',
-            tokenURI: '',
-        };
-
+        let ipfsJSON: string;
         try {
-            let res = await axios
-                                .request({
-                                    method: 'POST',
-                                    url: 'https://deep-index.moralis.io/api/v2/ipfs/uploadFolder',
-                                    headers: {
-                                        accept: 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY
-                                    },
-                                    data: JSON.stringify([{
-                                        path: mintData.path,
-                                        content: mintData.content
-                                    }])
-                                });
-            mintData.tokenURI = res.data[0].path;
-        }
+            // prepare path data for ipfs "${chainName}/${randomHash}"
+            const ipfsPath = `${toChain!.name}/${generateId()}`;
+            // update to moralis
+            const ipfsURL = await uploadToIPFS(ipfsPath, content);
+            console.log(`img: ${ipfsURL}`);
 
+            // create json metadata
+            const jsonData = {
+                "name": name,
+                "creator": window.ethereum?.selectedAddress,
+                "image": ipfsURL,
+                "description": description
+            };
+
+            ipfsJSON = await uploadToIPFS(`metadata/${ipfsPath}`, jsonData);
+            console.log(`json: ${ipfsJSON}`);
+        }
         catch (error){
             console.error(error);
             alert('Error Uploading..');
@@ -521,30 +513,29 @@ export default class ContractCall {
         }
 
         //mint
-        if (mintData.fromChain == mintData.toChain) {
+        if (toChainId == fromChainId) {
             console.log(`Same chain tx`);
             // same chain mint
 
             const currChain = _.find(ChainConfigs, {
-                id: Number(mintData.fromChain)
+                id: fromChainId
             });
 
             const nftContract = this.oneNFT;
-            const receipt = await nftContract.mint(mintData.tokenURI).then((tx: any) => tx.wait());
+            const receipt = await nftContract.mint(ipfsJSON).then((tx: any) => tx.wait());
 
             const txHash = _.has(receipt, 'transactionHash') ? receipt.transactionHash : receipt.hash;
-            mintData.tx = `${currChain!.blockExplorerUrl}/tx/${txHash}`;
+            console.log(`${currChain!.blockExplorerUrl}/tx/${txHash}`);
         }
-
         else {
             // cross chain mint
             // might not work yet
 
             const fromChain = _.find(ChainConfigs, {
-                id: Number(mintData.fromChain)
+                id: fromChainId
             });
             const toChain = _.find(ChainConfigs, {
-                id: Number(mintData.toChain)
+                id: toChainId
             });
 
             const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
@@ -569,14 +560,14 @@ export default class ContractCall {
             const receipt = await crossMarketplaceContract.crossChainMint(
                     uppercase(toChain!.evmChain!),
                     toChain!.messageReceiver,
-                    mintData.tokenURI,
+                    ipfsJSON,
                     {
                         value: BigInt(gasFee)
                     },
                 )
                 .then((tx: any) => tx.wait());;
 
-            mintData.tx = `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
+            console.log(`https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`);
         }
     }
 
@@ -634,7 +625,9 @@ export default class ContractCall {
         });
 
         const tokenIds = _.map(data, (d) => Number(d.tokenId.toString()));
+        const itemIds = _.map(data, (d) => Number(d.itemId.toString()));
         const tokenURLs = await this._batchGetTokenURI(tokenIds);
+        const sellingPrices = await this._batchGetSellingPrice(itemIds);
 
         const result: ListedToken[] = [];
         _.map(tokenURLs, (uri, tIndex) => {
@@ -642,6 +635,7 @@ export default class ContractCall {
                 ...data[tIndex],
                 tokenURI: uri
             })
+            result[tIndex].sellingPrice = sellingPrices[tIndex];
         })
         return result;
     }
@@ -656,5 +650,17 @@ export default class ContractCall {
         })
         const tokenURLs = await Promise.all(promises);
         return tokenURLs;
+    }
+
+    // use as helper function
+    _batchGetSellingPrice = async(itemIds: number[]): Promise<BigNumber[]> => {
+        let promises: any = [];
+        _.map(itemIds, (d) => {
+            // Queue some new things...
+            promises.push(this.batchNFTMarketplace.getTotalPrice(d));
+            // This line won't complete until the 10 above calls are complete, all of which will be sent as a single batch
+        })
+        const prices = await Promise.all(promises);
+        return prices;
     }
 }
