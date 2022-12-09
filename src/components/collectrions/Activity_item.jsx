@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
-import { collection_activity_item_data } from '../../../data/collection_data';
+// import { collection_activity_item_data } from '../../../data/collection_data';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAxelarTxsHistory, getBlockExporerHistory, formatUsdcAmount, getChainIcon } from '../../common/utils';
@@ -7,6 +7,7 @@ import UserContext from '../UserContext';
 import _, { omit } from 'lodash';
 import moment from 'moment';
 import { ChainConfigs } from '../EVM';
+import { truncateStr } from '../../common/utils';
 const chains = ChainConfigs;
 
 const Activity_item = () => {
@@ -61,7 +62,8 @@ const Activity_item = () => {
                     title: `${eventTypeCall}`,
                     price: price,
                     time: eventTime.format('YYYY-MM-DD HH:mm:ss'),
-                    category: 'crosschain'
+                    category: 'crosschain',
+                    hash: res.call.transactionHash
                 })
             }
         })
@@ -99,7 +101,8 @@ const Activity_item = () => {
                 title: `${eventTypeCall}`,
                 price: price,
                 time: eventTime.format('YYYY-MM-DD HH:mm:ss'),
-                category: 'interchain'
+                category: 'interchain',
+                hash: res.hash
             })
 
             setAllData(_.merge(allData, formatted));
@@ -189,7 +192,7 @@ const Activity_item = () => {
 					{/* <!-- Records --> */}
 					<div className="mb-10 shrink-0 basis-8/12 space-y-5 lg:mb-0 lg:pr-10">
 						{!_.isNil(data) && data.slice(0, 5).map((item) => {
-							const { id, image, toChain, fromChain, title, price, time, category } = item;
+							const { id, image, toChain, fromChain, title, price, time, category, hash } = item;
 							const itemLink = image
 								.split('/')
 								.slice(-1)
@@ -228,6 +231,7 @@ const Activity_item = () => {
                                             <span className="dark:text-jacarta-200 text-jacarta-500 mb-3 block text-sm">
                                                 {price}
                                             </span>
+                                            <span className="text-jacarta-200 block text-xs">#{truncateStr(hash, 16)}</span>
                                             <span className="text-jacarta-300 block text-xs">{time}</span>
                                         </div>
 
