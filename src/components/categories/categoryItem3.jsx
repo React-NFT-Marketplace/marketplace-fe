@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { buyModalShow, updateBuyModalProps } from "../../../redux/counterSlice";
+import { buyModalShow, delistModalShow, updateBuyModalProps, updateDelistModalProps } from "../../../redux/counterSlice";
 import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
@@ -148,6 +148,7 @@ const CategoryItem3 = ({items, listedItems}) => {
 
               {
                 isListed &&
+                seller.toLowerCase() != window.ethereum?.selectedAddress.toLowerCase() &&
                 <div className="mt-8 flex items-center justify-between">
                   <button
                     className="text-accent font-display text-sm font-semibold"
@@ -164,6 +165,34 @@ const CategoryItem3 = ({items, listedItems}) => {
                     }}
                   >
                     Buy now
+                  </button>
+                  <Link href={`/item`}>
+                    <a className="group flex items-center">
+                      <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
+                        <use xlinkHref="/icons.svg#icon-history"></use>
+                      </svg>
+                      <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
+                        View History
+                      </span>
+                    </a>
+                  </Link>
+                </div>
+              }
+              {
+                isListed &&
+                seller.toLowerCase() == window.ethereum?.selectedAddress.toLowerCase() &&
+                <div className="mt-8 flex items-center justify-between">
+                  <button
+                    className="text-accent font-display text-sm font-semibold"
+                    onClick={() => {
+                      dispatch(delistModalShow());
+                      dispatch(updateDelistModalProps({
+                        chainId: chain,
+                        itemId: BigNumber.from(itemId).toNumber(),
+                      }));
+                    }}
+                  >
+                    Delist
                   </button>
                   <Link href={`/item`}>
                     <a className="group flex items-center">
