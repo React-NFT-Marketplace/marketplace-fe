@@ -138,6 +138,13 @@ export default class ContractCall {
         return new Contract(chain.messageReceiver!, MessageReceiver.abi, this.provider.getSigner());
     }
 
+    getNFTContract = (chain: ChainConfig) => {
+        if(!this.provider) {
+            return;
+        }
+        return new Contract(chain.oneNFT!, OneNFT.abi, this.provider.getSigner());
+    }
+
     getMarketplaceContract = (chain: ChainConfig) => {
         if(!this.provider) {
             return;
@@ -351,8 +358,9 @@ export default class ContractCall {
         await requestSwitchChain(toChain);
         const destMarketplace = this.getMarketplaceContract(toChain);
         const destContract = this.getMessageReceiverContract(toChain);
-        const contractName = await destMarketplace!.name();
-        const nftNonce = await destMarketplace!.nonces(tokenId);
+        const destNFT = this.getNFTContract(toChain);
+        const contractName = await destNFT!.name();
+        const nftNonce = await destNFT!.nonces(tokenId);
 
         const signature = await this.getSignature(contractName, toChain.oneNFT!, toChain.nftMarketplace!, tokenId, toChain.id, nftNonce, deadline);
 
