@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useContext } from 'react';
 import { collection_activity_item_data } from '../../../data/collection_data';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getAxelarTxsHistory, formatUsdcAmount, getChainIcon } from '../../common/utils';
+import { getAxelarTxsHistory, getBlockExporerHistory, formatUsdcAmount, getChainIcon } from '../../common/utils';
 import UserContext from '../UserContext';
 import _, { omit } from 'lodash';
 import moment from 'moment';
@@ -17,16 +17,17 @@ const Activity_item = () => {
 	}
 
 	const [data, setData] = useState([]);
+	const [allData, setAllData] = useState([]);
 	const [filterData, setfilterData] = useState(['interchain', 'crosschain']);
 
 	const [inputText, setInputText] = useState('');
 
 	const handleFilter = (category) => {
-		setData(data.filter((item) => item.category === category));
+		setData(allData.filter((item) => item.category === category));
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const newArray = collection_activity_item_data.filter((item) => {
+		const newArray = allData.filter((item) => {
 			return item.title.toLowerCase().includes(inputText);
 		});
 		setData(newArray);
@@ -48,16 +49,16 @@ const Activity_item = () => {
             const eventTime = moment.unix(res.call.created_at.ms / 1000);
 
             // find if call from our contract
-            const result = _.find(chains, {"messageSender": res.call.to});
+            const isMsgSender = _.find(chains, {"messageSender": res.call.to});
             const toChain = _.find(chains, {"evmChain": res.approved.chain});
 
-            if (!_.isNil(result)) {
+            if (!_.isNil(isMsgSender)) {
                 formatted.push({
                     id: `https://testnet.axelarscan.io/gmp/${res.call.transactionHash}`,
                     image: '',
                     fromChain: getChainIcon(res.call.transaction.chainId),
                     toChain: getChainIcon(toChain.id),
-                    title: `NFT ${eventTypeCall}`,
+                    title: `${eventTypeCall}`,
                     price: price,
                     time: eventTime.format('YYYY-MM-DD HH:mm:ss'),
                     category: 'crosschain'
@@ -65,16 +66,57 @@ const Activity_item = () => {
             }
         })
 
-
         console.log(formatted);
-        setData(formatted);
-    }, [userContext.account]);
+        setAllData(_.merge(allData, formatted));
+    }, []);
+
+    const getBscExplorer = useCallback(async() => {
+        const chain = _.find(chains, {"id": Number(window.ethereum.networkVersion)});
+
+        const results = await getBlockExporerHistory(null, chain.oneNFT);
+        const formatted = [];
+
+        _.map(results.result, (res, resIndex) => {
+            let eventTypeCall = 'Buy';
+
+            if (res.from == "0x0000000000000000000000000000000000000000") {
+                eventTypeCall = 'Mint';
+            } else if (res.to == chain.nftMarketplace.toLowerCase()) {
+                eventTypeCall = 'List';
+            } else if (res.from == chain.nftMarketplace.toLowerCase() && Number(res.transactionIndex) > 2) {
+                eventTypeCall = 'Buy';
+            } else {
+                eventTypeCall = 'Delist';
+            }
+            const eventTime = moment.unix(Number(res.timeStamp));
+            const price = '';
+
+            formatted.push({
+                id: `${chain.blockExplorerUrl}/tx/${res.hash}`,
+                image: '',
+                fromChain: '',
+                toChain: '',
+                title: `${eventTypeCall}`,
+                price: price,
+                time: eventTime.format('YYYY-MM-DD HH:mm:ss'),
+                category: 'interchain'
+            })
+
+            setAllData(_.merge(allData, formatted));
+        });
+        // massage data
+        // from: "0x0000000000000000000000000000000000000000" = mint
+        // to: "0xa8ea7a97eb0ab5d4ccbafe82eb1941577f42abf7" = list
+        // from: "0xa8ea7a97eb0ab5d4ccbafe82eb1941577f42abf7" = buy / delist
+        // else buy
+    }, [userContext.account])
 
 	useEffect(() => {
+        getAxelarTxs();
+        getBscExplorer();
 		setfilterData(filterData.filter(onlyUnique));
         setFilterVal(1);
-        // setData(collection_activity_item_data.filter((item) => item.category === 'crosschain'));
-        getAxelarTxs();
+        setData(allData.filter((item) => item.category === 'crosschain'));
 	}, []);
 
 	return (

@@ -274,13 +274,12 @@ export const getAxelarTxsHistory = async() => {
 export const getBlockExporerHistory = async(chainId: number | null = null, contractAddress: string) => {
     // get chain nft contract address
     const chain: ChainConfig | undefined = _.find(chains, { id: (chainId? Number(chainId) : Number(window.ethereum!.networkVersion)) });
+
     const apiKey = JSON.parse(process.env.NEXT_PUBLIC_EXPLORER_API!);
-    console.log(apiKey);
-    console.log(apiKey[chain!.name]);
 
     const config = {
         method: 'get',
-        url: `${chain?.blockExplorerApi}/api?module=account&action=tokennfttx&contractaddress=${contractAddress}&address=${window.ethereum?.selectedAddress}&page=1&offset=100&startblock=0&endblock=999999999&sort=asc&apikey=${apiKey[chain!.name]}`,
+        url: `${chain?.blockExplorerApi}/api?module=account&action=tokennfttx&contractaddress=${contractAddress}&address=${window.ethereum?.selectedAddress}&page=1&offset=100&startblock=0&endblock=999999999&sort=desc&apikey=${apiKey[chain!.name]}`,
         headers: { }
     };
 
