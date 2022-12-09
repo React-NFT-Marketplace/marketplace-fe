@@ -14,8 +14,9 @@ const Explore_collection_item2 = ({ onFinishLoad }) => {
 		let collections = [];
 		_.map(ChainConfigs, async(chain) => {
             let contract = new ContractCall(chain.id);
-            let itemsCount = await contract.oneNFT.getCurrentId();
-            let name = await contract.oneNFT.name();
+			let oneNFT = contract.getOneNFTContract(true);
+            let itemsCount = await oneNFT.getCurrentId();
+            let name = await oneNFT.name();
 
 			collections.push({
 				id: chain.id,

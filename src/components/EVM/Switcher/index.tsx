@@ -3,6 +3,11 @@ import { runIfFunction } from '../../../common/utils';
 import { ChainConfig } from '../ChainConfigs/types';
 import { ButtonProps } from './types';
 import MetaMaskOnboarding from '@metamask/onboarding';
+import { ethers } from 'ethers';
+
+export const hexlify = (chainId: number) => {
+    return ethers.utils.hexlify(chainId).replace("0x0", "0x");
+}
 
 export const requestSwitchChain = async(
     targetChain: ChainConfig,
@@ -10,11 +15,13 @@ export const requestSwitchChain = async(
     onError?: (e: any) => void,
 ) => {
     let {
-        id: chainId, 
+        id, 
         name: chainName,
         nativeCurrency,
         rpc
     } = targetChain;
+
+    let chainId = hexlify(id);
     
     try {
         await window.ethereum!.request({

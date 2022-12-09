@@ -149,7 +149,8 @@ const CategoryItem2 = ({items, canList = false}) => {
                     onClick={() => {
                       dispatch(listModalShow());
                       dispatch(updateListModalProps({
-                        chainId: Number(chain)
+                        chainId: Number(chain),
+                        tokenId: token_id,
                       }));
                     }}
                   >

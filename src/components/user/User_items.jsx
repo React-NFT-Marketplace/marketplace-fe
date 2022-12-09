@@ -9,15 +9,15 @@ import { trendingCategoryData } from "../../../data/categories_data";
 import "react-tabs/style/react-tabs.css";
 import Explore_collection_item from "../collectrions/explore_collection_item";
 import UserContext from "../UserContext";
+import Trending_categories_items3 from "../categories/trending_categories_items3";
+import { BigNumber } from "ethers";
+import CategoryItem3 from "../categories/categoryItem3";
+import CategoryItem4 from "../categories/categoryItems4";
 
 const User_items = ({ items, listedItems, canList }) => {
   const [itemActive, setItemActive] = useState(1);
   const [itemsOnSale, setItemsOnSale] = useState([]);
   const userContext = useContext(UserContext);
-
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
 
   useEffect(() => {
     if(!listedItems) {
@@ -27,8 +27,13 @@ const User_items = ({ items, listedItems, canList }) => {
     if(!userContext || !userContext.account) {
       return;
     }
-    setItemsOnSale(listedItems.filter(item => item.seller == userContext.account));
-  }, [listedItems, userContext]);
+    
+    let userItemsOnSale = listedItems.filter(item => {
+      return item.seller.toLowerCase() == userContext.account.toLowerCase();
+    });
+
+    setItemsOnSale(userItemsOnSale);
+  }, [listedItems, userContext, items]);
 
   return (
     <>
@@ -59,10 +64,10 @@ const User_items = ({ items, listedItems, canList }) => {
                   }
                 >
                   <svg className="icon mr-1 h-5 w-5 fill-current">
-                    <use xlinkHref={`/icons.svg#icon-on-sale`}></use>
+                    <use xlinkHref={`/icons.svg#icon-owned`}></use>
                   </svg>
                   <span className="font-display text-base font-medium">
-                    On Sale ({itemsOnSale.length})
+                    Owned ({items.length})
                   </span>
                 </button>
               </Tab>
@@ -79,29 +84,29 @@ const User_items = ({ items, listedItems, canList }) => {
                   }
                 >
                   <svg className="icon mr-1 h-5 w-5 fill-current">
-                    <use xlinkHref={`/icons.svg#icon-owned`}></use>
+                    <use xlinkHref={`/icons.svg#icon-on-sale`}></use>
                   </svg>
                   <span className="font-display text-base font-medium">
-                    Owned ({items.length})
+                    On Sale ({itemsOnSale.length})
                   </span>
                 </button>
               </Tab>
             </TabList>
-
-            <TabPanel>
-              <div>
-                {/* <!-- Filter --> */}
-                <Trending_categories_items2 
-                  items={listedItems}
-                />
-              </div>
-            </TabPanel>
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
                 <Trending_categories_items2
                   items={items}
                   canList={true}
+                />
+              </div>
+            </TabPanel>
+
+            <TabPanel>
+              <div>
+                {/* <!-- Filter --> */}
+                <CategoryItem4
+                  listedItems={itemsOnSale}
                 />
               </div>
             </TabPanel>

@@ -13,6 +13,7 @@ const initialState = {
   walletModal: false,
   listModal: false,
   buyModal: false,
+  delistModal: false,
   propertiesModalValue: false,
   trendingCategorySorText: "",
 
@@ -26,6 +27,11 @@ const initialState = {
 
   listModalProps: {
     chainId: undefined,
+  },
+
+  delistModalProps: {
+    chainId: undefined,
+    itemId: undefined,
   },
 };
 
@@ -56,14 +62,24 @@ export const counterSlice = createSlice({
       state.walletModal = false;
     },
     listModalShow: (state) => {
+      document.querySelectorAll("body")[0].classList.add('modal-open');
       state.listModal = true;
     },
     listModalHide: (state) => {
+      document.querySelectorAll("body")[0].classList.remove('modal-open');
       state.listModal = false;
     },
     buyModalShow: (state) => {
       document.querySelectorAll("body")[0].classList.add('modal-open');
       state.buyModal = true;
+    },
+    delistModalHide: (state) => {
+      document.querySelectorAll("body")[0].classList.remove('modal-open');
+      state.delistModal = false;
+    },
+    delistModalShow: (state) => {
+      document.querySelectorAll("body")[0].classList.add('modal-open');
+      state.delistModal = true;
     },
     buyModalHide: (state) => {
       document.querySelectorAll("body")[0].classList.remove('modal-open');
@@ -182,6 +198,10 @@ export const counterSlice = createSlice({
       const props = action.payload;
       state.listModalProps = props;
     },
+    updateDeistModalProps: (state, action) => {
+      const props = action.payload;
+      state.delistModalProps = props;
+    },
   },
 });
 
@@ -195,6 +215,8 @@ export const {
   walletModalhide,
   listModalShow,
   listModalHide,
+  delistModalShow,
+  delistModalHide,
   buyModalShow,
   buyModalHide,
   showPropertiesModal,
@@ -210,6 +232,7 @@ export const {
   updateRankingDataByPostdate,
   updateBuyModalProps,
   updateListModalProps,
+  updateDeistModalProps,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

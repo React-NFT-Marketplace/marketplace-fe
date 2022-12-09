@@ -78,7 +78,7 @@ const Collection = () => {
 			try {
 				let contract = new ContractCall(chainId);
 
-				let name = await contract.oneNFT.name();
+				let name = await contract.getOneNFTContract(true).name();
 				setCollectionName(name);
 
 				let nfts = await contract.getContractNFTs();

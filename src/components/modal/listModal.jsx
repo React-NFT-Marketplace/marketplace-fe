@@ -2,6 +2,13 @@ import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { listModalHide } from "../../../redux/counterSlice";
 import ContractCall from "../EVM/ContractCall";
+import { toast } from 'react-toastify';
+
+const SuccessMintToast = (url) => (
+    <div>
+        <a target="_blank" rel="noopener noreferrer" href={url}>Tx Success!</a> 
+    </div>
+);
 
 const ListModal = () => {
   const { listModal, listModalProps } = useSelector((state) => state.counter);
@@ -14,16 +21,24 @@ const ListModal = () => {
   }, []);
 
   const onListClick = useCallback(async() => {
-    let { chainId } = listModalProps;
+    let { chainId, tokenId } = listModalProps;
 
     if(!chainId) {
       alert('Unable to get chain');
       return;
     }
 
-    let contract = new ContractCall(chainId);
-    await contract.callList()
-  }, [amount, listModalProps]);
+    try {
+      dispatch(listModalHide());
+      let contract = new ContractCall(chainId);
+      let url = await contract.list(chainId, tokenId, amount);
+      toast.success(SuccessMintToast(url));
+    }
+
+    catch {
+      toast.error('Failed to list!');
+    }
+  }, [amount, listModalProps, dispatch]);
 
   return (
     <div>

@@ -8,6 +8,8 @@ import { MetaMaskProvider } from "metamask-react";
 import Meta from "../src/components/Meta";
 import UserContext from "../src/components/UserContext";
 import { useEffect, useState, useRef } from "react";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -42,6 +44,7 @@ function MyApp({ Component, pageProps }) {
                   <Component {...pageProps} />
                 </Layout>
               )}
+              <ToastContainer />
             </UserContext.Provider>
           </MetaMaskProvider>
         </ThemeProvider>

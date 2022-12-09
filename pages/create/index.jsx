@@ -12,6 +12,13 @@ import { useDispatch } from "react-redux";
 import { showPropertiesModal } from "../../redux/counterSlice";
 import Meta from "../../src/components/Meta";
 import ContractCall from '../../src/components/EVM/ContractCall';
+import { toast } from 'react-toastify';
+
+const SuccessMintToast = (url) => (
+    <div>
+        <a target="_blank" rel="noopener noreferrer" href={url}>Tx Success!</a> 
+    </div>
+);
 
 const Create = () => {
   const fileTypes = [
@@ -51,17 +58,17 @@ const Create = () => {
 
     try {
       let caller = new ContractCall();
-      await caller.mint(toChainId, name, desc, file);
+      let url = await caller.mint(toChainId, name, desc, file);
       setDesc("");
       setFile(null);
       setName("");
       setToChainId(null);
-      alert('minted');
+      toast.success(SuccessMintToast(url));
     }
 
     catch (e){
       console.log(e);
-      alert('failed');
+      toast.error('Failed to mint!');
     }
 
     setIsMinting(false);
