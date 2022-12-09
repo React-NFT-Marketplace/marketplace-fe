@@ -128,7 +128,7 @@ const User = () => {
     const getNfts = async() => {
       let contract = new ContractCall();
       let newNfts = await contract.getAllNFTs();
-      console.log(newNfts);
+    //   console.log(newNfts);
       setListedNfts(newNfts);
     }
 

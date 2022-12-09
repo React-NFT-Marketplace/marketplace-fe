@@ -1,4 +1,4 @@
-import { ethers, Contract } from 'ethers';
+import { ethers, Contract, BigNumber } from 'ethers';
 import { ChainConfigs } from '..';
 import MessageSender from '../../../ABI/MessageSender.json';
 import MessageReceiver from '../../../ABI/MessageReceiver.json';
@@ -13,7 +13,7 @@ import { getBase64, getBaseUrl, ucFirst, uppercase } from '../../../common/utils
 import { ChainConfig } from '../ChainConfigs/types';
 // import { BSC_TEST, POLYGON_TEST, BSC, POLYGON } from '../../../src/components/EVM/ChainConfigs';
 import { AxelarQueryAPI, Environment, EvmChain, GasToken } from '@axelar-network/axelarjs-sdk';
-import { ListedToken, Transaction } from './types';
+import { HolderToken, ListedToken, Transaction } from './types';
 import { requestSwitchChain } from '../Switcher';
 const isTestnet = process.env.REACT_APP_CHAIN_ENV === "testnet";
 // assign chain info based on env
@@ -580,6 +580,35 @@ export default class ContractCall {
         }
     }
 
+    getContractNFTs = async
+
+    getHolderNFTs = async(): Promise<HolderToken[]> => {
+        let nftIds: any = await this.oneNFT.GetHolderNfts(window.ethereum?.selectedAddress);
+        nftIds = _.filter(nftIds, (d: ListedToken) => {
+            return (d).toString() != "0";
+        });
+
+        let promises: any = [];
+        _.map(nftIds, (d) => {
+            // Queue some new things...
+            promises.push(this.batchOneNFT.tokenURI(d.toString()));
+            // This line won't complete until the 10 above calls are complete, all of which will be sent as a single batch
+        })
+        const tokenURLs = await Promise.all(promises);
+
+        const result: HolderToken[] = [];
+        await Promise.all(_.map(tokenURLs, async(uri, tIndex) => {
+            result.push({
+                collection: await this.oneNFT.name(),
+                nft: this.oneNFT.address,
+                tokenId: Number(nftIds[tIndex].toString()),
+                tokenURI: uri
+            })
+        }));
+
+        return result;
+    }
+
     getAllNFTs = async(): Promise<ListedToken[]> => {
         let data: ListedToken[] = await this.NFTMarketplace.getAllListedNFTs();
         data = _.filter(data, (d: ListedToken) => {
@@ -596,7 +625,6 @@ export default class ContractCall {
 
         const result: ListedToken[] = [];
         _.map(tokenURLs, (uri, tIndex) => {
-            console.log(`tIndex: ${tIndex}`);
             result.push({
                 ...data[tIndex],
                 tokenURI: uri

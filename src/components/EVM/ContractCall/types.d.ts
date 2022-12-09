@@ -67,7 +67,8 @@ export type ListedToken = {
 }
 
 export type HolderToken = {
+    collection: string;
     nft: string;
-    tokenId: BigNumber;
+    tokenId: number;
     tokenURI?: string;
 }
