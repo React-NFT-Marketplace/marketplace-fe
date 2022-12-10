@@ -8,10 +8,7 @@ import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
-import Axios from "axios";
-import { setupCache } from 'axios-cache-interceptor';
-// same object, but with updated typings.
-const axios = setupCache(Axios);
+import axios from "axios";
 
 const CategoryItem3 = ({items, listedItems}) => {
   const dispatch = useDispatch();
