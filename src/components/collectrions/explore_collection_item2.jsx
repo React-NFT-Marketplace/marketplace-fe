@@ -30,7 +30,7 @@ const Explore_collection_item2 = ({ onFinishLoad }) => {
                 runIfFunction(onFinishLoad)
             }
 		});
-	}, [onFinishLoad]);
+	}, []);
 
 	return (
 		<>
