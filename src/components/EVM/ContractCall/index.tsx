@@ -711,7 +711,6 @@ export default class ContractCall {
         const tokenIds = _.map(data, (d) => Number(d.tokenId.toString()));
         const itemIds = _.map(data, (d) => Number(d.itemId.toString()));
         const tokenURLs = await this._batchGetTokenURI(tokenIds);
-        const sellingPrices = await this._batchGetSellingPrice(itemIds);
 
         const result: ListedToken[] = [];
         _.map(tokenURLs, (uri, tIndex) => {
@@ -719,7 +718,6 @@ export default class ContractCall {
                 ...data[tIndex],
                 tokenURI: uri
             })
-            result[tIndex].sellingPrice = sellingPrices[tIndex];
         })
         return result;
     }

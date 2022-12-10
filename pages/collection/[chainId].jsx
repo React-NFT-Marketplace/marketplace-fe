@@ -33,15 +33,15 @@ const Collection = () => {
 	  if(!userContext.chain) {
 		return;
 	  }
-  
+
 	  if(hasQueriedNfts) {
 		return;
 	  }
-  
+
 	  setHasQueriedNfts(true);
-  
+
 	  const getNfts = async() => {
-  
+
 		let newNFTs = [];
 
 		let contract = new ContractCall(chainId);
@@ -56,8 +56,10 @@ const Collection = () => {
 
 		setListedNfts(newNFTs);
 		setIsLoadingPrices(false);
+
+        console.log(`getting new nft`);
 	  }
-  
+
 	  getNfts();
 	}, [userContext.chain, chainId, hasQueriedNfts]);
 
@@ -65,11 +67,11 @@ const Collection = () => {
 		if(!chainId) {
 			return;
 		}
-  
+
 		if(hasQueriedCollections) {
 		  return;
 		}
-		
+
 		setHasQueriedCollections(true);
 
 		//get collection NFTs
@@ -91,7 +93,7 @@ const Collection = () => {
 
 				setNfts(ret);
 			}
-	
+
 			catch(e) {
 				console.error(e);
 			}

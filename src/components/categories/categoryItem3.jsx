@@ -70,7 +70,7 @@ const CategoryItem3 = ({items, listedItems}) => {
 
         let listDetails = listedItems.filter(x => BigNumber.from(x.tokenId).toNumber() == tokenId && !x.sold);
         const isListed = listDetails.length > 0;
-        const price = isListed? BigNumber.from(listDetails[0].sellingPrice).toNumber() / Math.pow(10, 6) : 0; //update this
+        const price = isListed? BigNumber.from(listDetails[0].price).toNumber() / Math.pow(10, 6) : 0; //update this
         const seller = isListed? listDetails[0].seller : "";
 
         const id = BigNumber.from(tokenId).toNumber();
@@ -89,7 +89,7 @@ const CategoryItem3 = ({items, listedItems}) => {
                         src={metadata.image}
                         alt={`Item #${id}`}
                         className="w-full h-[230px] rounded-[0.625rem] object-cover"
-                      /> : 
+                      /> :
                       <div className="w-full h-[230px] rounded-[0.625rem] flex items-center justify-center">Loading..</div>
                     }
                   </a>
