@@ -6,6 +6,7 @@ import Trending_categories_items2 from "../categories/trending_categories_items2
 import "react-tabs/style/react-tabs.css";
 import UserContext from "../UserContext";
 import CategoryItem4 from "../categories/categoryItems4";
+import CategoryItem5 from "../categories/categoriesItem5";
 
 const User_items = ({ items, listedItems, canList }) => {
   const [itemActive, setItemActive] = useState(1);
@@ -88,9 +89,8 @@ const User_items = ({ items, listedItems, canList }) => {
             <TabPanel>
               <div>
                 {/* <!-- Filter --> */}
-                <Trending_categories_items2
+                <CategoryItem5
                   items={items}
-                  canList={true}
                 />
               </div>
             </TabPanel>

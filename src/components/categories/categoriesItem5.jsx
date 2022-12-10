@@ -3,14 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
-import { delistModalShow, updateDelistModalProps } from "../../../redux/counterSlice";
+import { delistModalShow, listModalShow, updateDelistModalProps, updateListModalProps } from "../../../redux/counterSlice";
 import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils";
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
 import axios from "axios";
 
-const CategoryItem4 = ({listedItems}) => {
+const CategoryItem5 = ({items}) => {
   const dispatch = useDispatch();
   const [itemsWithMetadata, setItemsWithMetadata] = useState([]);
 
@@ -19,35 +19,20 @@ const CategoryItem4 = ({listedItems}) => {
 
     const getItems = async() => {
 
-    listedItems.forEach(async(item) => {
-        try {
-          let res = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
-  
-          console.log(`${res.cached} | ${item.tokenURI}`);
-  
-          item.metadata = res.data;
-          newItemsWithMetadata.push(item);
-  
-          if(newItemsWithMetadata.length == listedItems.length) {
-            setItemsWithMetadata(newItemsWithMetadata);
-          }
-        }
+    items.forEach(async(item) => {
+        let res = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
 
-        catch (e){
-          console.error('Cors error')
-  
-          item.metadata = {};
-          newItemsWithMetadata.push(item);
-  
-          if(newItemsWithMetadata.length == listedItems.length) {
-            setItemsWithMetadata(newItemsWithMetadata);
-          }
+        item.metadata = res.data;
+        newItemsWithMetadata.push(item);
+
+        if(newItemsWithMetadata.length == items.length) {
+          setItemsWithMetadata(newItemsWithMetadata);
         }
       });
     }
 
     getItems();
-  }, [listedItems]);
+  }, [items]);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
@@ -80,17 +65,12 @@ const CategoryItem4 = ({listedItems}) => {
           chain,
           metadata
         } = item;
-
-        let listDetails = listedItems.filter(x => BigNumber.from(x.tokenId).toNumber() == tokenId && !x.sold);
-        const isListed = listDetails.length > 0;
-        const price = isListed? BigNumber.from(listDetails[0].price).toNumber() / Math.pow(10, 6) : 0; //update this
-        const seller = isListed? listDetails[0].seller : "";
-
+        
         const id = BigNumber.from(tokenId).toNumber();
         const chainConfig = _.find(ChainConfigs, {id: Number(chain)});
 
         return (
-          <article key={id + '-listed-nftitem'}>
+          <article key={id + '-nftitem'}>
             <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
               <figure className="relative">
                 <Link href={`/item`}>
@@ -139,52 +119,21 @@ const CategoryItem4 = ({listedItems}) => {
                   </a>
                 </Link>
               </div>
-              {
-                seller &&
-                <div className="mt-2 text-sm">
-                  <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                    Seller: {ellipsizeThis(seller, 5, 5)}
-                  </span>
-                  <span className="mb-1 flex items-center whitespace-nowrap">
-                    <span data-tippy-content="USDC">
-                      <svg className="h-4 w-4">
-                        <use xlinkHref="/icons.svg#icon-usdc"></use>
-                      </svg>
-                    </span>
-                    <span className="dark:text-jacarta-100 text-sm font-medium tracking-tight ml-2">
-                      {toLocaleDecimal(price, 3, 3)}
-                    </span>
-                  </span>
-                </div>
-              }
 
-              {
-                isListed &&
                 <div className="mt-8 flex items-center justify-between">
                   <button
                     className="text-accent font-display text-sm font-semibold"
                     onClick={() => {
-                      dispatch(delistModalShow());
-                      dispatch(updateDelistModalProps({
-                        chainId: chain,
-                        itemId: BigNumber.from(itemId).toNumber(),
+                      dispatch(listModalShow());
+                      dispatch(updateListModalProps({
+                        chainId: Number(chain),
+                        tokenId: tokenId,
                       }));
                     }}
                   >
-                    Delist
+                    List now
                   </button>
-                  <Link href={`/item`}>
-                    <a className="group flex items-center">
-                      <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
-                        <use xlinkHref="/icons.svg#icon-history"></use>
-                      </svg>
-                      <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
-                        View History
-                      </span>
-                    </a>
-                  </Link>
                 </div>
-              }
             </div>
           </article>
         );
@@ -193,4 +142,4 @@ const CategoryItem4 = ({listedItems}) => {
   );
 };
 
-export default CategoryItem4;
+export default CategoryItem5;

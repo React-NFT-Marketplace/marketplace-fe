@@ -22,107 +22,40 @@ const User = () => {
 
   useEffect(() => {
     //get NFTs
-    const getHolderNFTs = async() => {
-      if(!userContext.account) {
-        return;
-      }
-
-      const headers = {
-        'accept': 'application/json',
-        'X-API-Key': `${
-            process.env.NEXT_PUBLIC_MORALIS_API_KEY
-        }`
-      };
-
-      // store all nfts
-      let nfts = [];
-
-      await Promise.all(
-          _.map(ChainConfigs, async(chain) => {
-              if(!chain.oneNFT) {
-                return;
-              }
-
-              let nextCursor = null;
-
-              /**
-               * sample return
-               * [
-                    {
-                        "token_address": "0x0bd341f2783e3d2fdfaf9c46d45f0de57feaef39",
-                        "token_id": "5",
-                        "owner_of": "0x2438939dd447e6a223c14968bd6a18920b98da5f",
-                        "block_number": "25273760",
-                        "block_number_minted": "25273760",
-                        "token_hash": "8a9a1c104475fd76b342f6c793ab3100",
-                        "amount": "1",
-                        "contract_type": "ERC721",
-                        "name": "bscNFT",
-                        "symbol": "bNFT",
-                        "token_uri": "https://ipfs.moralis.io:2053/ipfs/QmNVMJTPbgHxVvrEgHRCuArBh8TeoBuKvp3r4ETccindtY/Screenshot 2022-12-08 at 3.08.19 PM.png",
-                        "metadata": null,
-                        "last_token_uri_sync": "2022-12-08T11:38:21.161Z",
-                        "last_metadata_sync": "2022-12-08T12:56:13.296Z",
-                        "minter_address": null
-                    }
-                ]
-               */
-
-              do {
-                  let chainId = "0x" + (chain.id).toString(16);
-                  if(chainId == "0xfa2" || chainId == "0x507") {
-                    //moralis doesn't have these 2
-                    break;
-                  }
-
-                  let config = {
-                      method: 'GET',
-                      url: `https://deep-index.moralis.io/api/v2/${ userContext.account }/nft`,
-                      params: {
-                          chain: chainId,
-                          format: 'decimal',
-                          token_addresses: chain.oneNFT,
-                          // limit: 10
-                      },
-                      headers: headers
-                  }
-
-                  // append next cursor if not empty
-                  if (!_.isNil(nextCursor)) {
-                      config.params['cursor'] = nextCursor;
-                  }
-
-                  try {
-                    const { data } = await axios(config);
-  
-                    // merge all result
-                    if (!_.isNil(data)) {
-  
-                        data.result.forEach(r => {
-                          nfts.push({
-                            ...r,
-                            chain: chain.id
-                          })
-                        })
-  
-                        // while next page still available
-                        nextCursor = data.cursor;
-                    }
-                  }
-
-                  catch (e){
-                    console.error(e);
-                    break;
-                  }
-
-              } while(!_.isNil(nextCursor));
-          })
-      );
-
-      setNfts(nfts);
+    if(!userContext.account) {
+      return;
     }
 
-    getHolderNFTs();
+    hasQueriedNfts.current = true;
+
+    const getNfts = async() => {
+
+      let newNFTs = [];
+
+      let chains = _.map(ChainConfigs, chain => chain);
+
+      let contractCalls = await Promise.all(chains.map((chain) => {
+        if(!chain.oneNFT) {
+          return;
+        }
+
+        let contract = new ContractCall(chain.id);
+        return contract.getHolderNFTs();
+      }));
+
+      contractCalls.forEach((nfts, index) => {
+        nfts.forEach(r => {
+          newNFTs.push({
+            ...r,
+            chain: chains[index].id
+          })
+        })
+      });
+
+      setNfts(newNFTs);
+    }
+
+    getNfts();
   }, [userContext.account]);
 
   useEffect(() => {
