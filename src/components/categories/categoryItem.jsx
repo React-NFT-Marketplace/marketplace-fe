@@ -64,7 +64,7 @@ const CategoryItem = ({items}) => {
                           <img
                             src={owner.image}
                             alt="owner"
-                            layout="fill"
+                            // layout="fill"
                             className="dark:border-jacarta-600 hover:border-accent dark:hover:border-accent h-6 w-6 rounded-full border-2 border-white"
                           />
                         </Tippy>

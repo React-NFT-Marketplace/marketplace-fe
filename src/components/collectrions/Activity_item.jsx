@@ -202,7 +202,7 @@ const Activity_item = () => {
 								.replace('_sm', '')
 								.replace('avatar', 'item');
 							return (
-                                <Link href={id}>
+                                <Link href={id} key={id}>
                                     <a className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl relative flex items-center border bg-white p-8 transition-shadow hover:shadow-lg">
                                         {/* <figure className="mr-5 self-start">
                                             <Image
