@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, { useCallback, useEffect, useState, useContext, useRef } from 'react';
 // import { collection_activity_item_data } from '../../../data/collection_data';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ const chains = ChainConfigs;
 
 const Activity_item = () => {
     const userContext = useContext(UserContext);
-	const [filterVal, setFilterVal] = useState(null);
+	const [filterVal, setFilterVal] = useState(1);
 	function onlyUnique(value, index, self) {
 		return self.indexOf(value) === index;
 	}
@@ -22,10 +22,12 @@ const Activity_item = () => {
 	const [filterData, setfilterData] = useState(['interchain', 'crosschain']);
 
 	const [inputText, setInputText] = useState('');
+    const hasQueried = useRef(false);
 
-	const handleFilter = (category) => {
+	const handleFilter = useCallback((category) => {
 		setData(allData.filter((item) => item.category === category));
-	};
+	}, [allData]);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const newArray = allData.filter((item) => {
@@ -69,7 +71,9 @@ const Activity_item = () => {
         })
         console.log(`axelar txs`);
         setAllData(_.merge(allData, formatted));
-    }, []);
+
+        return;
+    }, [allData]);
 
     const getBscExplorer = useCallback(async() => {
         const chain = _.find(chains, {"id": Number(window.ethereum.networkVersion)});
@@ -106,20 +110,34 @@ const Activity_item = () => {
             console.log(`blockexplorer txs`);
             setAllData(_.merge(allData, formatted));
         });
+
+        return;
         // massage data
         // from: "0x0000000000000000000000000000000000000000" = mint
         // to: "0xa8ea7a97eb0ab5d4ccbafe82eb1941577f42abf7" = list
         // from: "0xa8ea7a97eb0ab5d4ccbafe82eb1941577f42abf7" = buy / delist
         // else buy
-    }, [])
+    }, [allData])
 
 	useEffect(() => {
-        getAxelarTxs();
-        getBscExplorer();
-        handleFilter('crosschain')
-        setFilterVal(1);
-        // setData(allData.filter((item) => item.category == 'crosschain'));
-	}, []);
+
+        if(hasQueried.current) {
+            return;
+        }
+
+        hasQueried.current = true;
+
+        const getData = async() => {
+            await Promise.all([
+                getAxelarTxs(),
+                getBscExplorer()
+            ])
+            handleFilter('crosschain')
+            setFilterVal(1);
+        }
+
+        getData();
+	}, [getAxelarTxs, getBscExplorer, handleFilter]);
 
 	return (
 		<>
