@@ -69,11 +69,17 @@ const User = () => {
                */
 
               do {
+                  let chainId = "0x" + (chain.id).toString(16);
+                  if(chainId == "0xfa2" || chainId == "0x507") {
+                    //moralis doesn't have these 2
+                    break;
+                  }
+
                   let config = {
                       method: 'GET',
                       url: `https://deep-index.moralis.io/api/v2/${ userContext.account }/nft`,
                       params: {
-                          chain: "0x" + (chain.id).toString(16),
+                          chain: chainId,
                           format: 'decimal',
                           token_addresses: chain.oneNFT,
                           // limit: 10

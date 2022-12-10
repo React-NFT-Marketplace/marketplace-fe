@@ -18,8 +18,11 @@ html {
 		color: rgba(0, 0, 0, 0.6);
 	}
 
-	body.modal-open {
+	body {
 		max-height: 100vh;
+	}
+
+	body.modal-open {
 		overflow: hidden;
 	}
 }

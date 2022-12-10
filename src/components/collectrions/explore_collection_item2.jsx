@@ -9,28 +9,43 @@ import ContractCall from '../EVM/ContractCall';
 
 const Explore_collection_item2 = ({ onFinishLoad }) => {
 	const [collections, setCollections] = useState([]);
+	const [hasQueriedCollections, setHasQueriedCollections] = useState(false);
 
 	useEffect(() => {
-		let collections = [];
-		_.map(ChainConfigs, async(chain) => {
-            let contract = new ContractCall(chain.id);
-			let oneNFT = contract.getOneNFTContract(true);
-            let itemsCount = await oneNFT.getCurrentId();
-            let name = await oneNFT.name();
 
-			collections.push({
-				id: chain.id,
-				bigImage: getChainIcon(chain.id),
-				title: name,
-				itemsCount: BigNumber.from(itemsCount).toNumber(),
-			});
+		if(hasQueriedCollections) {
+			return;
+		}
 
-            setCollections(collections);
-            if(collections.length == 5 /* currently only has 5 collections */) {
-                runIfFunction(onFinishLoad)
-            }
-		});
-	}, []);
+		setHasQueriedCollections(true);
+
+		const getCollections = async() => {
+			let collections = [];
+			let chains = _.map(ChainConfigs, chain => chain);
+			let calls = await Promise.all(chains.map(async chain => {
+				let contract = new ContractCall(chain.id);
+				let oneNFT = contract.getOneNFTContract(true);
+				let itemsCount = await oneNFT.getCurrentId();
+				let name = await oneNFT.name();
+	
+				return {
+					id: chain.id,
+					bigImage: getChainIcon(chain.id),
+					title: name,
+					itemsCount: BigNumber.from(itemsCount).toNumber(),
+				}
+			}));
+
+			calls.forEach(call => {
+				collections.push(call);
+			})
+
+			setCollections(collections);
+			runIfFunction(onFinishLoad)
+		}
+
+		getCollections();
+	}, [onFinishLoad, hasQueriedCollections]);
 
 	return (
 		<>
