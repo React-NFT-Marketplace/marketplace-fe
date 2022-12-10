@@ -8,7 +8,10 @@ import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
-import axios from "axios";
+import Axios from "axios";
+import { setupCache } from 'axios-cache-interceptor';
+// same object, but with updated typings.
+const axios = setupCache(Axios);
 
 const CategoryItem4 = ({listedItems}) => {
   const dispatch = useDispatch();
@@ -18,9 +21,13 @@ const CategoryItem4 = ({listedItems}) => {
     let newItemsWithMetadata = [];
 
     const getItems = async() => {
-      listedItems.forEach(async(item) => {
-        let { data } = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
-        item.metadata = data;
+    console.log(listedItems);
+    listedItems.forEach(async(item) => {
+        let res = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
+
+        console.log(`${res.cached} | ${item.tokenURI}`);
+
+        item.metadata = res.data;
         newItemsWithMetadata.push(item);
 
         if(newItemsWithMetadata.length == listedItems.length) {

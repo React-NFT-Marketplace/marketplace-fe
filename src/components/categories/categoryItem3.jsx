@@ -8,7 +8,10 @@ import { ellipsizeThis, getChainIcon, toLocaleDecimal } from "../../common/utils
 import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
-import axios from "axios";
+import Axios from "axios";
+import { setupCache } from 'axios-cache-interceptor';
+// same object, but with updated typings.
+const axios = setupCache(Axios);
 
 const CategoryItem3 = ({items, listedItems}) => {
   const dispatch = useDispatch();
@@ -24,8 +27,11 @@ const CategoryItem3 = ({items, listedItems}) => {
 
     const getItems = async() => {
       items.forEach(async(item) => {
-        let { data } = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
-        item.metadata = data;
+        let res = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
+
+        console.log(`${res.cached} | ${item.tokenURI}`);
+
+        item.metadata = res.data;
         newItemsWithMetadata.push(item);
 
         if(newItemsWithMetadata.length == items.length) {
@@ -155,7 +161,7 @@ const CategoryItem3 = ({items, listedItems}) => {
                     onClick={() => {
                       dispatch(buyModalShow());
                       dispatch(updateBuyModalProps({
-                        image: metadata.image,
+                        image: metadata?.image,
                         name: metadata.name,
                         collectionName,
                         price,

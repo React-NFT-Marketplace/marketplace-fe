@@ -673,7 +673,7 @@ export default class ContractCall {
             return [];
         }
 
-        const oneNFT = this.getOneNFTContract();
+        const oneNFT = this.getOneNFTContract(true);
         let nftIds: any = await oneNFT.GetHolderNfts(window.ethereum?.selectedAddress);
         nftIds = _.filter(nftIds, (d: ListedToken) => {
             return (d).toString() != "0";
