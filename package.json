@@ -31,6 +31,7 @@
     "react-accessible-accordion": "^5.0.0",
     "react-chartjs-2": "^4.3.1",
     "react-copy-to-clipboard": "^5.1.0",
+    "react-corner-ribbon": "^0.0.5",
     "react-countdown": "^2.3.2",
     "react-dom": "18.2.0",
     "react-drag-drop-files": "^2.3.7",

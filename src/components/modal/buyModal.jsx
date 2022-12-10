@@ -28,7 +28,7 @@ const BuyModal = () => {
     try {
       dispatch(buyModalHide());
       let contract = new ContractCall(chainId);
-      let url = await contract.buy(chainId, toLocaleDecimal(buyModalProps.price * 0.05, 3, 3), BigNumber.from(itemId));
+      let url = await contract.buy(chainId, toLocaleDecimal(buyModalProps.price * 1.05, 3, 3), BigNumber.from(itemId));
       toast.success(SuccessMintToast(url));
     }
 

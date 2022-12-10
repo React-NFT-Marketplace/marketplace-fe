@@ -9,6 +9,7 @@ import { ChainConfigs } from "../EVM";
 import { useDispatch } from "react-redux";
 import { BigNumber } from "ethers";
 import axios from "axios";
+import CornerRibbon from "react-corner-ribbon";
 
 const CategoryItem3 = ({items, listedItems}) => {
   const dispatch = useDispatch();
@@ -84,6 +85,19 @@ const CategoryItem3 = ({items, listedItems}) => {
           <article key={id + '-nftitem'}>
             <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
               <figure className="relative">
+                {
+                    isListed &&
+                    <CornerRibbon
+                        position="top-right" // OPTIONAL, default as "top-right"
+                        fontColor="#f0f0f0" // OPTIONAL, default as "#f0f0f0"
+                        backgroundColor="#2c7" // OPTIONAL, default as "#2c7"
+                        containerStyle={{}} // OPTIONAL, style of the ribbon
+                        style={{}} // OPTIONAL, style of ribbon content
+                        className="" // OPTIONAL, css class of ribbon
+                    >
+                        Sale
+                    </CornerRibbon>
+                }
                 <Link href={`/item`}>
                   <a>
                     {
