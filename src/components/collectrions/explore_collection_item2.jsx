@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Feature_collections_data from '../../../data/Feature_collections_data';
 import { getChainIcon, runIfFunction } from '../../common/utils';
@@ -9,15 +9,15 @@ import ContractCall from '../EVM/ContractCall';
 
 const Explore_collection_item2 = ({ onFinishLoad }) => {
 	const [collections, setCollections] = useState([]);
-	const [hasQueriedCollections, setHasQueriedCollections] = useState(false);
+	const hasQueriedCollections = useRef(false);
 
 	useEffect(() => {
 
-		if(hasQueriedCollections) {
+		if(hasQueriedCollections.current) {
 			return;
 		}
 
-		setHasQueriedCollections(true);
+		hasQueriedCollections.current = true;
 
 		const getCollections = async() => {
 			let collections = [];
@@ -41,11 +41,12 @@ const Explore_collection_item2 = ({ onFinishLoad }) => {
 			})
 
 			setCollections(collections);
+			console.log('getting collections');
 			runIfFunction(onFinishLoad)
 		}
 
 		getCollections();
-	}, [onFinishLoad, hasQueriedCollections]);
+	}, [onFinishLoad]);
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import User_items from "../../src/components/user/User_items";
 import Tippy from "@tippyjs/react";
@@ -17,7 +17,7 @@ const User = () => {
   const [copied, setCopied] = useState(false);
   const [nfts, setNfts] = useState([]);
   const [listedNfts, setListedNfts] = useState([]);
-  const [hasQueriedNfts, setHasQueriedNfts] = useState(false);
+  const hasQueriedNfts = useRef(false);
   const userContext = useContext(UserContext);
 
   useEffect(() => {
@@ -130,11 +130,11 @@ const User = () => {
       return;
     }
 
-    if(hasQueriedNfts) {
+    if(hasQueriedNfts.current) {
       return;
     }
 
-    setHasQueriedNfts(true);
+    hasQueriedNfts.current = true;
 
     const getNfts = async() => {
 
@@ -160,11 +160,12 @@ const User = () => {
         })
       });
 
+			console.log('getting nfts');
       setListedNfts(newNFTs);
     }
 
     getNfts();
-  }, [userContext.chain, hasQueriedNfts]);
+  }, [userContext.chain]);
 
   useEffect(() => {
     setTimeout(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useMemo } from 'react';
+import React, { useEffect, useState, useContext, useMemo, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { collection_item_data } from '../../data/collection_data';
 import Auctions_dropdown from '../../src/components/dropdown/Auctions_dropdown';
@@ -19,8 +19,8 @@ const Collection = () => {
 	const chainId = router.query.chainId;
 	const [nfts, setNfts] = useState([]);
 	const userContext = useContext(UserContext);
-	const [hasQueriedNfts, setHasQueriedNfts] = useState(false);
-	const [hasQueriedCollections, setHasQueriedCollections] = useState(false);
+	const hasQueriedNfts = useRef(false);
+	const hasQueriedCollections = useRef(false);
 	const chain = useMemo(() => {
 		return _.find(ChainConfigs, {id: Number(chainId)});
 	}, [chainId]);
@@ -34,11 +34,11 @@ const Collection = () => {
 		return;
 	  }
 
-	  if(hasQueriedNfts) {
+	  if(hasQueriedNfts.current) {
 		return;
 	  }
 
-	  setHasQueriedNfts(true);
+	  hasQueriedNfts.current = true;
 
 	  const getNfts = async() => {
 
@@ -61,18 +61,18 @@ const Collection = () => {
 	  }
 
 	  getNfts();
-	}, [userContext.chain, chainId, hasQueriedNfts]);
+	}, [userContext.chain, chainId]);
 
 	useEffect(() => {
 		if(!chainId) {
 			return;
 		}
 
-		if(hasQueriedCollections) {
+		if(hasQueriedCollections.current) {
 		  return;
 		}
 
-		setHasQueriedCollections(true);
+		hasQueriedCollections.current = true;
 
 		//get collection NFTs
 		const getNFTs = async() => {
@@ -91,6 +91,7 @@ const Collection = () => {
 					});
 				});
 
+				console.log('getting nfts');
 				setNfts(ret);
 			}
 
@@ -100,7 +101,7 @@ const Collection = () => {
 		}
 
 		getNFTs();
-	}, [chainId, hasQueriedCollections]);
+	}, [chainId]);
 
 	return (
 		<>
