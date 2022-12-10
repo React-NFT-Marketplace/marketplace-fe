@@ -46,7 +46,7 @@ const hero = () => {
           <div className="col-span-6 xl:col-span-8">
             <div className="relative text-center md:pl-8 md:text-right">
               <img
-                src="/images/hero/hero.jpg"
+                src="/images/hero/hero2.png"
                 alt=""
                 className="hero-img mt-8 inline-block w-72 rotate-[8deg] sm:w-full lg:w-[24rem] xl:w-[35rem]"
               />
