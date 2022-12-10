@@ -1,17 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
-import Feature_collections_data from "../../../data/Feature_collections_data";
 import Trending_categories_items2 from "../categories/trending_categories_items2";
-import { trendingCategoryData } from "../../../data/categories_data";
 
 import "react-tabs/style/react-tabs.css";
-import Explore_collection_item from "../collectrions/explore_collection_item";
 import UserContext from "../UserContext";
-import Trending_categories_items3 from "../categories/trending_categories_items3";
-import { BigNumber } from "ethers";
-import CategoryItem3 from "../categories/categoryItem3";
 import CategoryItem4 from "../categories/categoryItems4";
 
 const User_items = ({ items, listedItems, canList }) => {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import CategoryItem from "./categoryItem";
 import Recently_added_dropdown from "../dropdown/recently_added_dropdown";
 import { cloneObj } from "../../common/utils";
 import CategoryItem3 from "./categoryItem3";

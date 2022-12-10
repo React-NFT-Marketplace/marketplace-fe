@@ -1,12 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import { trending_category_filter } from "../../data/categories_data";
-import Link from "next/link";
-import { HeadLine } from "../../src/components/component";
+import HeadLine from "../../src/components/headLine";
 import Feature_collections_data from "../../data/Feature_collections_data";
-import Collection_dropdown from "../../src/components/dropdown/collection_dropdown";
 import Explore_collection_item2 from "../../src/components/collectrions/explore_collection_item2";
-import Head from "next/head";
 import Meta from "../../src/components/Meta";
 import { collectCollectionData } from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";

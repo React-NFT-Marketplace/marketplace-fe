@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { trendingCategoryData } from '../../../data/categories_data';
-import Activity_item from './Activity_item';
+import React from 'react';
 import Image from 'next/image';
-import FilterCategoryItem from '../categories/filterCategoryItem';
 
 import 'react-tabs/style/react-tabs.css';
-import { collection_activity_item_data } from '../../../data/collection_data';
 import CategoryItem3 from '../categories/categoryItem3';
 
 const Collection_items2 = ({ items, listedItems }) => {
