@@ -9,7 +9,7 @@ import { BigNumber } from "ethers";
 
 const SuccessMintToast = (url) => (
     <div>
-        <a target="_blank" rel="noopener noreferrer" href={url}>Tx Success!</a> 
+        <a target="_blank" rel="noopener noreferrer" href={url}>Tx Success!</a>
     </div>
 );
 
@@ -28,7 +28,7 @@ const BuyModal = () => {
     try {
       dispatch(buyModalHide());
       let contract = new ContractCall(chainId);
-      let url = await contract.buy(chainId, price, BigNumber.from(itemId));
+      let url = await contract.buy(chainId, toLocaleDecimal(buyModalProps.price * 0.05, 3, 3), BigNumber.from(itemId));
       toast.success(SuccessMintToast(url));
     }
 

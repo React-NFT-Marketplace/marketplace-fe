@@ -1029,105 +1029,38 @@ export default function Header01({handleAccountChange, handleChainChange}) {
               </ul>
             </li>
             <li className="js-nav-dropdown nav-item dropdown group relative">
-              <button
-                onClick={() => mobileCollapse(explore.id)}
-                className="dropdown-toggle text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5 w-full"
-              >
-                <span
-                  className={
-                    isParentPageActive(explore.pages, route.asPath)
-                      ? "text-accent dark:text-accent"
-                      : ""
-                  }
-                >
-                  {explore.name}
-                </span>
-                <i className="lg:hidden">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width={24}
-                    height={24}
-                    className="h-4 w-4 dark:fill-white"
-                  >
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z" />
-                  </svg>
-                </i>
-              </button>
-              <ul
-                className={`dropdown-menu left-0 top-[85%] z-10 grid-flow-row grid-cols-[repeat(2,_1fr)] gap-x-4 whitespace-nowrap rounded-xl bg-white transition-all will-change-transform group-hover:visible group-hover:opacity-100 dark:bg-jacarta-800 lg:invisible lg:absolute lg:!grid lg:translate-y-4 lg:py-8 lg:px-2 lg:opacity-0 lg:shadow-2xl lg:group-hover:translate-y-2 relative ${
-                  isCollapse === explore.id ? "block" : "hidden"
-                }`}
-                aria-labelledby="navDropdown-1"
-              >
-                {explore?.pages?.map((page) => (
-                  <li key={page.id} onClick={() => setToggle(false)}>
-                    <Link href="/">
-                      <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors">
-                        <span className="bg-light-base mr-3 rounded-xl p-[0.375rem]">
-                          {page.icon}
-                        </span>
-                        <span className="font-display text-jacarta-700 text-sm dark:text-white">
-                          {page.name}
-                        </span>
-                      </a>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            <li className="js-nav-dropdown group relative">
-              <button
-                onClick={() => mobileCollapse(resource.id)}
-                className="dropdown-toggle text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5 w-full"
-              >
-                <span
-                  className={
-                    isParentPageActive(resource.pages, route.asPath)
-                      ? "text-accent dark:text-accent"
-                      : ""
-                  }
-                >
-                  {resource.name}
-                </span>
-                <i className="lg:hidden">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width={24}
-                    height={24}
-                    className="h-4 w-4 dark:fill-white"
-                  >
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z" />
-                  </svg>
-                </i>
-              </button>
-              <ul
-                className={`dropdown-menu left-0 top-[85%] z-10 grid-flow-row grid-cols-[repeat(2,_1fr)] gap-x-4 whitespace-nowrap rounded-xl bg-white transition-all will-change-transform group-hover:visible group-hover:opacity-100 dark:bg-jacarta-800 lg:invisible lg:absolute lg:!grid lg:translate-y-4 lg:py-8 lg:px-2 lg:opacity-0 lg:shadow-2xl lg:group-hover:translate-y-2 relative ${
-                  isCollapse === resource.id ? "block" : "hidden"
-                }`}
-                aria-labelledby="navDropdown-4"
-              >
-                {resource?.pages?.map((page) => (
-                  <li key={page.id} onClick={() => setToggle(false)}>
-                    <Link href={page.path}>
-                      <a className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center rounded-xl px-5 py-2 transition-colors">
+                <Link href="/">
+                    <a>
+                    <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
                         <span
-                          className={`font-display text-jacarta-700 text-sm dark:text-white ${
-                            isChildrenPageActive(page.path, route.asPath)
-                              ? "text-accent dark:text-accent"
-                              : ""
-                          }`}
+                        className={
+                            isChildrenPageActive("/", route.asPath)
+                            ? "text-accent dark:text-accent"
+                            : ""
+                        }
                         >
-                          {page.name}
+                        Home
                         </span>
-                      </a>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                    </button>
+                    </a>
+                </Link>
+            </li>
+            <li className="js-nav-dropdown nav-item dropdown group relative">
+                <Link href="/collection/explore_collection">
+                    <a>
+                    <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                        <span
+                        className={
+                            isChildrenPageActive("/collection/explore_collection", route.asPath)
+                            ? "text-accent dark:text-accent"
+                            : ""
+                        }
+                        >
+                        Explore
+                        </span>
+                    </button>
+                    </a>
+                </Link>
             </li>
             <li className="group" onClick={() => setToggle(false)}>
               <Link href="/history">

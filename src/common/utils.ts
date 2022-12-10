@@ -276,7 +276,6 @@ export const getBlockExporerHistory = async(chainId: number | null = null, contr
     // get chain nft contract address
     const cid = (chainId ? Number(chainId) : Number(window.ethereum!.networkVersion));
     const chain: ChainConfig | undefined = _.find(chains, { "id": cid });
-    console.log(chains);
 
     const apiKey = JSON.parse(process.env.NEXT_PUBLIC_EXPLORER_API!);
 

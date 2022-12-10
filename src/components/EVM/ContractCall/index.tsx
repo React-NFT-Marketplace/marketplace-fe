@@ -362,7 +362,7 @@ export default class ContractCall {
 
         const receipt = await sourceContract!
             .crossChainList(
-                toChain.name,
+                uppercase(toChain!.evmChain!),
                 destContract!.address,
                 toChain.oneNFT,
                 tokenId,
@@ -424,7 +424,7 @@ export default class ContractCall {
 
         const receipt = await sourceContract!
             .crossChainDelist(
-                toChain.name,
+                uppercase(toChain!.evmChain!),
                 destContract!.address,
                 itemId,
                 {
@@ -451,8 +451,8 @@ export default class ContractCall {
             return;
         }
 
-        const fromChain = _.find(ChainConfigs, {id: Number(window.ethereum.networkVersion)});
-        const toChain = _.find(ChainConfigs, {id: Number(toChainId)});
+        const fromChain = _.find(ChainConfigs, {"id": Number(window.ethereum.networkVersion)});
+        const toChain = _.find(ChainConfigs, {"id": Number(toChainId)});
 
         if (!fromChain) {
             alert('Chain not supported');
@@ -474,21 +474,29 @@ export default class ContractCall {
             1000000,
             2
         );
+        console.log(`gasFee: ${gasFee}`);
+        console.log(`amount: ${amount}`);
+        console.log(ethers.utils.parseUnits(amount.toString(), 6));
+        console.log(`itemId: ${itemId}`);
 
         const sourceContract = this.getMessageSenderContract(fromChain);
         const destContract = this.getMessageReceiverContract(toChain);
 
         // Get token address from the gateway contract
-        const erc20 = this.getAUSDCContract();
+        const erc20 = this.getAUSDCContract(fromChain);
+        console.log(erc20);
 
         // Approve the token for the amount to be sent
+        console.log(`before approve`);
+        console.log(sourceContract!.address);
         await erc20
             .approve(sourceContract!.address, ethers.utils.parseUnits(amount.toString(), 6))
             .then((tx: any) => tx.wait());
+        console.log(`after approve`);
 
         const receipt = await sourceContract!
             .crossChainBuy(
-                toChain.name,
+                uppercase(toChain!.evmChain!),
                 destContract!.address,
                 "aUSDC",
                 ethers.utils.parseUnits(amount.toString(), 6),
@@ -503,7 +511,7 @@ export default class ContractCall {
           txHash: receipt.transactionHash,
         });
         onSent(receipt.transactionHash); */
-
+        console.log(`https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`);
         return `https://testnet.axelarscan.io/gmp/${receipt.transactionHash}`;
     }
 

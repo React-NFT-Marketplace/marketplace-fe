@@ -46,12 +46,12 @@ const Activity_item = () => {
         _.map(results.data, (res, resIndex) => {
             const eventTypeCall = eventType[res.call?.eventSignature] || 'ContractCall';
             // console.log(eventTypeCall);
-            const price = eventTypeCall == 'Buy' ? formatUsdcAmount(res.call.returnValues.amount.hex) : '';
+            const price = eventTypeCall == 'Buy' ? `${formatUsdcAmount(res.call.returnValues.amount.hex)} axlUSDC` : '';
             const eventTime = moment.unix(res.call.created_at.ms / 1000);
 
             // find if call from our contract
-            const isMsgSender = _.find(chains, {"messageSender": res.call.to});
-            const toChain = _.find(chains, {"evmChain": res.approved.chain});
+            const isMsgSender = _.find(chains, {"messageSender": res.call.transaction.to});
+            const toChain = _.find(chains, {"evmChain": res.call.returnValues.destinationChain.toLowerCase()});
 
             if (!_.isNil(isMsgSender)) {
                 formatted.push({
@@ -67,8 +67,7 @@ const Activity_item = () => {
                 })
             }
         })
-
-        console.log(formatted);
+        console.log(`axelar txs`);
         setAllData(_.merge(allData, formatted));
     }, []);
 
@@ -104,7 +103,7 @@ const Activity_item = () => {
                 category: 'interchain',
                 hash: res.hash
             })
-
+            console.log(`blockexplorer txs`);
             setAllData(_.merge(allData, formatted));
         });
         // massage data
@@ -112,14 +111,14 @@ const Activity_item = () => {
         // to: "0xa8ea7a97eb0ab5d4ccbafe82eb1941577f42abf7" = list
         // from: "0xa8ea7a97eb0ab5d4ccbafe82eb1941577f42abf7" = buy / delist
         // else buy
-    }, [userContext.account])
+    }, [])
 
 	useEffect(() => {
         getAxelarTxs();
         getBscExplorer();
-		setfilterData(filterData.filter(onlyUnique));
+        handleFilter('crosschain')
         setFilterVal(1);
-        setData(allData.filter((item) => item.category === 'crosschain'));
+        // setData(allData.filter((item) => item.category == 'crosschain'));
 	}, []);
 
 	return (

@@ -159,7 +159,7 @@ const CategoryItem3 = ({items, listedItems}) => {
                       dispatch(buyModalShow());
                       dispatch(updateBuyModalProps({
                         image: metadata?.image,
-                        name: metadata.name,
+                        name: metadata?.name,
                         collectionName,
                         price,
                         itemId,
