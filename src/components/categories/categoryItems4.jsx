@@ -18,8 +18,7 @@ const CategoryItem4 = ({listedItems}) => {
     let newItemsWithMetadata = [];
 
     const getItems = async() => {
-    console.log(listedItems);
-    listedItems.forEach(async(item) => {
+      listedItems.forEach(async(item) => {
         let { data } = await axios.get(item.tokenURI.replace("https://ipfs.moralis.io:2053/ipfs/", "https://gateway.moralisipfs.com/ipfs/"));
         item.metadata = data;
         newItemsWithMetadata.push(item);
@@ -32,8 +31,6 @@ const CategoryItem4 = ({listedItems}) => {
 
     getItems();
   }, [listedItems]);
-
-  console.log(itemsWithMetadata);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
